@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos Comerciais</title>
+</head>
+<body>
+    <h1>Detalhes dos Pedidos</h1>
+    <div id="order-details"></div>
+
+    <script>
+        // Função para carregar os detalhes dos pedidos
+        async function loadOrderDetails() {
+            try {
+                const response = await fetch('/api/pedidos');
+                if (!response.ok) {
+                    throw new Error(`Erro ao obter pedidos: ${response.statusText}`);
+                }
+                const data = await response.json();
+                console.log('Pedidos recebidos:', data);
+
+                // Acesse o array de pedidos dentro do campo "dados"
+                const orders = data.dados;
+
+                // Exibir os detalhes dos pedidos na página
+                const orderDetailsDiv = document.getElementById('order-details');
+                orders.forEach(order => {
+                    const orderDiv = document.createElement('div');
+                    orderDiv.innerHTML = `
+                        <p>ID do Pedido: ${order.id}</p>
+                        <p>Código: ${order.codigo}</p>
+                        <p>Data do Pedido: ${order.dataPedido}</p>
+                        <p>Status: ${order.status}</p>
+                        <p>Transportadora Código: ${order.transportadoraCodigo}</p>
+                        <p>Status de Entrega: ${order.statusEntrega}</p>
+                        <p>Cliente: ${order.cliente.nome}</p> <!-- Ajuste conforme necessário para acessar o campo correto -->
+                        <hr>
+                    `;
+                    orderDetailsDiv.appendChild(orderDiv);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar os detalhes dos pedidos:', error);
+            }
+        }
+
+        // Chama a função para carregar os detalhes dos pedidos ao carregar a página
+        loadOrderDetails();
+    </script>
+</body>
+</html>

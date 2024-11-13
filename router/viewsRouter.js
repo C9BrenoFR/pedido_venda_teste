@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const pdfController = require('../controllers/pdfController');
+const orderController = require('../controllers/orderController'); // Importa o controlador
 const { authMiddleware, authenticateUser } = require('../middleware/authMiddleware');
 
 
@@ -28,6 +29,14 @@ router.get('/login2', (req, res) => {
 router.get('/admin', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..','views', 'admin.html'));
 });
+
+// Rota para a página de pedidos (comercial.html)
+router.get('/comercial', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'views', 'comercial.html'));
+});
+
+// Rota para obter detalhes dos pedidos (API)
+router.get('/api/pedidos', orderController.getOrderDetails);
 
 
 // Rota para envio do PDF
