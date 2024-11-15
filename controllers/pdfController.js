@@ -13,7 +13,7 @@ exports.sendPdf = async (req, res) => {
             service: 'gmail',
             auth: {
                 user: process.env.GMAIL_USER, // Seu e-mail do Gmail
-                pass: GMAIL_APP_PASSWORD // Substitua pela senha de aplicativo gerada
+                pass: process.env.GMAIL_APP_PASSWORD // Substitua pela senha de aplicativo gerada
             },
             tls: {
                 rejectUnauthorized: false // Ignora a verificação do certificado
