@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 exports.sendPdf = async (req, res) => {
-    
+
     const { pdfBase64, razaoSocial, codCliente,representante } = req.body;
 
     if (!pdfBase64) {
@@ -22,7 +22,7 @@ exports.sendPdf = async (req, res) => {
         });
 
         const subject = `Pedido de Venda ${razaoSocial} - ${codCliente}`;
-        const fileName = `Pedido de Venda ${razaoSocial} - ${codCliente}.pdf`;
+        const fileName = `Pedido de Venda ${razaoSocial} - ${codCliente} e Rep ${representante}.pdf`;
 
         // Configurando o e-mail
         await transporter.sendMail({
