@@ -24,8 +24,17 @@ btPdfGeneration.addEventListener("click", async () => {
 
         const pdfBase64 = await html2pdf().set(options).from(content).outputPdf('datauristring');
 
+
+           // Adiciona a etapa de confirmação de envio do e-mail
+           const confirmSend = confirm("Você deseja realmente enviar este e-mail?");
+           if (!confirmSend) {
+               alert("Envio de e-mail cancelado.");
+               elementsToHide.forEach(el => el.style.display = 'block');
+               return; // Sai da função se o usuário clicar em "Não"
+           }
+
         // Bloco de código de envio de e-mail desativado
-        /*
+        
         try {
             const response = await fetch('/send-pdf', {
                 method: 'POST',
@@ -40,7 +49,7 @@ btPdfGeneration.addEventListener("click", async () => {
         } catch (error) {
             console.error('Erro ao enviar o PDF:', error);
         }
-        */
+        
 
         elementsToHide.forEach(el => el.style.display = 'block');
     });
