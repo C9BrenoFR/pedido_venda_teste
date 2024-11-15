@@ -1,7 +1,8 @@
 const nodemailer = require('nodemailer');
 
 exports.sendPdf = async (req, res) => {
-    const { pdfBase64, razaoSocial, codCliente } = req.body;
+    
+    const { pdfBase64, razaoSocial, codCliente,representante } = req.body;
 
     if (!pdfBase64) {
         return res.status(400).send('Nenhum PDF foi recebido.');
@@ -28,7 +29,7 @@ exports.sendPdf = async (req, res) => {
             from: 'kidzonekidszonemail@gmail.com', // Seu e-mail do Gmail
             to: ['alxnvn@yahoo.com.br','alex.lima@kidszoneworld.com.br'], // Destinatário do e-mail
             subject: subject, // Assunto dinâmico
-            text: 'Segue em anexo o PDF gerado.',
+            text: `Segue em anexo o PDF gerado para o cliente ${razaoSocial} - ${codCliente} representante ${representante}`,
             attachments: [
                 {
                     filename: fileName,
