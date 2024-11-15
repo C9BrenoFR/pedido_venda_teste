@@ -12,8 +12,8 @@ exports.sendPdf = async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'kidzonekidszonemail@gmail.com', // Seu e-mail do Gmail
-                pass: 'kajf bovu cxtb ezka' // Substitua pela senha de aplicativo gerada
+                user: process.env.GMAIL_USER, // Seu e-mail do Gmail
+                pass: GMAIL_APP_PASSWORD // Substitua pela senha de aplicativo gerada
             },
             tls: {
                 rejectUnauthorized: false // Ignora a verificação do certificado
