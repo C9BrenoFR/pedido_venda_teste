@@ -1,15 +1,12 @@
-// controllers/orderController.js
 const apiService = require('../utils/apiService');
 
 async function getOrderDetails(req, res) {
   try {
-    const orders = await apiService.fetchOrderDetails();
-    console.log('JSON completo dos pedidos:', orders);
-
-    res.status(200).json(orders);
+    const ordersWithDetailsAndRepresentatives = await apiService.fetchOrdersWithdetailsAndRepresentativesWithTransport();
+    res.status(200).json(ordersWithDetailsAndRepresentatives);
   } catch (error) {
-    console.error('Erro ao obter detalhes do pedido:', error);
-    res.status(500).send('Erro ao obter detalhes do pedido');
+    console.error('Erro ao obter detalhes dos pedidos com representantes:', error);
+    res.status(500).send('Erro ao obter detalhes dos pedidos com representantes');
   }
 }
 

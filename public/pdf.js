@@ -1,57 +1,70 @@
-const btPdfGeneration = document.getElementById('button_pdf');
+document.addEventListener("DOMContentLoaded", () => {
+    const btPdfGeneration = document.getElementById('button_pdf');
 
-btPdfGeneration.addEventListener("click", async () => {
+    btPdfGeneration.addEventListener("click", async () => {
+        console.log('Botão de PDF clicado');
+        const elementsToHide = document.querySelectorAll('.no-print');
+        elementsToHide.forEach(el => el.style.display = 'none');
 
-    const elementsToHide = document.querySelectorAll('.no-print');
-    elementsToHide.forEach(el => el.style.display = 'none');
-     
-    const content = document.querySelector('.container');
-    const razaoSocial = document.getElementById('razao_social').value;
-    const codCliente = document.getElementById('cod_cliente').value;
-    const representante = document.getElementById('representante').value;
-    
-    const filename = `Pedido de Venda ${razaoSocial} - ${codCliente} e Rep ${representante}.pdf`; // Atualiza o filename
+        const content = document.querySelector('.container');
+        const razaoSocial = document.getElementById('razao_social').value;
+        const codCliente = document.getElementById('cod_cliente').value;
+        const representante = document.getElementById('representante').value;
 
-    const options = {
-        margin: [0, 0, 0, 0],
-        filename: filename , // valor padrão, será sobrescrito na função
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
-        pagebreak: { mode: 'avoid-all' }
-    };
+        const filename = `Pedido de Venda ${razaoSocial} - ${codCliente} e Rep ${representante}.pdf`;
 
-    html2pdf().set(options).from(content).save().then(async () => {
-        alert('PDF criado e baixado no downloads');
+        const options = {
+            margin: [0, 0, 0, 0],
+            filename: filename,
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
+            pagebreak: { mode: 'avoid-all' }
+        };
 
-        const pdfBase64 = await html2pdf().set(options).from(content).outputPdf('datauristring');
-
-
-           // Adiciona a etapa de confirmação de envio do e-mail
-           const confirmSend = confirm("Você deseja realmente enviar este e-mail?");
-           if (!confirmSend) {
-               alert("Envio de e-mail cancelado.");
-               elementsToHide.forEach(el => el.style.display = 'block');
-               return; // Sai da função se o usuário clicar em "Não"
-           }
-
-        // Bloco de código de envio de e-mail desativado
-        
         try {
+            // 1. Gera o PDF em memória
+            const pdfBlob = await html2pdf().set(options).from(content).output('blob');
+            console.log('PDF gerado como blob.');
+
+            // 2. Salva o PDF no dispositivo (simula o download)
+            const pdfURL = URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = pdfURL;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            console.log('PDF baixado com sucesso.');
+
+            alert('PDF criado e salvo nos downloads.');
+
+            // 3. Gera o PDF novamente em base64 para envio
+            const pdfBase64 = await html2pdf().set(options).from(content).outputPdf('datauristring');
+
+            // Pergunta ao usuário se deseja enviar o e-mail
+            const confirmSend = confirm("Você deseja realmente enviar este e-mail?");
+            if (!confirmSend) {
+                console.log('Envio de e-mail cancelado.');
+                elementsToHide.forEach(el => el.style.display = 'block');
+                return;
+            }
+
+            // 4. Envia o PDF em base64 para o servidor
             const response = await fetch('/send-pdf', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ pdfBase64, razaoSocial, codCliente ,representante })
+                body: JSON.stringify({ pdfBase64, razaoSocial, codCliente, representante })
             });
 
             const result = await response.text();
-            alert(result); // Mostra mensagem de sucesso ou erro
+            console.log(result);
+            alert(result);
         } catch (error) {
-            console.error('Erro ao enviar o PDF:', error);
+            console.error('Erro ao salvar ou enviar o PDF:', error);
+        } finally {
+            elementsToHide.forEach(el => el.style.display = 'block');
         }
-        
-
-        elementsToHide.forEach(el => el.style.display = 'block');
     });
 });

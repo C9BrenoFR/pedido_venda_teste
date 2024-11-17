@@ -13,28 +13,27 @@
         // Função para carregar os detalhes dos pedidos
         async function loadOrderDetails() {
             try {
-                const response = await fetch('/api/pedidos');
+                const response = await fetch('/api/pedidos'); // Rota correta para o controlador
                 if (!response.ok) {
                     throw new Error(`Erro ao obter pedidos: ${response.statusText}`);
                 }
-                const data = await response.json();
-                console.log('Pedidos recebidos:', data);
-
-                // Acesse o array de pedidos dentro do campo "dados"
-                const orders = data.dados;
+                const orders = await response.json(); // O controlador já retorna o array combinado
+                console.log('Pedidos recebidos:', orders);
 
                 // Exibir os detalhes dos pedidos na página
                 const orderDetailsDiv = document.getElementById('order-details');
                 orders.forEach(order => {
                     const orderDiv = document.createElement('div');
                     orderDiv.innerHTML = `
-                        <p>ID do Pedido: ${order.id}</p>
-                        <p>Código: ${order.codigo}</p>
-                        <p>Data do Pedido: ${order.dataPedido}</p>
-                        <p>Status: ${order.status}</p>
-                        <p>Transportadora Código: ${order.transportadoraCodigo}</p>
-                        <p>Status de Entrega: ${order.statusEntrega}</p>
-                        <p>Cliente: ${order.cliente.nome}</p> <!-- Ajuste conforme necessário para acessar o campo correto -->
+                        <p><strong>ID do Pedido:</strong> ${order.id}</p>
+                        <p><strong>Código:</strong> ${order.codigo}</p>
+                        <p><strong>Data do Pedido:</strong> ${order.dataPedido}</p>
+                        <p><strong>Status:</strong> ${order.status}</p>
+                        <p><strong>Transportadora:</strong> ${order.detalhes_transporte?.nomeAbreviado || 'Não informado'}</p>
+                        <p><strong>Valor Total:</strong> R$ ${order.detalhes?.valorTotal || 'N/A'}</p>
+                        <p><strong>Status de Entrega:</strong> ${order.statusEntrega}</p>
+                        <p><strong>Cliente:</strong> ${order.cliente.nomeAbreviado}</p>
+                        <p><strong>Representante:</strong> ${order.representante?.nomeAbreviado || 'Não informado'}</p>
                         <hr>
                     `;
                     orderDetailsDiv.appendChild(orderDiv);
