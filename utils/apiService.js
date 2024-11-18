@@ -40,16 +40,18 @@ async function checkToken() {
 }
 
 // Função para buscar os pedidos de venda
-async function fetchOrderDetails() {
+async function fetchOrderDetails(status = 6) {
   await checkToken();
 
   if (!authToken) {
     console.error('Erro: Token não obtido.');
     return;
   }
+   
+  console.log(`Buscando pedidos com status: ${status}`); // Adicionado para verificar o status recebido
 
   try {
-    const response = await fetch('https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?status=6', {
+    const response = await fetch(`https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?PageNumber=1&PageSize=5&status=${status}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${authToken}`,
@@ -62,6 +64,8 @@ async function fetchOrderDetails() {
     }
 
     const ordersData = await response.json();
+    console.log('Pedidos recebidos:', ordersData); // Log dos dados recebidos
+
     return ordersData.dados || []; // Retorna o array de pedidos
   } catch (error) {
     console.error('Erro ao buscar detalhes do pedido:', error);
@@ -69,9 +73,9 @@ async function fetchOrderDetails() {
 }
 
 // Função para buscar representantes para cada cliente
-async function fetchOrdersWithRepresentatives() {
+async function fetchOrdersWithRepresentatives(status = 6) {
 
-  const orders = await fetchOrderDetails();
+  const orders = await fetchOrderDetails(status);
 
   const representativeEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/pessoa-service/representante/cliente/';
 
@@ -106,9 +110,9 @@ async function fetchOrdersWithRepresentatives() {
 }
 
 // Função para buscar detalhes do pedido de venda
-async function fetchOrdersWithdetailsAndRepresentatives () {
+async function fetchOrdersWithdetailsAndRepresentatives (status = 6) {
 
-   const orders2 = await fetchOrdersWithRepresentatives() ;
+   const orders2 = await fetchOrdersWithRepresentatives(status) ;
 
    const IdOrdersDetailsEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido/';
 
@@ -148,9 +152,9 @@ async function fetchOrdersWithdetailsAndRepresentatives () {
 }
 
 
-async function  fetchOrdersWithdetailsAndRepresentativesWithTransport() {
+async function  fetchOrdersWithdetailsAndRepresentativesWithTransport(status = 6) {
 
-    const orders3 = await fetchOrdersWithdetailsAndRepresentatives() ;   
+    const orders3 = await fetchOrdersWithdetailsAndRepresentatives(status) ;   
 
     const transportEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/pessoa-service/transportadora/codigo/'
 
@@ -177,7 +181,8 @@ async function  fetchOrdersWithdetailsAndRepresentativesWithTransport() {
               return {
                 ...order,
                 detalhes_transporte : transportDetails,
-              };
+              };  
+
            } catch (error) {
               console.error(`Erro ao buscar detalhes do id da transportadora ${order.transportadoraCodigo}:`, error);
               return {
@@ -189,7 +194,9 @@ async function  fetchOrdersWithdetailsAndRepresentativesWithTransport() {
         })
 
     );
+
     return transportWithDetails;
+    
 }
 
 

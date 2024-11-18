@@ -4,47 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos Comerciais</title>
+    <link rel="stylesheet" href="/css/comercial.css">
 </head>
 <body>
     <h1>Detalhes dos Pedidos</h1>
-    <div id="order-details"></div>
+    
+    <!-- Filtros -->
+    <div id="filters">
+        <label for="representanteFilter">Cód Representante:</label>
+        <input type="text" id="representanteFilter" placeholder="Ex.: 37">
+        
+        <label for="clienteCNPJFilter">Cliente CNPJ:</label>
+        <input type="text" id="clienteCNPJFilter" placeholder="Ex.: 08712676000110">
+        
+        <label for="dataPedidoFilter">Data Pedido:</label>
+        <input type="date" id="dataPedidoFilter">
+        
+        <label for="statusFilter">Status:</label>
+        <select id="statusFilter">
+
+            <option value="6">6 - Pendente</option>
+            <option value="0">0 - Cadastrado</option>
+            <option value="1">1 - Cancelado Parcial</option>
+            <option value="2">2 - Cancelado Total</option>
+            <option value="3">3 - Em Aprovação</option>
+            <option value="4">4 - Faturado Parcial</option>
+            <option value="5">5 - Faturado Total</option>
+            <option value="7">7 - Reprovado</option>
+            <option value="8">8 - Em Andamento</option>
+            <option value="9">9 - Reservado</option>
+        </select>
+        
+        <button id="applyFilters">Aplicar Filtros</button>
+        <button id="clearFilters">Limpar Filtros</button>
+    </div>
+
+    <!-- Tabela -->
+    <table id="order-table">
+        <thead>
+            <tr>
+                <th>Cód pedido</th>
+                <th>Data do Pedido</th>
+                <th>Status</th>
+                <th>Status Separação</th>
+                <th>Cód Cliente</th>
+                <th>Cliente</th>
+                <th>Cliente CNPJ</th>
+                <th>Cód Representante</th>
+                <th>Representante</th>
+                <th>Valor Total</th>
+                <th>Transportadora</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dados serão adicionados dinamicamente -->
+        </tbody>
+    </table>
 
     <script>
-        // Função para carregar os detalhes dos pedidos
-        async function loadOrderDetails() {
-            try {
-                const response = await fetch('/api/pedidos'); // Rota correta para o controlador
-                if (!response.ok) {
-                    throw new Error(`Erro ao obter pedidos: ${response.statusText}`);
-                }
-                const orders = await response.json(); // O controlador já retorna o array combinado
-                console.log('Pedidos recebidos:', orders);
+        let ordersData = [];
 
-                // Exibir os detalhes dos pedidos na página
-                const orderDetailsDiv = document.getElementById('order-details');
-                orders.forEach(order => {
-                    const orderDiv = document.createElement('div');
-                    orderDiv.innerHTML = `
-                        <p><strong>ID do Pedido:</strong> ${order.id}</p>
-                        <p><strong>Código:</strong> ${order.codigo}</p>
-                        <p><strong>Data do Pedido:</strong> ${order.dataPedido}</p>
-                        <p><strong>Status:</strong> ${order.status}</p>
-                        <p><strong>Transportadora:</strong> ${order.detalhes_transporte?.nomeAbreviado || 'Não informado'}</p>
-                        <p><strong>Valor Total:</strong> R$ ${order.detalhes?.valorTotal || 'N/A'}</p>
-                        <p><strong>Status de Entrega:</strong> ${order.statusEntrega}</p>
-                        <p><strong>Cliente:</strong> ${order.cliente.nomeAbreviado}</p>
-                        <p><strong>Representante:</strong> ${order.representante?.nomeAbreviado || 'Não informado'}</p>
-                        <hr>
-                    `;
-                    orderDetailsDiv.appendChild(orderDiv);
-                });
+        async function loadOrderDetails(status = 6) {
+            try {
+                console.log(`Carregando pedidos com status: ${status}`); // Log para verificar o status enviado
+                const response = await fetch(`/api/pedidos?PageNumber=1&PageSize=5&status=${status}`);
+
+                if (response.status === 404) {
+                    console.warn(`Nenhum pedido encontrado para o status ${status}`);
+                    renderTable([]); // Renderizar tabela vazia
+                    return;
+                }
+
+                if (!response.ok) throw new Error(`Erro ao obter pedidos: ${response.statusText}`);
+                ordersData = await response.json(); // Carrega todos os pedidos
+                console.log('Pedidos carregados no frontend:', ordersData); // Log para verificar os dados carregados
+                renderTable(ordersData);
             } catch (error) {
                 console.error('Erro ao carregar os detalhes dos pedidos:', error);
             }
         }
 
-        // Chama a função para carregar os detalhes dos pedidos ao carregar a página
-        loadOrderDetails();
+        function renderTable(data) {
+            const orderTableBody = document.querySelector('#order-table tbody');
+            orderTableBody.innerHTML = ''; // Limpar tabela
+            data.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+             
+                    <td>${order.codigo}</td>
+                    <td>${order.dataPedido}</td>
+                    <td>${order.status}</td>
+                    <td>${order.statusSeparacao}</td>
+                    <td>${order.cliente?.codigo || 'N/A'}</td>
+                    <td>${order.cliente?.nomeAbreviado || 'Não informado'}</td>
+                    <td>${order.cliente?.documento?.numeroTexto || 'Não informado'}</td>
+                    <td>${order.representante?.id || 'Não informado'}</td>
+                    <td>${order.representante?.nomeAbreviado || 'Não informado'}</td>
+                    <td>${order.detalhes?.valor || 'N/A'}</td>
+                    <td>${order.detalhes_transporte?.nomeAbreviado || 'Não informado'}</td>
+
+                `;
+                orderTableBody.appendChild(row);
+            });
+        }
+
+        function applyFilters() {
+            const representanteFilter = document.getElementById('representanteFilter').value.trim();
+            const clienteCNPJFilter = document.getElementById('clienteCNPJFilter').value.trim();
+            const dataPedidoFilter = document.getElementById('dataPedidoFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const filteredData = ordersData.filter(order => {
+                const matchRepresentante = !representanteFilter || order.representante?.id?.toString() === representanteFilter;
+                const matchClienteCNPJ = !clienteCNPJFilter || order.cliente.documento.numeroTexto === clienteCNPJFilter;
+                const matchDataPedido = !dataPedidoFilter || order.dataPedido.startsWith(dataPedidoFilter);
+                const matchStatus = !statusFilter || order.status.toString() === statusFilter;
+                return matchRepresentante && matchClienteCNPJ && matchDataPedido && matchStatus;
+            });
+
+            console.log('Dados filtrados:', filteredData); // Log para verificar os dados filtrados
+            renderTable(filteredData);
+        }
+
+        function clearFilters() {
+            document.getElementById('representanteFilter').value = '';
+            document.getElementById('clienteCNPJFilter').value = '';
+            document.getElementById('dataPedidoFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            renderTable(ordersData);
+        }
+
+        document.getElementById('applyFilters').addEventListener('click', applyFilters);
+        document.getElementById('clearFilters').addEventListener('click', clearFilters);
+
+        document.getElementById('statusFilter').addEventListener('change', function () {
+            const selectedStatus = this.value || 6; // Padrão para "Pendente"
+            console.log(`Filtro de status alterado para: ${selectedStatus}`);
+            loadOrderDetails(selectedStatus);
+        });
+
+        loadOrderDetails(); // Inicializa a tabela com o status padrão
     </script>
 </body>
 </html>
