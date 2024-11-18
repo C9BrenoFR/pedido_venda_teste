@@ -189,7 +189,31 @@
         padding: 10px 0;
     }
 
+footer {
 
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    background-color: #333;
+}
+
+.link_sites {
+    display: flex;
+    justify-content:center;
+    width: 100%;
+    padding: 15px;
+}
+
+
+.link_sites a{
+    display: flex;
+    justify-content:center;
+    color:#ffffff ;
+    text-align: center;
+    padding: 15px;
+
+}
 
 
 /* Media Queries para responsividade */

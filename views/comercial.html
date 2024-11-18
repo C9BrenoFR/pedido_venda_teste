@@ -90,7 +90,7 @@
 
             try {
                 console.log(`Carregando pedidos com status: ${status}`); // Log para verificar o status enviado
-                const response = await fetch(`/api/pedidos?PageNumber=1&PageSize=5&status=${status}`);
+                const response = await fetch(`/api/pedidos?PageNumber=1&PageSize=200&status=${status}`);
 
                 if (response.status === 404) {
                     console.warn(`Nenhum pedido encontrado para o status ${status}`);
