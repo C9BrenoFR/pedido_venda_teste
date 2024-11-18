@@ -51,7 +51,7 @@ async function fetchOrderDetails(status = 6) {
   console.log(`Buscando pedidos com status: ${status}`); // Adicionado para verificar o status recebido
 
   try {
-    const response = await fetch(`https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?PageNumber=1&PageSize=5&status=${status}`, {
+    const response = await fetch(`https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?PageNumber=1&PageSize=100&status=${status}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${authToken}`,

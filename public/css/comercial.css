@@ -1,12 +1,13 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 20px;
+    margin: 0px;
+    padding: 10px;
 }
 
-h1 {
+h2 {
     text-align: center;
     margin-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 table {
@@ -22,7 +23,8 @@ table th, table td {
 }
 
 table th {
-    background-color: #f4f4f4;
+    background-color: #333;
+    color:#f9f9f9;
 }
 
 table tr:nth-child(even) {
@@ -46,4 +48,12 @@ table tr:hover {
 
 #filters input, #filters button {
     padding: 5px;
+}
+
+#representanteFilter {
+    width:50px;
+}
+
+#statusFilter {
+    padding: 7px;
 }
