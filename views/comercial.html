@@ -118,7 +118,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${order.dataPedido ? new Date(order.dataPedido).toLocaleDateString('pt-BR') : 'N/A'}</td>
-                    <td>${order.codigo}</td>
+                    <td><a href="detalhes?pedidoId=${order.id}" target="_blank">${order.codigo}</a></td>
                     <td>${order.status}</td>
                     <td>${mapStatusSeparacao(order.statusSeparacao)}</td>
                     <td>${order.cliente.codigo}</td>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Pedido2</title>
+    <link rel="stylesheet" href="/css/detalhes.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="/images/logo.png" alt="Imagem KidsZone">
+            <div class="date"></div>
+        </div>
+
+        <div class="section">
+
+            <div class="section-title">DADOS DO CLIENTE</div>
+
+            <form class="form-group">
+                <label for="cnpj">CNPJ:</label> 
+                <input type="text" id="cnpj" placeholder="Digite o CNPJ" maxlength="14">
+
+                <label for="representante" class="label-espaco-esquerda">CÓDIGO REP:</label> 
+                <input type="text" id="representante" placeholder="Representante" readonly>
+
+                <label class="IE" for="ie">INSCRIÇÃO ESTADO:</label> 
+                <input type="text" id="ie" placeholder="Inscrição Estadual" readonly>
+
+                <label class="label-espaco-esquerda" for="tipo_pedido">TIPO PEDIDO:</label>
+                <select id="tipo_pedido">
+                    <option value="Venda">Venda</option>
+                    <option value="Promoção">Promoção</option>
+                    <option value="Bonificação">Bonificação</option>
+                </select>
+
+                <label for="razao_social" >RAZÃO SOCIAL:</label> 
+                <input type="text" id="razao_social" placeholder="Razão Social" readonly>
+
+                <label for="cod_cliente" class="label-espaco-esquerda">CÓD CLIENTE:</label> 
+                <input type="text" id="cod_cliente" placeholder="Código Cliente" readonly>
+
+                <label for="endereco">ENDEREÇO:</label> 
+                <input type="text" id="endereco" placeholder="Endereço"readonly>
+
+                <label for="bairro" class="label-espaco-esquerda">BAIRRO:</label> 
+                <input type="text" id="bairro" placeholder="Bairro" readonly>
+
+                <label for="cidade">CIDADE:</label> 
+                <input type="text" id="cidade" placeholder="Cidade"readonly>
+
+                <label for="uf" class="label-espaco-esquerda">UF:</label> 
+                <input type="text" id="uf" placeholder="UF" maxlength="2" readonly>
+
+                <label for="cep">CEP:</label> 
+                <input type="text" id="cep" placeholder="CEP" readonly>
+
+                <label for="telefone" class="label-espaco-esquerda">TELEFONE:</label> 
+                <input type="text" id="telefone" placeholder="Telefone"readonly>
+
+                <label for="email">E-MAIL:</label> 
+                <input type="text" id="email" placeholder="E-mail" readonly>
+
+                <label for="email_fiscal" class="label-espaco-esquerda">E-MAIL FISCAL:</label> 
+                <input type="text" id="email_fiscal" placeholder="E-mail Fiscal" readonly>
+
+                <label for="pay">CONDIÇÃO PGTO:</label> 
+                <input type="text" id="pay" placeholder=" Condição de pagamento" readonly>
+
+                <label for="transp" class="label-espaco-esquerda" >TRANSPORTE:</label> 
+                <input type="text" id="transp" placeholder="Transportadora" readonly>
+
+                <label class="spaceInputCod" class="label-espaco-esquerda" for="codgroup">CÓDIGO TABELA:</label> 
+                <input type="text" id="codgroup" placeholder="Código Tabela" readonly>
+
+                <label class="label-espaco-esquerda" for="group">TABELA:</label> 
+                <input type="text" id="group" placeholder="Descrição Grupo" readonly>
+            </form>
+        </div>
+
+        <div class="section">
+            <div class="section-title">DADOS DO PEDIDO</div>
+            <div class="table-container">
+                <table id="dadosPedido" class="table">
+                    <thead>
+                        <tr>
+                            <th>CÓD</th>
+                            <th>QTD</th>
+                            <th>UV</th>
+                            <th>PACK</th>
+                            <th>DESCRIÇÃO</th>
+                            <th>IPI</th>
+                            <th>R$ UNIT.</th>
+                            <th>R$ C/ IPI</th>
+                            <th>TOTAL R$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas serão adicionadas dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="payment-conditions">
+            <label for="volume">VOLUMES:</label>
+            <input type="text" id="volume" readonly>
+
+            <label for="total">TOTAL PRODUTOS:</label>
+            <input type="text" id="total" readonly>
+
+            <label for="total_imp">TOTAL C/IMP:</label>
+            <input type="text" id="total_imp" readonly>
+        </div>
+
+        <div class="observations">
+            <div class="obs-title">OBSERVAÇÕES</div>
+            <textarea id="observacoes" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        // Função para obter o pedidoId da URL
+        function getPedidoIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('pedidoId');
+        }
+
+        // Carregar detalhes do pedido
+        async function loadPedidoDetails() {
+            const pedidoId = getPedidoIdFromURL();
+            if (!pedidoId) {
+                alert('ID do pedido não encontrado na URL!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/pedidos/${pedidoId}`);
+                if (!response.ok) throw new Error('Erro ao buscar detalhes do pedido');
+
+                const pedido = await response.json();
+
+                // Preencher campos com os dados do pedido
+                document.getElementById('cnpj').value = pedido.cliente?.documento?.numeroTexto || '';
+                document.getElementById('representante').value = pedido.representante?.nomeAbreviado|| '';
+                document.getElementById('razao_social').value = pedido.cliente?.nomeAbreviado || '';
+                document.getElementById('cod_cliente').value = pedido.cliente?.codigo || '';
+                document.getElementById('endereco').value = pedido.cliente?.endereco.logradouro || '';
+                document.getElementById('bairro').value = pedido.cliente?.bairro || '';
+                document.getElementById('cidade').value = pedido.detalhes.cliente.endereco.cidade.nome || '';
+                document.getElementById('uf').value = pedido.cliente?.uf || '';
+                document.getElementById('cep').value = pedido.cliente?.cep || '';
+                document.getElementById('volume').value = pedido.volumes || '';
+                document.getElementById('total').value = pedido.totalProdutos || '';
+                document.getElementById('total_imp').value = pedido.totalComImpostos || '';
+                document.getElementById('observacoes').value = pedido.observacoes || '';
+
+                // Preencher tabela de itens do pedido
+                const tbody = document.getElementById('dadosPedido').querySelector('tbody');
+                tbody.innerHTML = ''; // Limpar tabela
+        // Certifique-se de acessar os itens dentro de 'detalhes'
+                    const detalheItens = pedido.detalhes?.itens || []; // Acessar os itens dentro de 'detalhes'
+
+                    detalheItens.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.itemEmpresaId || ''}</td>
+                            <td>${item.quantidade || ''}</td>
+                            <td>${item.unidadeMedidaAbreviado || ''}</td>
+                            <td>${item.pack || ''}</td>
+                            <td>${item.descricao || ''}</td>
+                            <td>${item.tributos.ipi.aliquota || ''}</td>
+                            <td>${item.valorUnitario || ''}</td>
+                            <td>${item.valorComIpi || ''}</td>
+                            <td>${item.total || ''}</td>
+                         
+                        `;
+                        tbody.appendChild(row);
+                    });
+            } catch (error) {
+                console.error('Erro ao carregar os detalhes do pedido:', error);
+                alert('Erro ao carregar os detalhes do pedido.');
+            }
+        }
+
+        // Executar ao carregar a página
+        loadPedidoDetails();
+    </script>
+</body>
+</html>

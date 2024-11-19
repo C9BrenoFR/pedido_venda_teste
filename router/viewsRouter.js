@@ -32,8 +32,17 @@ router.get('/comercial', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'views', 'comercial.html'));
 });
 
+
+// Rota para a página de detalhes do pedido (detalhes.html)
+router.get('/detalhes', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'detalhes.html'));
+});
+
+
 // Rotas da API de pedidos
 router.get('/api/pedidos', orderController.getOrderDetails); // Pedidos com representantes
+router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes do pedido por ID
+
 
 
 // Rota para envio de PDF
