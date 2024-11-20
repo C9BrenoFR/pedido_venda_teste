@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const pLimit = require('p-limit');
 
 let authToken = null;
 let tokenExpirationTime = null;
@@ -9,22 +8,30 @@ async function authenticate() {
   try {
     const response = await fetch('https://homolog-gateway-ng.dbcorp.com.br:44400/identidade-service/autenticar', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ usuario: 'alex.l', senha: '@Al@2313', origin: 'kidszone-ng' }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        usuario: "alex.l",
+        senha: "@Al@2313",
+        origin: "kidszone-ng"
+      })
     });
 
-    if (!response.ok) throw new Error(`Erro na autenticação: ${response.statusText}`);
+    if (!response.ok) {
+      throw new Error(`Erro na autenticação: ${response.statusText}`);
+    }
 
     const data = await response.json();
-    authToken = data.tokenAcesso;
-    tokenExpirationTime = Date.now() + 2 * 60 * 60 * 1000; // 2 horas de validade
+    authToken = data.tokenAcesso; // Atualizado para tokenAcesso
+    tokenExpirationTime = Date.now() + 2 * 60 * 60 * 1000;
     console.log('Autenticado com sucesso, token obtido.');
   } catch (error) {
     console.error('Erro ao autenticar:', error);
   }
 }
 
-// Função para verificar se o token está válido ou renovar
+// Função para verificar se o token está válido ou se precisamos renovar
 async function checkToken() {
   if (!authToken || Date.now() > tokenExpirationTime) {
     console.log('Token expirado ou inexistente. Autenticando...');
@@ -32,8 +39,8 @@ async function checkToken() {
   }
 }
 
-// Função para buscar os pedidos de venda em lotes
-async function fetchOrderDetails(status = 6, maxRecords = 100) {
+// Função para buscar os pedidos de venda
+async function fetchOrderDetails(status = 6, maxRecords = 80) {
   await checkToken();
 
   if (!authToken) {
@@ -41,7 +48,7 @@ async function fetchOrderDetails(status = 6, maxRecords = 100) {
     return [];
   }
 
-  const pageSize = 20; // Tamanho do lote
+  const pageSize = 20; // Mantemos um tamanho pequeno para evitar problemas de performance.
   let pageNumber = 1;
   let totalFetched = 0;
   let allOrders = [];
@@ -55,7 +62,7 @@ async function fetchOrderDetails(status = 6, maxRecords = 100) {
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json',
           },
         }
@@ -67,18 +74,30 @@ async function fetchOrderDetails(status = 6, maxRecords = 100) {
 
       const ordersData = await response.json();
 
+      // Verifica se existem dados e acumula
       if (ordersData.dados && ordersData.dados.length > 0) {
         allOrders = [...allOrders, ...ordersData.dados];
         totalFetched += ordersData.dados.length;
         console.log(`Total de pedidos acumulados: ${totalFetched}`);
       }
 
-      if (ordersData.dados.length < pageSize) break;
+      // Se a página atual não trouxe registros, encerra o loop
+      if (ordersData.dados.length < pageSize) {
+        console.log('Nenhum dado adicional disponível, encerrando a busca.');
+        break;
+      }
 
+      // Incrementa o número da página para buscar a próxima
       pageNumber++;
     }
 
-    return allOrders.slice(0, maxRecords); // Retorna os registros necessários
+    // Limita os resultados ao máximo desejado
+    if (allOrders.length > maxRecords) {
+      allOrders = allOrders.slice(0, maxRecords);
+    }
+
+    console.log(`Busca concluída. Total de pedidos coletados: ${allOrders.length}`);
+    return allOrders;
   } catch (error) {
     console.error('Erro ao buscar pedidos:', error);
     return [];
@@ -87,140 +106,146 @@ async function fetchOrderDetails(status = 6, maxRecords = 100) {
 
 // Função para buscar representantes para cada cliente
 async function fetchOrdersWithRepresentatives(status = 6) {
+
   const orders = await fetchOrderDetails(status);
 
   const representativeEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/pessoa-service/representante/cliente/';
-  const limit = pLimit(5); // Limita a 5 requisições simultâneas
 
   const ordersWithRepresentatives = await Promise.all(
-    orders.map((order) =>
-      limit(async () => {
-        try {
-          const response = await fetch(`${representativeEndpoint}${order.cliente.codigo}`, {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-              'Content-Type': 'application/json',
-            },
-          });
+    orders.map(async (order) => {
+      const clienteCodigo = order.cliente.codigo;
 
-          const repData = await response.json();
-          return { ...order, representante: repData[0] || null };
-        } catch (error) {
-          console.error(`Erro ao buscar representante para cliente ${order.cliente.codigo}:`, error);
-          return { ...order, representante: null };
-        }
-      })
-    )
+      try {
+        const repResponse = await fetch(`${representativeEndpoint}${clienteCodigo}`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const repData = await repResponse.json();
+        return {
+          ...order,
+          representante: repData[0] || null // Combina os dados do representante
+        };
+      } catch (error) {
+        console.error(`Erro ao buscar representante para cliente ${clienteCodigo}:`, error);
+        return {
+          ...order,
+          representante: null
+        };
+      }
+    })
   );
 
   return ordersWithRepresentatives;
 }
 
-// Função para buscar detalhes dos pedidos
-async function fetchOrdersWithdetailsAndRepresentatives(status = 6) {
-  const ordersWithRepresentatives = await fetchOrdersWithRepresentatives(status);
+// Função para buscar detalhes do pedido de venda
+async function fetchOrdersWithdetailsAndRepresentatives (status = 6) {
 
-  const orderDetailsEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido/';
-  const limit = pLimit(5); // Limita a 5 requisições simultâneas
+   const orders2 = await fetchOrdersWithRepresentatives(status) ;
 
-  const ordersWithDetails = await Promise.all(
-    ordersWithRepresentatives.map((order) =>
-      limit(async () => {
+   const IdOrdersDetailsEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido/';
+
+   const ordersWithDetails = await Promise.all(
+
+      orders2.map(async (order) => {
         try {
-          const response = await fetch(`${orderDetailsEndpoint}${order.id}`, {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-              'Content-Type': 'application/json',
-            },
-          });
+            const response = await fetch(`${IdOrdersDetailsEndpoint}${order.id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
 
-          if (!response.ok) {
-            throw new Error(`Erro ao buscar detalhes do pedido ${order.id}: ${response.statusText}`);
-          }
+            if (!response.ok) {
+                throw new Error(`Erro ao buscar detalhes do pedido ${order.id}: ${response.statusText}`);
+            }
 
-          const details = await response.json();
-          return { ...order, detalhes: details };
+            const orderDetails = await response.json();
+            return {
+                ...order,
+                detalhes: orderDetails,
+            };
         } catch (error) {
-          console.error(`Erro ao buscar detalhes do pedido ${order.id}:`, error);
-          return { ...order, detalhes: null };
+            console.error(`Erro ao buscar detalhes para o pedido com ID ${order.id}:`, error);
+            return {
+                ...order,
+                detalhes: null, // Caso haja erro, atribui null aos detalhes
+            };
         }
       })
-    )
-  );
+   
+   );
 
-  return ordersWithDetails;
+   return ordersWithDetails;
 }
 
-// Função para buscar transportadoras e enriquecer pedidos
-async function fetchOrdersWithdetailsAndRepresentativesWithTransport(status = 6) {
-  const ordersWithDetails = await fetchOrdersWithdetailsAndRepresentatives(status);
 
-  const transportEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/pessoa-service/transportadora/codigo/';
-  const limit = pLimit(5); // Limita a 5 requisições simultâneas
+async function  fetchOrdersWithdetailsAndRepresentativesWithTransport(status = 6) {
 
-  const ordersWithTransport = await Promise.all(
-    ordersWithDetails.map((order) =>
-      limit(async () => {
-        try {
-          const response = await fetch(`${transportEndpoint}${order.transportadoraCodigo}`, {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-              'Content-Type': 'application/json',
-            },
-          });
+    const orders3 = await fetchOrdersWithdetailsAndRepresentatives(status) ;   
 
-          if (!response.ok) {
-            throw new Error(`Erro ao buscar detalhes da transportadora ${order.transportadoraCodigo}: ${response.statusText}`);
-          }
+    const transportEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/pessoa-service/transportadora/codigo/'
 
-          const transportDetails = await response.json();
-          return { ...order, detalhes_transporte: transportDetails };
-        } catch (error) {
-          console.error(`Erro ao buscar detalhes da transportadora ${order.transportadoraCodigo}:`, error);
-          return { ...order, detalhes_transporte: null };
-        }
-      })
-    )
-  );
+    const transportWithDetails = await Promise.all(
+      
+        orders3.map(async (order) => {
+           
+           try {
+              
+              const response = await fetch(`${transportEndpoint}${order.transportadoraCodigo}`,{
+                  method: 'GET',
+                  headers: {
+                      'Authorization': `Bearer ${authToken}`,
+                      'Content-Type': 'application/json',
+                  },
+              });
+            
+              
+              if (!response.ok) {
+                  throw new Error(`Erro ao buscar detalhes da transportadora ${order.transportadoraCodigo}: ${response.statusText}`);
+              }
 
-  return ordersWithTransport;
-}
+              const transportDetails = await response.json();
+              return {
+                ...order,
+                detalhes_transporte : transportDetails,
+              };  
 
-// Função para buscar detalhes de um pedido específico pelo ID
-async function fetchOrderDetailsById(id, status = 6) {
-  await checkToken();
+           } catch (error) {
+              console.error(`Erro ao buscar detalhes do id da transportadora ${order.transportadoraCodigo}:`, error);
+              return {
+                ...order,
+                detalhes_transporte: null, // Caso haja erro, atribui null aos detalhes
+              };
+           }
 
-  if (!authToken) {
-    console.error('Erro: Token não obtido.');
-    return null;
-  }
+        })
 
-  try {
-    const response = await fetch(
-      `https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido/${id}?status=${status}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      }
     );
 
-    if (!response.ok) throw new Error(`Erro ao buscar detalhes do pedido com ID ${id}: ${response.statusText}`);
+    return transportWithDetails;
+    
+}
 
-    const orderDetails = await response.json();
-    console.log(`Detalhes do pedido ${id} carregados com sucesso.`);
-    return orderDetails;
+const fetchOrderDetailsById = async (id, status = 6) => {
+  try {
+    const response = await fetch(`/api/pedidos/${id}?status=${status}`);
+    if (!response.ok) throw new Error(`Erro ao carregar pedido ${id}: ${response.statusText}`);
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(`Erro ao buscar detalhes do pedido com ID ${id}:`, error);
     throw error;
   }
-}
+};
 
-// Exportar funções
+setInterval(checkToken, 60 * 60 * 1000);  // Verifica o token a cada 1 hora
+
+// Exportar as funções
 module.exports = {
   authenticate,
   checkToken,
@@ -228,5 +253,5 @@ module.exports = {
   fetchOrdersWithRepresentatives,
   fetchOrdersWithdetailsAndRepresentatives,
   fetchOrdersWithdetailsAndRepresentativesWithTransport,
-  fetchOrderDetailsById,
+  fetchOrderDetailsById
 };
