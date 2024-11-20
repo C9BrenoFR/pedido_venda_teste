@@ -40,35 +40,67 @@ async function checkToken() {
 }
 
 // Função para buscar os pedidos de venda
-async function fetchOrderDetails(status = 6) {
+async function fetchOrderDetails(status = 6, maxRecords = 500) {
   await checkToken();
 
   if (!authToken) {
     console.error('Erro: Token não obtido.');
-    return;
+    return [];
   }
-   
-  console.log(`Buscando pedidos com status: ${status}`); // Adicionado para verificar o status recebido
+
+  const pageSize = 20; // Mantemos um tamanho pequeno para evitar problemas de performance.
+  let pageNumber = 1;
+  let totalFetched = 0;
+  let allOrders = [];
 
   try {
-    const response = await fetch(`https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?PageNumber=1&PageSize=40&status=${status}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${authToken}`,
-        'Content-Type': 'application/json'
-      }
-    });
+    while (totalFetched < maxRecords) {
+      console.log(`Buscando página ${pageNumber} com tamanho ${pageSize}`);
 
-    if (!response.ok) {
-      throw new Error(`Erro ao buscar pedidos: ${response.statusText}`);
+      const response = await fetch(
+        `https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?PageNumber=${pageNumber}&PageSize=${pageSize}&status=${status}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar pedidos na página ${pageNumber}: ${response.statusText}`);
+      }
+
+      const ordersData = await response.json();
+
+      // Verifica se existem dados e acumula
+      if (ordersData.dados && ordersData.dados.length > 0) {
+        allOrders = [...allOrders, ...ordersData.dados];
+        totalFetched += ordersData.dados.length;
+        console.log(`Total de pedidos acumulados: ${totalFetched}`);
+      }
+
+      // Se a página atual não trouxe registros, encerra o loop
+      if (ordersData.dados.length < pageSize) {
+        console.log('Nenhum dado adicional disponível, encerrando a busca.');
+        break;
+      }
+
+      // Incrementa o número da página para buscar a próxima
+      pageNumber++;
     }
 
-    const ordersData = await response.json();
-    console.log('Pedidos recebidos:', ordersData); // Log dos dados recebidos
+    // Limita os resultados ao máximo desejado
+    if (allOrders.length > maxRecords) {
+      allOrders = allOrders.slice(0, maxRecords);
+    }
 
-    return ordersData.dados || []; // Retorna o array de pedidos
+    console.log(`Busca concluída. Total de pedidos coletados: ${allOrders.length}`);
+    return allOrders;
   } catch (error) {
-    console.error('Erro ao buscar detalhes do pedido:', error);
+    console.error('Erro ao buscar pedidos:', error);
+    return [];
   }
 }
 
