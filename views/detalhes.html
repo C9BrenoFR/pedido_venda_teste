@@ -177,8 +177,15 @@
                 document.getElementById('uf').value = pedido.cliente?.uf || '';
                 document.getElementById('cep').value = pedido.cliente?.cep || '';
                 document.getElementById('volume').value = pedido.volumes || '';
-                document.getElementById('total').value = pedido.detalhes.financeiro.item.valorTotal|| '';
-                document.getElementById('total_imp').value = pedido.detalhes.financeiro.item.valorFinanceiro || '';
+
+                document.getElementById('total').value = pedido.detalhes.financeiro.item.valorTotal
+                 ? pedido.detalhes.financeiro.item.valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                  : '';
+
+                document.getElementById('total_imp').value = pedido.detalhes.financeiro.item.valorFinanceiro
+                 ? pedido.detalhes.financeiro.item.valorFinanceiro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                  : '';  
+
                 document.getElementById('observacoes').value = pedido.detalhes.cliente.observacao || '';
                 document.getElementById('pay').value = pedido.detalhes.condicaoPagamento.descricao || '';
                 document.getElementById('codgroup').value = pedido.detalhes.listaPreco.id || '';
@@ -200,10 +207,16 @@
                         <td>${item.unidadeMedidaAbreviado || ''}</td>
                         <td>${item.pack || ''}</td>
                         <td>${item.descricao || ''}</td>
-                        <td>${item.tributos?.ipi?.aliquota || ''}</td>
-                        <td>${item.financeiro.valorUnitarioFinal || ''}</td>
+                        <td>${item.tributos?.ipi?.aliquota 
+                          ? item.tributos.ipi.aliquota.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%' 
+                          : ''}</td>
+                        <td>${item.financeiro.valorUnitarioFinal 
+                          ? item.financeiro.valorUnitarioFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) 
+                          : ''}</td>
                         <td>${item.valorComIpi || ''}</td>
-                        <td>${item.financeiro.valorTotalFinal || ''}</td>
+                        <td>${item.financeiro.valorTotalFinal 
+                          ? item.financeiro.valorTotalFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) 
+                          : ''}</td>
                     `;
                     tbody.appendChild(row);
                 });
