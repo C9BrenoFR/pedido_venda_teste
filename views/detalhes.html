@@ -177,8 +177,8 @@
                 document.getElementById('uf').value = pedido.cliente?.uf || '';
                 document.getElementById('cep').value = pedido.cliente?.cep || '';
                 document.getElementById('volume').value = pedido.volumes || '';
-                document.getElementById('total').value = pedido.totalProdutos || '';
-                document.getElementById('total_imp').value = pedido.totalComImpostos || '';
+                document.getElementById('total').value = pedido.detalhes.financeiro.item.valorTotal|| '';
+                document.getElementById('total_imp').value = pedido.detalhes.financeiro.item.valorFinanceiro || '';
                 document.getElementById('observacoes').value = pedido.detalhes.cliente.observacao || '';
                 document.getElementById('pay').value = pedido.detalhes.condicaoPagamento.descricao || '';
                 document.getElementById('codgroup').value = pedido.detalhes.listaPreco.id || '';
@@ -201,9 +201,9 @@
                         <td>${item.pack || ''}</td>
                         <td>${item.descricao || ''}</td>
                         <td>${item.tributos?.ipi?.aliquota || ''}</td>
-                        <td>${item.valorUnitario || ''}</td>
+                        <td>${item.financeiro.valorUnitarioFinal || ''}</td>
                         <td>${item.valorComIpi || ''}</td>
-                        <td>${item.total || ''}</td>
+                        <td>${item.financeiro.valorTotalFinal || ''}</td>
                     `;
                     tbody.appendChild(row);
                 });
