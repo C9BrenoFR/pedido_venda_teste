@@ -179,7 +179,11 @@
                 document.getElementById('volume').value = pedido.volumes || '';
                 document.getElementById('total').value = pedido.totalProdutos || '';
                 document.getElementById('total_imp').value = pedido.totalComImpostos || '';
-                document.getElementById('observacoes').value = pedido.observacoes || '';
+                document.getElementById('observacoes').value = pedido.detalhes.cliente.observacao || '';
+                document.getElementById('pay').value = pedido.detalhes.condicaoPagamento.descricao || '';
+                document.getElementById('codgroup').value = pedido.detalhes.listaPreco.id || '';
+                document.getElementById('group').value = pedido.detalhes.listaPreco.descricao || '';
+                document.getElementById('transp').value = pedido.detalhes_transporte.nomeAbreviado || '';
 
                 // Preencher tabela de itens do pedido
                 const tbody = document.getElementById('dadosPedido').querySelector('tbody');
