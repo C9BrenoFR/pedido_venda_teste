@@ -14,7 +14,7 @@
     
     <!-- Filtros -->
     <div id="filters">
-        <label for="representanteFilter">Cód Representante:</label>
+        <label for="representanteFilter">Cód Rep:</label>
         <input type="text" id="representanteFilter" placeholder="Ex.: 37">
         
         <label for="clienteCNPJFilter">Cliente CNPJ:</label>
@@ -55,7 +55,7 @@
                 <th>Cód Cliente</th>
                 <th>Cliente</th>
                 <th>Cliente CNPJ</th>
-                <th>Cód Representante</th>
+                <th>Cód Rep</th>
                 <th>Representante</th>
                 <th>Valor Total</th>
                 <th>Transportadora</th>
@@ -118,7 +118,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${order.dataPedido ? new Date(order.dataPedido).toLocaleDateString('pt-BR') : 'N/A'}</td>
-                    <td><a href="detalhes?pedidoId=${order.id}" target="_blank">${order.codigo}</a></td>
+                    <td><a href="detalhes?pedidoId=${order.id}&status=${statusFilter.value}" target="_blank">${order.codigo}</a></td>
                     <td>${order.status}</td>
                     <td>${mapStatusSeparacao(order.statusSeparacao)}</td>
                     <td>${order.cliente.codigo}</td>

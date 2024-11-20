@@ -18,19 +18,21 @@ async function getOrderDetails(req, res) {
 // Nova função para buscar detalhes de um pedido específico
 async function getOrderDetailsById(req, res) {
   const { id } = req.params; // Obtém o ID do pedido a partir dos parâmetros da URL
-  console.log(`Buscando detalhes do pedido com ID: ${id}`); // Log para depuração
+  const { status } = req.query; // Opcional: Obtém o status da query string
+  console.log(`Buscando detalhes do pedido com ID: ${id} e Status: ${status || 'não informado'}`); // Log para depuração
+
 
   try {
-    const orders = await apiService.fetchOrdersWithdetailsAndRepresentativesWithTransport(); // Busca todos os pedidos
+    const orders = await apiService.fetchOrdersWithdetailsAndRepresentativesWithTransport(status); // Busca todos os pedidos
     const order = orders.find((o) => o.id === id); // Filtra o pedido pelo ID fornecido
 
     if (!order) {
-      res.status(404).send(`Pedido com ID ${id} não encontrado.`);
+      res.status(404).send(`Pedido com ID ${id} não encontrado para o status ${status || 'padrão'}.`);
     } else {
       res.status(200).json(order); // Retorna os detalhes do pedido encontrado
     }
   } catch (error) {
-    console.error(`Erro ao buscar detalhes do pedido com ID ${id}:`, error);
+    console.error(`Erro ao buscar detalhes do pedido com ID ${id} e Status ${status}:`, error);
     res.status(500).send('Erro ao carregar detalhes do pedido.');
   }
 }

@@ -199,18 +199,17 @@ async function  fetchOrdersWithdetailsAndRepresentativesWithTransport(status = 6
     
 }
 
-const fetchOrderDetailsById = async (id) => {
+const fetchOrderDetailsById = async (id, status = 6) => {
   try {
-      const response = await fetch(`/api/pedidos/${id}`);
-      if (!response.ok) throw new Error(`Erro ao carregar pedido ${id}: ${response.statusText}`);
-      const data = await response.json();
-      return data;
+    const response = await fetch(`/api/pedidos/${id}?status=${status}`);
+    if (!response.ok) throw new Error(`Erro ao carregar pedido ${id}: ${response.statusText}`);
+    const data = await response.json();
+    return data;
   } catch (error) {
-      console.error(`Erro ao buscar detalhes do pedido com ID ${id}:`, error);
-      throw error;
+    console.error(`Erro ao buscar detalhes do pedido com ID ${id}:`, error);
+    throw error;
   }
 };
-
 
 setInterval(checkToken, 60 * 60 * 1000);  // Verifica o token a cada 1 hora
 

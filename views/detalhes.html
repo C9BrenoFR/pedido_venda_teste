@@ -120,29 +120,33 @@
     </div>
 
     <script>
-        // Função para obter o pedidoId da URL
-        function getPedidoIdFromURL() {
+        // Função para obter o pedidoId e o status da URL
+        function getParamsFromURL() {
             const params = new URLSearchParams(window.location.search);
-            return params.get('pedidoId');
+            return {
+                pedidoId: params.get('pedidoId'),
+                status: params.get('status') || 6 // Valor padrão para status
+            };
         }
-
         // Carregar detalhes do pedido
         async function loadPedidoDetails() {
-            const pedidoId = getPedidoIdFromURL();
+            const { pedidoId, status } = getParamsFromURL(); // Agora captura pedidoId e status
             if (!pedidoId) {
                 alert('ID do pedido não encontrado na URL!');
                 return;
             }
 
             try {
-                const response = await fetch(`/api/pedidos/${pedidoId}`);
+                console.log(`Carregando detalhes do pedido com ID: ${pedidoId} e Status: ${status}`);
+                
+                const response = await fetch(`/api/pedidos/${pedidoId}?status=${status}`);
                 if (!response.ok) throw new Error('Erro ao buscar detalhes do pedido');
 
                 const pedido = await response.json();
 
                 // Preencher campos com os dados do pedido
                 document.getElementById('cnpj').value = pedido.cliente?.documento?.numeroTexto || '';
-                document.getElementById('representante').value = pedido.representante?.nomeAbreviado|| '';
+                document.getElementById('representante').value = pedido.representante?.nomeAbreviado || '';
                 document.getElementById('razao_social').value = pedido.cliente?.nomeAbreviado || '';
                 document.getElementById('cod_cliente').value = pedido.cliente?.codigo || '';
                 document.getElementById('endereco').value = pedido.cliente?.endereco.logradouro || '';
@@ -158,25 +162,25 @@
                 // Preencher tabela de itens do pedido
                 const tbody = document.getElementById('dadosPedido').querySelector('tbody');
                 tbody.innerHTML = ''; // Limpar tabela
-        // Certifique-se de acessar os itens dentro de 'detalhes'
-                    const detalheItens = pedido.detalhes?.itens || []; // Acessar os itens dentro de 'detalhes'
 
-                    detalheItens.forEach(item => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${item.itemEmpresaId || ''}</td>
-                            <td>${item.quantidade || ''}</td>
-                            <td>${item.unidadeMedidaAbreviado || ''}</td>
-                            <td>${item.pack || ''}</td>
-                            <td>${item.descricao || ''}</td>
-                            <td>${item.tributos.ipi.aliquota || ''}</td>
-                            <td>${item.valorUnitario || ''}</td>
-                            <td>${item.valorComIpi || ''}</td>
-                            <td>${item.total || ''}</td>
-                         
-                        `;
-                        tbody.appendChild(row);
-                    });
+                // Certifique-se de acessar os itens dentro de 'detalhes'
+                const detalheItens = pedido.detalhes?.itens || [];
+
+                detalheItens.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.itemEmpresaId || ''}</td>
+                        <td>${item.quantidade || ''}</td>
+                        <td>${item.unidadeMedidaAbreviado || ''}</td>
+                        <td>${item.pack || ''}</td>
+                        <td>${item.descricao || ''}</td>
+                        <td>${item.tributos?.ipi?.aliquota || ''}</td>
+                        <td>${item.valorUnitario || ''}</td>
+                        <td>${item.valorComIpi || ''}</td>
+                        <td>${item.total || ''}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
             } catch (error) {
                 console.error('Erro ao carregar os detalhes do pedido:', error);
                 alert('Erro ao carregar os detalhes do pedido.');
@@ -185,6 +189,7 @@
 
         // Executar ao carregar a página
         loadPedidoDetails();
+
     </script>
 </body>
 </html>
