@@ -40,7 +40,7 @@ async function checkToken() {
 }
 
 // Função para buscar os pedidos de venda
-async function fetchOrderDetails(status = 6, maxRecords = 500) {
+async function fetchOrderDetails(status = 6, maxRecords = 80) {
   await checkToken();
 
   if (!authToken) {
@@ -55,6 +55,9 @@ async function fetchOrderDetails(status = 6, maxRecords = 500) {
 
   try {
     while (totalFetched < maxRecords) {
+
+      const pageSize = Math.min(maxRecords - totalFetched, 20); // Ajusta o pageSize para evitar exceder maxRecords
+
       console.log(`Buscando página ${pageNumber} com tamanho ${pageSize}`);
 
       const response = await fetch(
