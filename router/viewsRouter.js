@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const pdfController = require('../controllers/pdfController');
 const orderController = require('../controllers/orderController'); // Importa o controlador
+const invoicesController = require('../controllers/invoicesControllers');
 const { authMiddleware, authenticateUser } = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -39,9 +40,20 @@ router.get('/detalhes', (req, res) => {
 });
 
 
+// Rota para a página de detalhes do pedido (detalhes.html)
+router.get('/logistica', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'logistica.html'));
+});
+
+
+
 // Rotas da API de pedidos
 router.get('/api/pedidos', orderController.getOrderDetails); // Pedidos com representantes
 router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes do pedido por ID
+
+
+// Rotas da API de Logistica
+router.get('/api/logistica', invoicesController.getInvoices);
 
 
 
