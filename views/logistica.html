@@ -28,16 +28,8 @@
         
         <label for="statusFilter">Status:</label>
         <select id="statusFilter">
-            <option value="6">6 -Pendente</option>
-            <option value="0">0 -Cadastrado</option>
-            <option value="1">1 -Cancelado Parcial</option>
-            <option value="2">2 -Cancelado Total</option>
-            <option value="3">3 -Em Aprovação</option>
-            <option value="4">4 -Faturado Parcial</option>
-            <option value="5">5 -Faturado Total</option>        
-            <option value="7">7 -Reprovado</option>
-            <option value="8">8 -Em Andamento</option>
-            <option value="9">9 -Reservado</option>
+            <option value="6">1 -impresso</option>
+            <option value="0">0 -Cancelado</option>
         </select>
         
         <button id="applyFilters">Aplicar Filtros</button>
@@ -119,16 +111,11 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${order.dataEmissao ? new Date(order.dataEmissao).toLocaleDateString('pt-BR') : 'N/A'}</td>
-                    <td><a href="detalhes?pedidoId=${order.id}&status=${statusFilter.value}" target="_blank">${order.id}</a></td>
-                    <td>${order.status}</td>
-                    <td>${mapStatusSeparacao(order.statusSeparacao)}</td>
-                    <td>${order.cliente.codigo}</td>
-                    <td>${order.cliente.nomeAbreviado}</td>
-                    <td>${order.cliente.documento.numeroTexto}</td>
-                    <td>${order.representante?.id || 'Não informado'}</td>
-                    <td>${order.representante?.nomeAbreviado || 'Não informado'}</td>
-                    <td>${order.detalhes?.valor?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'N/A'}</td>
-                    <td>${order.detalhes_transporte?.nomeAbreviado || 'Não informado'}</td>
+                    <td>${order.numero}</td>
+                    <td>${order.numero}</td>
+                    <td>${order.destinatario.nomeAbreviado}</td>
+                    <td>${order.destinatario.documento.numeroTexto}</td>
+
                 `;
                 orderTableBody.appendChild(row);
             });

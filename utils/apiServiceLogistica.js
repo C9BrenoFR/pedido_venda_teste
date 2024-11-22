@@ -48,6 +48,121 @@ function getLast30Days() {
 }
 
 
+
+async function fetchClients() {
+  await checkToken();
+
+  if (!authToken) {
+    console.error('Erro: Token não obtido.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://homolog-gateway-ng.dbcorp.com.br:44400/pessoa-service/cliente`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar clientes: ${response.statusText}`);
+    }
+
+    const ClientsData = await response.json();
+    console.log('Clientes recebidos:', ClientsData); // Log dos dados recebidos
+
+    // Filtrar apenas os clientes ativos e não suspensos
+    const filteredClients = ClientsData.filter(client => client.ativo === true && client.suspenso === false && client.status === 0);
+    console.log('Clientes filtrados:', filteredClients); // Log dos dados filtrados
+
+    return filteredClients; // Retorna apenas os clientes filtrados
+  } catch (error) {
+    console.error('Erro ao buscar detalhes dos clientes:', error);
+  }
+}
+
+
+
+async function fetchInvoiceClients() {
+  await checkToken();
+
+  if (!authToken) {
+    console.error('Erro: Token não obtido.');
+    return;
+  }
+
+  const orders = await fetchClients() ;  
+
+  const endpointClient = 'https://homolog-gateway-ng.dbcorp.com.br:44400/documentos-fiscais-service/nota-fiscal/cliente/'
+
+  const InvoiceClients = await Promise.all(
+
+    orders.map(async (order) => { 
+
+      try {
+        const response = await fetch(`${endpointClient}${order.codigo}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar notas fiscais: ${response.statusText}`);
+        }
+
+        const clientsDetails = await response.json();
+        return {
+          ...order,
+          detalhes_clientes : clientsDetails,
+        };  
+    
+      } catch (error) {
+        console.error('Erro ao buscar detalhes da notas fiscais:', error);
+        return {
+          ...order,
+          detalhes_clientes: null, // Caso haja erro, atribui null aos detalhes
+        };
+      }
+
+    })
+
+  );
+   return InvoiceClients
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function fetchInvoices(status = 1) {
     await checkToken();
   
@@ -90,6 +205,8 @@ async function fetchInvoices(status = 1) {
 module.exports = {
     authenticate,
     checkToken,
+    fetchClients,
+    fetchInvoiceClients,
     fetchInvoices,
   
   };

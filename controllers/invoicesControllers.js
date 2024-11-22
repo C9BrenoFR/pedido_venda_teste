@@ -14,8 +14,24 @@ async function getInvoices(req, res) {
       res.status(500).send('Erro ao obter detalhes das notas fiscais');
     }
   }
+
+
+  async function getClients(req, res) {
+  
+    try {
+      const Clients = await apiServiceLogistica.fetchInvoiceClients();
+      res.status(200).json(Clients);
+    } catch (error) {
+      console.error('Erro ao obter detalhes das notas fiscais:', error);
+      res.status(500).send('Erro ao obter detalhes das notas fiscais');
+    }
+  }
+
+
+
   
   module.exports = { 
     getInvoices, 
+    getClients
 
 };
