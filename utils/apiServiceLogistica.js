@@ -102,7 +102,7 @@ async function fetchInvoiceClients() {
     orders.map(async (order) => { 
 
       try {
-        const response = await fetch(`${endpointClient}${order.codigo}`, {
+        const response = await fetch(`${endpointClient}${order.dataCriacao.codigo}?`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authToken}`,
