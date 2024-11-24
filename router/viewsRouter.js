@@ -53,9 +53,8 @@ router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes
 
 
 // Rotas da API de Logistica
-router.get('/api/logistica', invoicesController.getInvoices);
-// Rotas da API de Logistica
-router.get('/api/logistica/cliente', invoicesController.getClients);
+router.get('/api/logistica/onedrive', invoicesController.fetchLogisticsData);
+
 
 
 // Rota para envio de PDF

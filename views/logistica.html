@@ -77,29 +77,20 @@
         }
 
         // Carregar detalhes dos pedidos
-        async function loadOrderDetails(status = 1) {
+        async function loadOrderDetailsFromSharePoint() {
 
             showFeedback("Carregando pedidos, aguarde...");
 
             try {
-                console.log(`Carregando pedidos com status: ${status}`); // Log para verificar o status enviado
-                const response = await fetch(`/api/logistica?status=${status}`);
-
-                if (response.status === 404) {
-                    console.warn(`Nenhum pedido encontrado para o status ${status}`);
-                    renderTable([]); // Renderizar tabela vazia
-                    showFeedback("Nenhum dado encontrado com os filtros aplicados.");
-                    return;
-                }
-
-                if (!response.ok) throw new Error(`Erro ao obter pedidos: ${response.statusText}`);
-                ordersData = await response.json(); // Carrega todos os pedidos
-                console.log('Pedidos carregados no frontend:', ordersData); // Log para verificar os dados carregados
+                const response = await fetch('/api/logistica/sharepoint');
+                if (!response.ok) throw new Error("Erro ao buscar dados do SharePoint");
+                ordersData = await response.json();
                 hideFeedback();
                 renderTable(ordersData);
+          
             } catch (error) {
-                console.error('Erro ao carregar os detalhes dos pedidos:', error);
-                showFeedback("Erro ao carregar dados. Recarregue a página e tente novamente.");
+                console.error("Erro ao carregar dados do SharePoint:", error);
+                showFeedback("Erro ao carregar dados do SharePoint. Recarregue a página.");
             }
         }
 
@@ -111,24 +102,20 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${order.dataEmissao ? new Date(order.dataEmissao).toLocaleDateString('pt-BR') : 'N/A'}</td>
-                    <td>${order.numero}</td>
-                    <td>${order.numero}</td>
-                    <td>${order.destinatario.nomeAbreviado}</td>
-                    <td>${order.destinatario.documento.numeroTexto}</td>
-
+                    <td>${order.numero || 'N/A'}</td>
+                    <td>${order.codCliente || 'N/A'}</td>
+                    <td>${order.cliente || 'N/A'}</td>
+                    <td>${order.cnpj || 'N/A'}</td>
+                    <td>${order.codRep || 'N/A'}</td>
+                    <td>${order.representante || 'N/A'}</td>
+                    <td>${order.transportadora || 'N/A'}</td>
+                    <td>${order.saida || 'N/A'}</td>
+                    <td>${order.previsaoEntrega || 'N/A'}</td>
+                    <td>${order.agenda || 'N/A'}</td>
+                    <td>${order.ocorrencia || 'N/A'}</td>
                 `;
                 orderTableBody.appendChild(row);
             });
-        }
-
-        // Mapear Status de Separação
-        function mapStatusSeparacao(status) {
-            switch (status) {
-                case 0: return 'Não Separado';
-                case 1: return 'Separado Parcial';
-                case 2: return 'Separado Total';
-                default: return 'Desconhecido';
-            }
         }
 
         // Aplicar Filtros
@@ -186,7 +173,7 @@
         });
 
         // Inicializar tabela ao carregar a página
-        loadOrderDetails();
+        loadOrderDetailsFromSharePoint();
     </script>
 </body>
 </html>
