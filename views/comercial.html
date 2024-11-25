@@ -151,18 +151,36 @@
 
         
        // Inicializar ao carregar a página
-       document.addEventListener('DOMContentLoaded', () => {
-            const userNumero = window.sessionData?.userNumero || null;
+       document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Faz a requisição para obter os dados da sessão
+                const response = await fetch('/session-data');
+                if (!response.ok) throw new Error('Erro ao buscar dados da sessão');
 
-            const representanteFilter = document.getElementById('representanteFilter');
-            if (userNumero) {
-                representanteFilter.value = userNumero;
-                representanteFilter.disabled = true; // Bloqueia o campo
-            }
+                    const sessionData = await response.json();
 
-            loadOrderDetails();
-        });
+                    // Define os dados no front-end
+                    if (sessionData.isAuthenticated) {
+                        window.sessionData = sessionData;
 
+                        const userNumero = window.sessionData?.userNumero || null;
+                        const representanteFilter = document.getElementById('representanteFilter');
+
+                        if (userNumero) {
+                            representanteFilter.value = userNumero;
+                            representanteFilter.disabled = true; // Bloqueia o campo
+                        }
+
+                        loadOrderDetails();
+                    } else {
+                        console.warn('Usuário não autenticado');
+                        window.location.href = '/login2'; // Redireciona para a página de login
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar os dados da sessão:', error);
+                }
+       });
+       
         // Eventos dos botões de filtro
         document.getElementById('applyFilters').addEventListener('click', async () => {
             await loadOrderDetails();

@@ -29,25 +29,8 @@ router.get('/admin', (req, res) => {
 });
 
 // Rota para a página de pedidos comerciais (comercial.html)
-router.get('/comercial', authMiddleware, (req, res) => {
-    res.send(`
-        <!DOCTYPE html>
-        <html lang="pt-BR">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Comercial</title>
-            <script>
-                window.sessionData = {
-                    userNumero: "${req.session.userNumero || ''}"
-                };
-            </script>
-        </head>
-        <body>
-            ${require('fs').readFileSync(path.resolve(__dirname, '..', 'views', 'comercial.html'))}
-        </body>
-        </html>
-    `);
+router.get('/comercial', authMiddleware,(req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'views', 'comercial.html'));
 });
 
 // Rota para a página de detalhes do pedido (detalhes.html)
@@ -82,6 +65,15 @@ router.get('/error-404', (req, res) => {
     res.status(404).sendFile(path.join(__dirname, '..', 'views', 'error-404.html'));
 });
 
+
+// Rota para enviar os dados da sessão para o front-end
+router.get('/session-data', authMiddleware, (req, res) => {
+    res.json({
+        userNumero: req.session.userNumero || '',
+        isAuthenticated: req.session.isAuthenticated || false,
+        user: req.session.user || null,
+    });
+});
 
 // Rota para envio de PDF
 router.post('/send-pdf', pdfController.sendPdf);
