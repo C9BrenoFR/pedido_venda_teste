@@ -2,6 +2,8 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
+const RedisStore = require('connect-redis').default; 
+const Redis = require('ioredis');
 const path = require('path');
 const viewsRouter = require('./router/viewsRouter');
 
@@ -21,13 +23,27 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+// Configuração do Redis
+const redisClient = new Redis({
+    host: 'decent-bulldog-44204.upstash.io', // Substitua pelo host fornecido pelo Upstash
+    port: 6379, // Porta padrão do Redis
+    password: 'AaysAAIjcDE5NzM3NTkyYzFiYzc0ZDZiYmRhNTJkNjIzMzNhMTk4MXAxMA', // Substitua pela senha fornecida pelo Upstash
+    tls: {} // Necessário para conexões seguras
+});
+
+
 // Configuração da sessão
 app.use(session({
-    secret: 'seuSegredoAqui',
+    store: new RedisStore({ client: redisClient }),
+    secret: 'minha-chave-secreta', // Altere para uma chave forte
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production', // Habilita apenas HTTPS em produção
+        httpOnly: true, // Evita que o cookie seja acessado pelo JavaScript do cliente
+        maxAge: 1000 * 60 * 60 // 1 hora de validade
+    }
 }));
-
 
 // Usar o router para as views
 app.use('/', viewsRouter);

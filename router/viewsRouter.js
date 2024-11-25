@@ -29,7 +29,7 @@ router.get('/admin', (req, res) => {
 });
 
 // Rota para a página de pedidos comerciais (comercial.html)
-router.get('/comercial',(req, res) => {
+router.get('/comercial', authMiddleware,(req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'views', 'comercial.html'));
 });
 
