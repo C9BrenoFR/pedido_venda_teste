@@ -5,7 +5,10 @@ const session = require('express-session');
 const RedisStore = require('connect-redis').default; 
 const Redis = require('ioredis');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const viewsRouter = require('./router/viewsRouter');
+
+
 
 
 const app = express();
@@ -31,6 +34,7 @@ const redisClient = new Redis({
     tls: {} // Necessário para conexões seguras
 });
 
+app.use(cookieParser());
 
 // Configuração da sessão
 app.use(session({
@@ -41,7 +45,7 @@ app.use(session({
     cookie: {
         secure: process.env.NODE_ENV === 'production', // Garante HTTPS
         httpOnly: true,
-        sameSite: 'lax', // Permite cookies no mesmo domínio e redirecionamentos
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // None para cross-origin em produção
         maxAge: 1000 * 60 * 60 // 1 hora
     }
 }));
