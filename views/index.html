@@ -12,7 +12,7 @@
 <body id="corpo">
     <div class="container">
         <div class="header">
-            <img src="/images/logo.png" alt="Imagem KidsZone">
+           <a href="https://kidszoneworld.com.br/portal-do-representante/"><img src="/images/logo.png" alt="Imagem KidsZone"></a> 
             <div class="date"></div> <!-- A data e hora serão inseridas aqui -->
 
                 <script>
@@ -162,13 +162,34 @@
 
     <footer>
         <div class="link_sites">
+           <button id="logoutButton">Sair</button>
            <a target="_blank" href="/admin">Área Administrativa</a>
            <a target="_blank" href="/comercial">Área Comercial</a>
            <a target="_blank" href="/logistica">Área logistica</a>
         </div>
+        
     </footer>
     
     <script src="/script.js"></script>
     <script  src="/pdf.js"></script>
+    <script>
+        // Função para limpar dados do usuário e redirecionar para a página de login
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            // Limpa os dados locais
+            sessionStorage.clear();
+            localStorage.clear();
+
+            // Faz a requisição ao servidor para destruir a sessão
+            await fetch('/logout', { method: 'POST' });
+
+            // Limpa cookies manualmente (como precaução)
+            document.cookie.split(";").forEach(cookie => {
+                document.cookie = cookie.split("=")[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+            });
+
+            // Redireciona para a página de login
+            window.location.href = '/login2';
+       });
+    </script>
 </body>
 </html>

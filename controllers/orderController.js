@@ -3,17 +3,31 @@ const apiService = require('../utils/apiService');
 async function getOrderDetails(req, res) {
 
   const status = req.query.status || 6; // Usa status 6 como padrão
+  const codRep = req.query.codRep || null; // Novo parâmetro codRep
 
   console.log(`Recebendo pedidos para o status: ${status}`); // Log para depuração
 
   try {
-    const ordersWithDetailsAndRepresentatives = await apiService.fetchOrdersWithdetailsAndRepresentativesWithTransport(status);
-    res.status(200).json(ordersWithDetailsAndRepresentatives);
+    const orders  = await apiService.fetchOrdersWithdetailsAndRepresentativesWithTransport(status);
+
+       // Filtrar por código do representante, se fornecido
+       const filteredOrders = codRep
+       ? orders.filter(order => order.representante?.id?.toString() === codRep.toString())
+       : orders;
+
+       if (filteredOrders.length === 0 && codRep) {
+        console.warn(`Nenhum pedido encontrado para o representante ${codRep}`);
+       }
+
+
+    res.status(200).json(filteredOrders);
   } catch (error) {
     console.error('Erro ao obter detalhes dos pedidos com representantes:', error);
     res.status(500).send('Erro ao obter detalhes dos pedidos com representantes');
   }
 }
+
+
 
 // Nova função para buscar detalhes de um pedido específico
 async function getOrderDetailsById(req, res) {

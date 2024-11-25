@@ -29,13 +29,29 @@ router.get('/admin', (req, res) => {
 });
 
 // Rota para a página de pedidos comerciais (comercial.html)
-router.get('/comercial', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', 'views', 'comercial.html'));
+router.get('/comercial', authMiddleware, (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Comercial</title>
+            <script>
+                window.sessionData = {
+                    userNumero: "${req.session.userNumero || ''}"
+                };
+            </script>
+        </head>
+        <body>
+            ${require('fs').readFileSync(path.resolve(__dirname, '..', 'views', 'comercial.html'))}
+        </body>
+        </html>
+    `);
 });
 
-
 // Rota para a página de detalhes do pedido (detalhes.html)
-router.get('/detalhes', (req, res) => {
+router.get('/detalhes',authMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'detalhes.html'));
 });
 
@@ -56,11 +72,33 @@ router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes
 router.get('/api/logistica/onedrive', invoicesController.fetchLogisticsData);
 
 
+// Rota para página de erro 401 (Senha incorreta)
+router.get('/error-401', (req, res) => {
+    res.status(401).sendFile(path.join(__dirname, '..', 'views', 'error-401.html'));
+});
+
+// Rota para página de erro 404 (Usuário não encontrado)
+router.get('/error-404', (req, res) => {
+    res.status(404).sendFile(path.join(__dirname, '..', 'views', 'error-404.html'));
+});
+
 
 // Rota para envio de PDF
 router.post('/send-pdf', pdfController.sendPdf);
 
 // Rota para autenticação
 router.post('/auth', authenticateUser);
+
+// Rota para Limpar os dados do usuario
+router.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Erro ao encerrar a sessão:', err);
+            return res.status(500).send('Erro ao encerrar a sessão.');
+        }
+        res.clearCookie('connect.sid'); // Limpa o cookie de sessão
+        res.status(200).send('Sessão encerrada com sucesso.');
+    });
+});
 
 module.exports = router;
