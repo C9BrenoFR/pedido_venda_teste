@@ -58,11 +58,17 @@ app.get('/teste', (req, res) => {
 });
 
 
+//app.use((req, res, next) => {
+   // res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+   // res.setHeader('Pragma', 'no-cache');
+   // res.setHeader('Expires', '0');
+   // res.setHeader('Surrogate-Control', 'no-store');
+   // next();
+//});
+
 app.use((req, res, next) => {
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-    res.setHeader('Surrogate-Control', 'no-store');
+    res.setHeader('Access-Control-Allow-Origin', 'https://pedido-venda-teste.vercel.app'); // Substitua pela URL do seu site
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
 
