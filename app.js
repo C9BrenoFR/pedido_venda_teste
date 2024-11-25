@@ -37,7 +37,7 @@ app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: 'minha-chave-secreta', // Altere para uma chave forte
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         secure: process.env.NODE_ENV === 'production', // Garante HTTPS
         httpOnly: true,
