@@ -40,12 +40,12 @@ app.use(cookieParser());
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: 'minha-chave-secreta', // Altere para uma chave forte
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Garante HTTPS
+        secure: true, // Garante HTTPS
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // None para cross-origin em produção
+        sameSite: 'None' , // None para cross-origin em produção
         maxAge: 1000 * 60 * 60 // 1 hora
     }
 }));
