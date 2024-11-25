@@ -1,11 +1,19 @@
 const REPRESENTANTES = require('../public/data/representantes.json');
 
 function authMiddleware(req, res, next) {
+
+    console.log('Middleware de autenticação - Sessão:', req.session);
+    console.log('Sessão autenticada?', req.session.isAuthenticated);
+
     if (req.session && req.session.isAuthenticated) {
+
+        console.log('Usuário autenticado:', req.session.user);
+
         // Usuário autenticado, permitir acesso
         return next();
     }
     // Redirecionar para a página de login caso não esteja autenticado
+    console.warn('Usuário não autenticado, redirecionando para login2');
     res.redirect('/login2');
 }
 
@@ -33,10 +41,14 @@ function authenticateUser(req, res) {
             console.log(`Usuário autenticado: ${email}`);
             res.redirect("/");
         } else {
+
+             console.warn('Senha incorreta');
               // Redireciona para a página de erro 401
               res.redirect('/error-401');
         }
     } else {
+
+          console.warn('Usuário não encontrado');
            // Redireciona para a página de erro 404
            res.redirect('/error-404');
     }

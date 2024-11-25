@@ -36,12 +36,13 @@ const redisClient = new Redis({
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: 'minha-chave-secreta', // Altere para uma chave forte
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Habilita apenas HTTPS em produção
-        httpOnly: true, // Evita que o cookie seja acessado pelo JavaScript do cliente
-        maxAge: 1000 * 60 * 60 // 1 hora de validade
+        secure: process.env.NODE_ENV === 'production', // Garante HTTPS
+        httpOnly: true,
+        sameSite: 'lax', // Permite cookies no mesmo domínio e redirecionamentos
+        maxAge: 1000 * 60 * 60 // 1 hora
     }
 }));
 

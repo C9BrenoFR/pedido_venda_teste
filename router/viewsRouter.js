@@ -75,6 +75,14 @@ router.get('/session-data', authMiddleware, (req, res) => {
     });
 });
 
+
+router.get('/session-test', (req, res) => {
+    res.json({
+        session: req.session || 'Nenhuma sessão encontrada',
+        cookies: req.cookies || 'Nenhum cookie encontrado',
+    });
+});
+
 // Rota para envio de PDF
 router.post('/send-pdf', pdfController.sendPdf);
 
