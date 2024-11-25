@@ -26,6 +26,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+// Adicionar esta linha para configurar o proxy
+app.set('trust proxy', 1); // Necessário para cookies seguros em proxies (como Vercel)
+
 // Configuração do Redis
 const redisClient = new Redis({
     host: 'decent-bulldog-44204.upstash.io', // Substitua pelo host fornecido pelo Upstash
@@ -40,12 +43,12 @@ app.use(cookieParser());
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: 'minha-chave-secreta', // Altere para uma chave forte
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
-        secure: true, // Garante HTTPS
+        secure: process.env.NODE_ENV === 'production', // Garante HTTPS
         httpOnly: true,
-        sameSite: 'None' , // None para cross-origin em produção
+        sameSite:'strict', // None para cross-origin em produção
         maxAge: 1000 * 60 * 60 // 1 hora
     }
 }));
