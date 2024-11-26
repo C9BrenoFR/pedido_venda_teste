@@ -2,9 +2,9 @@ const axios = require('axios');
 const qs = require('qs');
 
 // Configurações do Azure
-const tenantId = "d443408c-996a-424e-81a7-d4d8dceb3800";
-const clientId = "9fe66d1c-6602-414c-b811-d6bf98eae186";
-const clientSecret = "94S8Q~85LUm_NoRH5lZWxg62Zz8bczeXcjskQaT9";
+const tenantId = process.env.TENANTID;
+const clientId = process.env.CLIENTID;
+const clientSecret = process.env.CLIENTSECRET;
 const scope = "https://graph.microsoft.com/.default";
 
 // URL da API Graph
