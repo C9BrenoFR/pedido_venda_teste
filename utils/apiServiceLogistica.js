@@ -19,7 +19,7 @@ async function getAccessToken() {
         client_secret: clientSecret,
         grant_type: "client_credentials",
     });
-
+//Cabeçario axios
     try {
         const response = await axios.post(url, body, {
             headers: {
