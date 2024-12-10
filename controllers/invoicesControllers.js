@@ -11,7 +11,7 @@ async function fetchLogisticsData(req, res) {
         const data = await getSpreadsheetData(driveId, itemId, sheetName);
 
         // Processar os dados para o formato necessário
-        const formattedData = data.map(row => ({
+        const formattedData = data.slice(4).map(row => ({
             NF: row[0],
             EMISSÃO: row[1],
             codCliente: row[2],

@@ -82,7 +82,7 @@
             showFeedback("Carregando pedidos, aguarde...");
 
             try {
-                const response = await fetch('/api/logistica/sharepoint');
+                const response = await fetch('/api/logistica/onedrive');
                 if (!response.ok) throw new Error("Erro ao buscar dados do SharePoint");
                 ordersData = await response.json();
                 hideFeedback();
@@ -101,18 +101,18 @@
             data.forEach(order => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${order.dataEmissao ? new Date(order.dataEmissao).toLocaleDateString('pt-BR') : 'N/A'}</td>
-                    <td>${order.numero || 'N/A'}</td>
+                    <td>${order.EMISSÃO ? new Date(order.EMISSÃO).toLocaleDateString('pt-BR') : 'N/A'}</td>
+                    <td>${order.NF || 'N/A'}</td>
                     <td>${order.codCliente || 'N/A'}</td>
-                    <td>${order.cliente || 'N/A'}</td>
-                    <td>${order.cnpj || 'N/A'}</td>
-                    <td>${order.codRep || 'N/A'}</td>
-                    <td>${order.representante || 'N/A'}</td>
-                    <td>${order.transportadora || 'N/A'}</td>
-                    <td>${order.saida || 'N/A'}</td>
-                    <td>${order.previsaoEntrega || 'N/A'}</td>
-                    <td>${order.agenda || 'N/A'}</td>
-                    <td>${order.ocorrencia || 'N/A'}</td>
+                    <td>${order.NOME || 'N/A'}</td>
+                    <td>${order.CodTransporte || 'N/A'}</td>
+                    <td>${order.Rep || 'N/A'}</td>
+                    <td>${order.UF || 'N/A'}</td>
+                    <td>${order.TRANSPORTES || 'N/A'}</td>
+                    <td>${order.SAÍDA ? new Date(order.SAÍDA).toLocaleDateString('pt-BR') : 'N/A'}</td>
+                    <td>${order.PrevisaoEntrega ? new Date(order.PrevisaoEntrega).toLocaleDateString('pt-BR') : 'N/A'}</td>
+                    <td>${order.AGENDA || 'N/A'}</td>
+                    <td>${order.OCORRÊNCIA || 'N/A'}</td>
                 `;
                 orderTableBody.appendChild(row);
             });

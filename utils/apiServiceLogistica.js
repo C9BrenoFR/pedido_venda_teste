@@ -36,7 +36,7 @@ async function getAccessToken() {
 // Função para buscar dados da planilha
 async function getSpreadsheetData(driveId, itemId, sheetName) {
     const token = await getAccessToken();
-    const url = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')/range(address='A1:Z100')`;
+    const url = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')/usedRange`;
 
     try {
         const response = await axios.get(url, {
