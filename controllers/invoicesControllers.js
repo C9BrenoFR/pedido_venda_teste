@@ -24,7 +24,7 @@ async function fetchLogisticsData(req, res) {
         // Processar os dados para o formato necessário
         const formattedData = data.slice(4).map(row => ({
             NF: row[0],
-            EMISSÃO: row[1] ? (excelDateToJSDate(row[1]) ? excelDateToJSDate(row[1]).toISOString() : null) : null,
+            EMISSÃO: row[1] ? (excelDateToJSDate(row[1]) ? excelDateToJSDate(row[1]).toISOString(): null) : null,
             codCliente: row[2],
             Rep: row[3],
             NOME: row[4],
