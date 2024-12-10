@@ -43,7 +43,7 @@ async function getAccessToken() {
 // Função para buscar dados da planilha com filtro de últimos 4 meses
 async function getSpreadsheetData(driveId, itemId, sheetName) {
     const token = await getAccessToken();
-    const url = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')/usedRange`;
+    const url = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')/range(address='A3700:O4178')`;
 
     try {
         const response = await axios.get(url, {
@@ -55,7 +55,7 @@ async function getSpreadsheetData(driveId, itemId, sheetName) {
         // Filtrar os últimos 4 meses
         const now = new Date();
         const fourMonthsAgo = new Date();
-        fourMonthsAgo.setMonth(now.getMonth() - 1);
+        fourMonthsAgo.setMonth(now.getMonth() - 12);
 
         const filteredData = response.data.values.filter(row => {
             if (!row[1] || isNaN(row[1])) return false; // Ignorar datas inválidas
