@@ -45,11 +45,14 @@
                 <th>Cód Cliente</th>
                 <th>Cliente</th>
                 <th>Cliente CNPJ</th>
+                <th>UF</th>
                 <th>Cód Rep</th>
-                <th>Representante</th>
+                <th>Cod Trans</th>
                 <th>Transportadora</th>
                 <th>Saída</th>
                 <th>Previsão de Entrega</th>
+                <th>Data de Entrega</th>
+                <th>Status Entrega</th> 
                 <th>Agenda</th>
                 <th>Ocorrência</th>
             </tr>
@@ -101,18 +104,22 @@
             data.forEach(order => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${order.EMISSÃO ? new Date(order.EMISSÃO).toLocaleDateString('pt-BR') : 'N/A'}</td>
-                    <td>${order.NF || 'N/A'}</td>
-                    <td>${order.codCliente || 'N/A'}</td>
-                    <td>${order.NOME || 'N/A'}</td>
-                    <td>${order.CodTransporte || 'N/A'}</td>
-                    <td>${order.Rep || 'N/A'}</td>
-                    <td>${order.UF || 'N/A'}</td>
-                    <td>${order.TRANSPORTES || 'N/A'}</td>
-                    <td>${order.SAÍDA ? new Date(order.SAÍDA).toLocaleDateString('pt-BR') : 'N/A'}</td>
-                    <td>${order.PrevisaoEntrega ? new Date(order.PrevisaoEntrega).toLocaleDateString('pt-BR') : 'N/A'}</td>
-                    <td>${order.AGENDA || 'N/A'}</td>
-                    <td>${order.OCORRÊNCIA || 'N/A'}</td>
+                    <td>${order.EMISSÃO ? new Date(order.EMISSÃO).toLocaleDateString('pt-BR') : ''}</td>
+                    <td>${order.NF || ''}</td>
+                    <td>${order.codCliente || ''}</td>
+                    <td>${order.NOME || ''}</td>
+                    <td>${order.CNPJ || ''}</td>
+                    <td>${order.UF || ''}</td>
+                    <td>${order.Rep || ''}</td>
+                    <td>${order.CodTransporte || ''}</td>
+                    <td>${order.TRANSPORTES || ''}</td>
+                    <td>${order.SAÍDA ? new Date(order.SAÍDA).toLocaleDateString('pt-BR') : ''}</td>
+                    <td>${order.PrevisaoEntrega ? new Date(order.PrevisaoEntrega).toLocaleDateString('pt-BR') : ''}</td>
+                    <td>${order.ENTREGUE || '' ? new Date(order.PrevisaoEntrega).toLocaleDateString('pt-BR') : ''}</td>
+                    <td>${order.STATUS_ENTREGA || ''}</td>
+                    <td>${order.AGENDA || ''}</td>
+                    <td>${order.OCORRÊNCIA || ''}</td>
+
                 `;
                 orderTableBody.appendChild(row);
             });

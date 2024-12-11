@@ -28,16 +28,18 @@ async function fetchLogisticsData(req, res) {
             codCliente: row[2],
             Rep: row[3],
             NOME: row[4],
-            UF: row[5],
-            REGIÃO: row[6],
-            VOL: row[7],
-            CodTransporte: row[8],
-            TRANSPORTES: row[9],
-            SAÍDA: row[10] ? (excelDateToJSDate(row[10]) ? excelDateToJSDate(row[10]).toISOString() : null) : null,
-            PrevisaoEntrega: row[11] ? (excelDateToJSDate(row[11]) ? excelDateToJSDate(row[11]).toISOString() : null) : null,
-            ENTREGUE: row[12] ? (excelDateToJSDate(row[12]) ? excelDateToJSDate(row[12]).toISOString() : null) : null,
-            AGENDA: row[13],
-            OCORRÊNCIA: row[14],
+            UF: row[6],
+            REGIÃO: row[7],
+            VOL: row[8],
+            CodTransporte: row[9],
+            TRANSPORTES: row[10],
+            SAÍDA: row[11] ? (excelDateToJSDate(row[11]) ? excelDateToJSDate(row[11]).toISOString() : null) : null,
+            PrevisaoEntrega: row[12] ? (excelDateToJSDate(row[12]) ? excelDateToJSDate(row[12]).toISOString() : null) : null,
+            ENTREGUE: row[13] ? (excelDateToJSDate(row[13]) ? excelDateToJSDate(row[13]).toISOString() : null) : null,
+            AGENDA: row[16],
+            OCORRÊNCIA: row[17],
+            CNPJ: row[5],
+            STATUS_ENTREGA: row[15]
         }));
 
         res.json(formattedData);
