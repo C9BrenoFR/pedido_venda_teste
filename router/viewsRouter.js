@@ -39,7 +39,7 @@ router.get('/detalhes',authMiddleware, (req, res) => {
 });
 
 // Rota para a página de detalhes do produto (Detalhes_Produtos.html)
-router.get('/detalhesProdutos',authMiddleware, (req, res) => {
+router.get('/detalhesProdutos',(req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'Detalhes_Produtos.html'));
 });
 

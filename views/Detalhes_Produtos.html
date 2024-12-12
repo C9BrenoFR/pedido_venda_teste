@@ -1,12 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Produto</title> 
+    <title>Detalhes do Produto</title>
     <link rel="stylesheet" href="/css/detalhesProdutos.css">
 </head>
 <body>
-<H2 class="Titulo">Detalhes do Produto</H2>    
+    <div class="container">
+        <div class="header">
+            <h2>KIDS ZONE - CADASTRO DE PRODUTOS / INFORMAÇÕES FISCAIS</h2>
+        </div>
+        <div class="codigo-item">
+            <label for="codigo">COD ITEM:</label>
+            <input type="text" id="codigo" placeholder="Digite o código">
+        </div>
+        <div class="descricao">
+            <h2>DESCRIÇÃO</h2>
+            <textarea id="descricao" rows="2" placeholder="Descrição do produto"></textarea>
+            <label for="classificacao">CLASSIFICAÇÃO FISCAL:</label>
+            <input type="text" id="classificacao" placeholder="Classificação Fiscal">
+            <label for="ipi">IPI:</label>
+            <input type="text" id="ipi" placeholder="IPI">
+            <label for="preco-ref">PREÇO REF.:</label>
+            <input type="text" id="preco-ref" placeholder="Preço de Referência">
+            <label for="preco-ipi">PREÇO C/IPI:</label>
+            <input type="text" id="preco-ipi" placeholder="Preço com IPI">
+            <div class="imagem-produto">
+                <h2>IMAGEM DO PRODUTO</h2>
+                <img id="imagem" src="placeholder.jpg" alt="Imagem do Produto">
+            </div>
+        </div>
+        <div class="info-caixa-master">
+            <h2>INFO CAIXA MASTER (DUN 14)</h2>
+            <label for="codigo-master">CÓD. DE BARRAS:</label>
+            <input type="text" id="codigo-master" placeholder="Código de Barras">
+            <label for="qtd-caixa">QTD NA CX MASTER:</label>
+            <input type="number" id="qtd-caixa" placeholder="Quantidade">
+            <label for="peso-caixa">PESO CX MASTER:</label>
+            <input type="text" id="peso-caixa" placeholder="Peso">
+            <label for="comprimento-caixa">COMPR. CX MASTER:</label>
+            <input type="text" id="comprimento-caixa" placeholder="Comprimento">
+            <label for="largura-caixa">LARG. CX MASTER:</label>
+            <input type="text" id="largura-caixa" placeholder="Largura">
+            <label for="altura-caixa">ALT. CX MASTER:</label>
+            <input type="text" id="altura-caixa" placeholder="Altura">
+        </div>
+        <div class="info-display">
+            <h2>INFO DISPLAY (EAN 14)</h2>
+            <label for="codigo-display">CÓD. DE BARRAS:</label>
+            <input type="text" id="codigo-display" placeholder="Código de Barras">
+            <label for="qtd-display">QTD NO DISPLAY:</label>
+            <input type="number" id="qtd-display" placeholder="Quantidade">
+            <label for="peso-display">PESO DISPLAY:</label>
+            <input type="text" id="peso-display" placeholder="Peso">
+            <label for="comprimento-display">COMPR. DISPLAY:</label>
+            <input type="text" id="comprimento-display" placeholder="Comprimento">
+            <label for="largura-display">LARG. DISPLAY:</label>
+            <input type="text" id="largura-display" placeholder="Largura">
+            <label for="altura-display">ALT. DISPLAY:</label>
+            <input type="text" id="altura-display" placeholder="Altura">
+        </div>
+        <div class="info-unidade">
+            <h2>INFO UNIDADE (EAN 13)</h2>
+            <label for="codigo-unidade">CÓD. DE BARRAS:</label>
+            <input type="text" id="codigo-unidade" placeholder="Código de Barras">
+            <label for="peso-unitario">PESO UNITÁRIO:</label>
+            <input type="text" id="peso-unitario" placeholder="Peso Unitário">
+            <label for="comprimento-unitario">COMPR. UNITÁRIO:</label>
+            <input type="text" id="comprimento-unitario" placeholder="Comprimento Unitário">
+            <label for="largura-unitario">LARG. UNITÁRIO:</label>
+            <input type="text" id="largura-unitario" placeholder="Largura Unitária">
+            <label for="altura-unitario">ALT. UNITÁRIO:</label>
+            <input type="text" id="altura-unitario" placeholder="Altura Unitária">
+        </div>
+        <div class="calculo-palete">
+            <h2>CÁLCULO DE PALETIZAÇÃO</h2>
+            <label for="altura-max">Altura Máx (mts):</label>
+            <input type="text" id="altura-max" placeholder="Altura Máxima">
+            <label for="altura-pallet">Altura Pallet:</label>
+            <input type="text" id="altura-pallet" placeholder="Altura do Pallet">
+            <label for="qtd-lastro">Qtd Lastro:</label>
+            <input type="number" id="qtd-lastro" placeholder="Quantidade de Lastro">
+            <label for="qtd-altura">Qtd Altura:</label>
+            <input type="number" id="qtd-altura" placeholder="Quantidade de Altura">
+            <label for="cx-plt">CX/Plt:</label>
+            <input type="number" id="cx-plt" placeholder="Caixas por Pallet">
+            <label for="alt-pallet">Alt. Pallet:</label>
+            <input type="text" id="alt-pallet" placeholder="Altura do Pallet">
+            <label for="peso-pallet">Peso Pallet Kg:</label>
+            <input type="text" id="peso-pallet" placeholder="Peso do Pallet">
+        </div>
+    </div>
+
+    <script></script>
 </body>
 </html>
