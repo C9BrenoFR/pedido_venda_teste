@@ -36,10 +36,10 @@ async function fetchLogisticsData(req, res) {
             SAÍDA: row[11] ? (excelDateToJSDate(row[11]) ? excelDateToJSDate(row[11]).toISOString() : null) : null,
             PrevisaoEntrega: row[12] ? (excelDateToJSDate(row[12]) ? excelDateToJSDate(row[12]).toISOString() : null) : null,
             ENTREGUE: row[13] ? (excelDateToJSDate(row[13]) ? excelDateToJSDate(row[13]).toISOString() : null) : null,
-            AGENDA: row[16],
-            OCORRÊNCIA: row[17],
+            AGENDA: row[15],
+            OCORRÊNCIA: row[16],
             CNPJ: row[5],
-            STATUS_ENTREGA: row[15]
+            STATUS_ENTREGA: row[14]
         }));
 
         res.json(formattedData);
