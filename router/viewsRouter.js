@@ -38,6 +38,11 @@ router.get('/detalhes',authMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'detalhes.html'));
 });
 
+// Rota para a página de detalhes do produto (Detalhes_Produtos.html)
+router.get('/detalhesProdutos',authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'Detalhes_Produtos.html'));
+});
+
 
 // Rota para a página de detalhes do pedido (detalhes.html)
 router.get('/logistica', (req, res) => {
