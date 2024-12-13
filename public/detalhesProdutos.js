@@ -69,6 +69,7 @@ function preencherCamposProduto(detalhes, caminhoImagem) {
     document.getElementById('ipi').value = detalhes[24] || '0%'; // IPI
     document.getElementById('preco-ref').value = `R$ ${detalhes[23]}`; // Preço Referência
     document.getElementById('preco-ipi').value = `R$ ${(detalhes[23] * (1 + (detalhes[24] || 0) / 100)).toFixed(2)}`; // Preço com IPI
+    document.getElementById('codigo-master').value = `${detalhes[3]}`;
 
     // Atualizar imagem
     const imgElemento = document.getElementById('imagem');
@@ -83,6 +84,7 @@ function limparCamposProduto() {
     document.getElementById('ipi').value = '';
     document.getElementById('preco-ref').value = '';
     document.getElementById('preco-ipi').value = '';
+    document.getElementById('codigo-master').value = ``;
     document.getElementById('imagem').src = 'placeholder.jpg';
     document.getElementById('imagem').alt = 'Imagem não disponível';
 }
