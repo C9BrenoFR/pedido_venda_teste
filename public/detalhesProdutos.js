@@ -90,16 +90,23 @@ function preencherCamposProduto(detalhes, caminhoImagem) {
     document.getElementById('altura-pallet').value = `${detalhes[21]}`;
     document.getElementById('qtd-lastro').value = `${detalhes[22]}`;
     document.getElementById('qtd-altura').value = `${detalhes[23]}`;
-    document.getElementById('cx-pallet').value = `${detalhes[24]}`;
+    document.getElementById('cx-plt').value = `${detalhes[24]}`;
     document.getElementById('alt-pallet').value = `${detalhes[25]}`;
     document.getElementById('peso-pallet').value = `${detalhes[26]}`;
    
     
 
-    // Atualizar imagem
     const imgElemento = document.getElementById('imagem');
-    imgElemento.src = caminhoImagem || 'placeholder.jpg';
-    imgElemento.alt = detalhes[1] || 'Imagem não disponível';
+    if (caminhoImagem) {
+        imgElemento.src = caminhoImagem;
+        imgElemento.alt = detalhes[1] || 'Imagem do Produto';
+    } else {
+        imgElemento.src = 'placeholder.jpg'; // Imagem padrão
+        imgElemento.alt = 'Imagem não disponível';
+    }
+
+    console.log('Detalhes do Produto:', detalhes);
+    console.log('Caminho da Imagem:', caminhoImagem);
 }
 
 // Função para limpar os campos do produto
