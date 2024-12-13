@@ -7,6 +7,7 @@ body {
 
 .container {
     width: 90%;
+    max-width: 1000px;
     margin: 20px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -16,7 +17,7 @@ body {
 
 .header {
     text-align: center;
-    background-color: #000000;
+    background-color: #333;
     color: #ffffff;
     padding: 15px 0;
     border-radius: 5px;
@@ -39,31 +40,44 @@ body {
     font-size: 1em;
     padding: 5px;
     text-align: center;
-    border: 1px solid #ddd;
+    border: 1px solid #242323;
     border-radius: 4px;
 }
 
 .descricao, .info-caixa-master, .info-display, .info-unidade, .calculo-palete {
     margin: 20px 0;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #242323;
     border-radius: 5px;
     background-color: #f9f9f9;
 }
 
-.descricao h2, .info-caixa-master h2, .info-display h2, .info-unidade h2, .calculo-palete h2 {
-    background-color: #000000;
+.descricao h3, .info-caixa-master h3, .info-display h3, .info-unidade h3, .calculo-palete h3 {
+    background-color: #333;
     color: #ffffff;
     padding: 5px;
     margin: 0 0 10px 0;
     border-radius: 4px;
 }
 
+.descricao-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.descricao {
+    flex: 1;
+    min-width: 300px;
+}
+
+
 input, textarea {
     width: 100%;
     font-size: 0.9em;
-    padding: 5px;
-    border: 1px solid #ddd;
+    padding: 8px;
+    border: 1px solid #242323;
     border-radius: 4px;
     margin-top: 5px;
     margin-bottom: 10px;
@@ -92,7 +106,7 @@ table th, table td {
 }
 
 table th {
-    background-color: #000000;
+    background-color: #333;
     color: #ffffff;
 }
 
@@ -103,4 +117,28 @@ img {
     margin: 0 auto;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+
+.imagem-produto {
+    flex: 0 0 300px;
+    text-align: center;
+}
+
+.imagem-produto img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+
+@media (max-width: 768px) {
+    .descricao-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .imagem-produto {
+        text-align: center;
+    }
 }
