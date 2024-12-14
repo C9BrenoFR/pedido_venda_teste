@@ -66,9 +66,11 @@ document.getElementById('codigo').addEventListener('input', function () {
 function preencherCamposProduto(detalhes, caminhoImagem) {
     document.getElementById('descricao').value = detalhes[1]; // Descrição
     document.getElementById('classificacao').value = detalhes[2]; // Classificação Fiscal
-    document.getElementById('ipi').value = detalhes[24] || '0%'; // IPI
-    document.getElementById('preco-ref').value = `R$ ${detalhes[23]}`; // Preço Referência
-    document.getElementById('preco-ipi').value = `R$ ${(detalhes[23] * (1 + (detalhes[24] || 0) / 100)).toFixed(2)}`; // Preço com IPI
+    document.getElementById('ipi').value =  detalhes[24] 
+                                            ? `${detalhes[24].toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`
+                                            : '0%'; // IPI
+    document.getElementById('preco-ref').value = `R$ ${detalhes[23].toFixed(2).toLocaleString('pt-BR', { minimumFractionDigits: 2 }).replace('.', ',')}`; // Preço Referência
+    document.getElementById('preco-ipi').value = `R$ ${((detalhes[23] * (1 + (detalhes[24] || 0) / 100))).toFixed(2).toLocaleString('pt-BR', { minimumFractionDigits: 2 }).replace('.', ',')}`; // Preço com IPI
     document.getElementById('codigo-master').value = `${detalhes[3]}`;
     document.getElementById('qtd-caixa').value = `${detalhes[4]}`;
     document.getElementById('peso-caixa').value = `${detalhes[5]}`;
@@ -86,13 +88,86 @@ function preencherCamposProduto(detalhes, caminhoImagem) {
     document.getElementById('comprimento-unitario').value = `${detalhes[17]}`;
     document.getElementById('largura-unitario').value = `${detalhes[18]}`;
     document.getElementById('altura-unitario').value = `${detalhes[19]}`;
-    document.getElementById('altura-max').value = `${detalhes[20]}`;
-    document.getElementById('altura-pallet').value = `${detalhes[21]}`;
-    document.getElementById('qtd-lastro').value = `${detalhes[22]}`;
-    document.getElementById('qtd-altura').value = `${detalhes[23]}`;
-    document.getElementById('cx-plt').value = `${detalhes[24]}`;
-    document.getElementById('alt-pallet').value = `${detalhes[25]}`;
-    document.getElementById('peso-pallet').value = `${detalhes[26]}`;
+    document.getElementById('altura-max').value = 1.30;
+    document.getElementById('altura-pallet').value = 0.15;
+
+
+           // Tratamento dos campos para número float para fazer os calculos
+           const alturaMax = parseFloat(document.getElementById('altura-max').value); // T4
+           const alturaPallet = parseFloat(document.getElementById('altura-pallet').value); // X4
+           const pesoCaixa = parseFloat(document.getElementById('peso-caixa').value); // E15
+           const comprimentoCaixa = parseFloat(document.getElementById('comprimento-caixa').value); // E16
+           const larguraCaixa = parseFloat(document.getElementById('largura-caixa').value); // E17
+           const alturaCaixa = parseFloat(document.getElementById('altura-caixa').value); // E18
+
+
+           //variáveis dos resultados
+           let qtdLastro = '';
+           let qtdAltura = '';
+           let cxPorPallet = '';
+           let altPallet = '';
+           let pesoPallet = '';
+
+           
+           // Calculo campo QUANTIDADE LASTRO:------inicio--------------------------------------------------------------------------
+           if (comprimentoCaixa > 0 && larguraCaixa > 0) {
+           qtdLastro = Math.floor((1 * alturaMax) / (comprimentoCaixa * larguraCaixa)); // Cálculo arredondado para baixo
+           }
+           document.getElementById('qtd-lastro').value = qtdLastro || ''; // Exibe vazio se ocorrer erro
+           // Calculo campo QUANTIDADE LASTRO:----fim ----------------------------------------------------------------------------
+
+            
+            // Calculo campo QUATIDADE ALTURA:------inicio--------------------------------------------------------------------------
+            if (alturaCaixa > 0) { // Verificando se alturaCaixa é maior que 0 para evitar divisão por zero
+                qtdAltura = Math.floor(alturaMax / alturaCaixa); // Realizando o cálculo e arredondando para baixo
+            }
+            document.getElementById('qtd-altura').value = qtdAltura || '';
+            // Calculo campo QUATIDADE ALTURA:----fim ----------------------------------------------------------------------------
+
+
+
+            // Calculo campo QUATIDADE DE CAIXA POR PALLET:------inicio--------------------------------------------------------------------------
+            // Obtendo os valores de qtdLastro e qtdAltura
+            const qtdLastro1 = parseInt(document.getElementById('qtd-lastro').value) || 0; // Convertendo para inteiro ou 0 se vazio
+            const qtdAltura1 = parseInt(document.getElementById('qtd-altura').value) || 0; // Convertendo para inteiro ou 0 se vazio
+
+            // Calculando o número de caixas por pallet
+            if (qtdLastro1 > 0 && qtdAltura1 > 0) {
+                cxPorPallet = qtdLastro1 * qtdAltura1; // Multiplicação
+            }
+            document.getElementById('cx-plt').value = cxPorPallet || '';
+            // Calculo campo QUATIDADE DE CAIXA POR PALLET:------inicio--------------------------------------------------------------------------
+
+
+         
+          
+          // Calculo campo ALTURA PALLET:------inicio--------------------------------------------------------------------------
+           const alturaCaixa1 = parseFloat(document.getElementById('altura-caixa').value) || 0; // E18
+           const alturaPallet1 = parseFloat(document.getElementById('altura-pallet').value) || 0; // X4
+
+           // Calculando ((E18 * T9) - X4)
+          if (alturaCaixa > 0 && qtdAltura > 0) { // Verificando se os valores são válidos
+              altPallet = (alturaCaixa1 * qtdAltura1) - alturaPallet1;
+          }
+          document.getElementById('alt-pallet').value = altPallet > 0 
+                                                    ? altPallet.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+                                                    : '';
+          // Calculo campo ALTURA PALLET:------inicio--------------------------------------------------------------------------
+
+           
+
+           // Calculo campo PESO PALLET:------inicio--------------------------------------------------------------------------
+           const cxPorPallet1 = parseInt(document.getElementById('cx-plt').value) || 0;
+
+           if(cxPorPallet1 > 0 && pesoCaixa > 0){
+
+              pesoPallet = cxPorPallet1 * pesoCaixa
+
+              // Arredondar para duas casas decimais e formatar com vírgula
+              pesoPallet = pesoPallet.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+           }
+           document.getElementById('peso-pallet').value = pesoPallet || '' ;
+           // Calculo campo PESO PALLET:------inicio--------------------------------------------------------------------------
    
     
 
@@ -137,7 +212,7 @@ function limparCamposProduto() {
     document.getElementById('altura-pallet').value = ``;
     document.getElementById('qtd-lastro').value = ``;
     document.getElementById('qtd-altura').value = ``;
-    document.getElementById('cx-pallet').value = ``;
+    document.getElementById('cx-plt').value = ``;
     document.getElementById('alt-pallet').value = ``;
     document.getElementById('peso-pallet').value = ``;
     document.getElementById('imagem').src = 'placeholder.jpg';
