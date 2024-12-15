@@ -23,7 +23,10 @@
         <div class="descricao-container">
             <div class="descricao">
                 <h3>DESCRIÇÃO DO ITEM</h3>
-                <textarea id="descricao" rows="2" placeholder="Descrição do produto" readonly></textarea>
+                <textarea id="descricao" rows="2" placeholder="Descrição do produto" ></textarea>
+                <div id="resultados-busca" style="display: none; border: 1px solid #ccc; border-radius: 5px; padding: 10px; background-color: #fff; max-height: 150px; overflow-y: auto;">
+                    <ul id="lista-resultados" style="list-style: none; padding: 0; margin: 0;"></ul>
+                </div>
                 <label for="classificacao">CLASSIFICAÇÃO FISCAL:</label>
                 <input type="text" id="classificacao" placeholder="Classificação Fiscal"readonly>
                 <label for="ipi">IPI:</label>

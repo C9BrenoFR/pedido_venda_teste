@@ -62,6 +62,54 @@ document.getElementById('codigo').addEventListener('input', function () {
     }
 });
 
+
+// Evento para buscar pela descrição
+document.getElementById('descricao').addEventListener('keyup', function (event) {
+    const termoBusca = this.value.trim().toLowerCase();
+    const resultadosContainer = document.getElementById('resultados-busca');
+    const listaResultados = document.getElementById('lista-resultados');
+
+    // Exibe apenas após três caracteres ou Enter
+    if (termoBusca.length >= 3 || event.key === 'Enter') {
+        listaResultados.innerHTML = ''; // Limpa a lista
+        resultadosContainer.style.display = 'none';
+
+        // Filtra produtos com base na descrição
+        const resultados = detalhesProdutosData.filter((produto) =>
+            produto[1].toLowerCase().includes(termoBusca)
+        );
+
+        // Se houver resultados, exibe na lista
+        if (resultados.length > 0) {
+            resultados.forEach((produto) => {
+                const item = document.createElement('li');
+                item.textContent = `Código: ${produto[0]} - Descrição: ${produto[1]}`;
+                item.style.cursor = 'pointer';
+                item.style.padding = '5px';
+                item.style.borderBottom = '1px solid #ddd';
+
+                // Evento ao clicar em um resultado
+                item.addEventListener('click', () => {
+                    document.getElementById('codigo').value = produto[0]; // Define o código no campo
+                    document.getElementById('codigo').dispatchEvent(new Event('input')); // Dispara o evento 'input'
+                    resultadosContainer.style.display = 'none'; // Oculta a lista de resultados
+                });
+
+                listaResultados.appendChild(item);
+            });
+
+            resultadosContainer.style.display = 'block';
+        } else {
+            listaResultados.innerHTML = '<li style="padding: 5px;">Nenhum resultado encontrado</li>';
+            resultadosContainer.style.display = 'block';
+        }
+    } else {
+        resultadosContainer.style.display = 'none'; // Oculta a lista
+    }
+});
+
+
+
 // Função para preencher os campos do produto
 function preencherCamposProduto(detalhes, caminhoImagem) {
     document.getElementById('descricao').value = detalhes[1]; // Descrição

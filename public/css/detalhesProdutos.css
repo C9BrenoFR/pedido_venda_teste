@@ -204,6 +204,36 @@ img {
 }
 
 
+#resultados-busca {
+    position: absolute;
+    z-index: 1000;
+    width: 50%;
+    background-color: #fff;
+    border: 2px solid rgba(225, 0, 152, 0.6); /* Borda com a cor desejada */
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+
+#lista-resultados li {
+    color: rgba(225, 0, 152); /* Cor do texto */
+    padding: 8px; /* Espaçamento interno */
+    font-family: Arial, sans-serif; /* Fonte padrão */
+    font-size: 14px; /* Tamanho da fonte */
+    border-bottom: 1px solid #ddd; /* Linha separadora */
+    cursor: pointer; /* Muda o cursor ao passar por cima */
+    transition: background-color 0.2s ease-in-out; /* Suaviza a mudança de cor */
+}
+
+#lista-resultados li:last-child {
+    border-bottom: none; /* Remove a linha no último item */
+}
+
+#lista-resultados li:hover {
+    background-color: rgba(225, 0, 152);/* Cor de fundo ao passar o mouse */
+    color: rgb(250, 242, 247); /* Mantém a cor do texto */
+}
+
 @media (max-width: 768px) {
     .descricao-container {
         flex-direction: column;
