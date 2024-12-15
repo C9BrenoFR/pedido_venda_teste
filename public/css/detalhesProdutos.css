@@ -116,7 +116,7 @@ body {
 
 input, textarea {
     width: 100%;
-    font-size: 0.9em;
+    font-size: 125%;
     padding: 8px;
     border: 1px solid #242323;
     border-radius: 4px;
@@ -125,8 +125,17 @@ input, textarea {
     box-sizing: border-box;
 }
 
+input:focus , textarea:focus{
+    border-color: rgba(225,0,152); /* Cor da borda quando o input estiver ativo */
+    outline: none; /* Remove o contorno padrão do navegador */
+    box-shadow: 0 0 5px #ff0000; /* Efeito de brilho leve */ 
+}
+
 textarea {
     resize: none;
+    font-size: 135%;
+    color:rgba(225,0,152);
+    font-weight: bold;
 }
 
 label {
@@ -167,6 +176,8 @@ img {
     width: 50%; /* Cada divisão ocupa 50% */
     text-align: center;
     min-width: 0; /* Garante que não ocorra estouro de largura */
+    color:rgba(225,0,152);
+    font-weight: bold;
 }
 
 .imagem-produto img {
