@@ -1,3 +1,25 @@
+
+/* Animação de inversão de lado */
+@keyframes inverterLado {
+    0%, 100% {
+        transform: rotateY(0deg); /* Lado frontal */
+    }
+    50% {
+        transform: rotateY(180deg); /* Lado de trás */
+    }
+}
+
+@keyframes go-back {
+    0% {
+        transform: rotateZ(3deg);
+    }
+    100% {
+        
+        transform: rotateZ(-3deg);
+        
+    }
+  }
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -137,6 +159,7 @@ img {
     margin: 0 auto;
     border: 1px solid #ddd;
     border-radius: 5px;
+    
 }
 
 .imagem-produto {
@@ -152,6 +175,14 @@ img {
     height: 350px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    animation: go-back 2s infinite alternate;
+    /*animation: inverterLado 30s linear infinite; /* Duração de 3 segundos, linear e looping infinito */
+   /* transform-style: preserve-3d; /* Mantém o efeito 3D */
+    /*backface-visibility: hidden; /* Evita mostrar o verso ao girar */
+    display: block;
+    margin: 0 auto;
+    transform-origin: center; /* Define o ponto central para a rotação */
+   
 }
 
 
