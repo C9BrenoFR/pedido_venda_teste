@@ -111,6 +111,8 @@
 #tipo_pedido {
     padding: 8px;
     border: 1px solid #242323;
+    color:rgba(225, 0, 152);
+    font-weight: 600;
     border-radius: 3px;
     width: 128%;
     margin-left: -60px;
@@ -225,6 +227,29 @@ footer {
     font-size: 140%;
     animation: animationButtonSend 1s;
 
+}
+
+
+input:focus , textarea:focus{
+    border-color: rgba(225,0,152); /* Cor da borda quando o input estiver ativo */
+    outline: none; /* Remove o contorno padrão do navegador */
+    box-shadow: 0 0 5px #ff0000; /* Efeito de brilho leve */ 
+}
+
+
+/* Adiciona o asterisco vermelho ao lado do texto CNPJ e TIPO PEDIDO */
+label[for="cnpj"]::after,
+label[for="tipo_pedido"]::after {
+    content: " *"; /* Insere o asterisco */
+    color: rgba(225, 0, 152); /* Cor vermelha */
+    font-weight: bold; /* Deixa o asterisco em negrito */
+    font-size: 22px; /* Tamanho do asterisco */
+}
+
+.no-print button:hover{
+    background-color: rgba(225, 0, 152);/* Cor de fundo ao passar o mouse */
+    color: rgb(250, 242, 247); /* Mantém a cor do texto */
+    border:none;
 }
 
 /* Media Queries para responsividade */
