@@ -4,6 +4,7 @@ const pdfController = require('../controllers/pdfController');
 const orderController = require('../controllers/orderController'); // Importa o controlador
 const invoicesController = require('../controllers/invoicesControllers');
 const { authMiddleware, authenticateUser } = require('../middleware/authMiddleware');
+const imputOrdersController = require('../controllers/imputOrdersControllers');
 
 const router = express.Router();
 
@@ -105,5 +106,16 @@ router.post('/logout', (req, res) => {
         res.status(200).send('Sessão encerrada com sucesso.');
     });
 });
+
+//Rota post para pedidos
+
+router.post('/api/pedidos/imput', imputOrdersController.fetchImputOrders)
+
+
+
+
+
+
+
 
 module.exports = router;
