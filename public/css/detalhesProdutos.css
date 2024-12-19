@@ -11,11 +11,11 @@
 
 @keyframes go-back {
     0% {
-        transform: rotateZ(3deg);
+        transform: rotateZ(2deg);
     }
     100% {
         
-        transform: rotateZ(-3deg);
+        transform: rotateZ(-2deg);
         
     }
   }

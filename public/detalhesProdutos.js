@@ -184,7 +184,7 @@ function preencherCamposProduto(detalhes, caminhoImagem) {
                 cxPorPallet = qtdLastro1 * qtdAltura1; // Multiplicação
             }
             document.getElementById('cx-plt').value = cxPorPallet || '';
-            // Calculo campo QUATIDADE DE CAIXA POR PALLET:------inicio--------------------------------------------------------------------------
+            // Calculo campo QUATIDADE DE CAIXA POR PALLET:------fim--------------------------------------------------------------------------
 
 
          
@@ -200,7 +200,7 @@ function preencherCamposProduto(detalhes, caminhoImagem) {
           document.getElementById('alt-pallet').value = altPallet > 0 
                                                     ? altPallet.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
                                                     : '';
-          // Calculo campo ALTURA PALLET:------inicio--------------------------------------------------------------------------
+          // Calculo campo ALTURA PALLET:------fim--------------------------------------------------------------------------
 
            
 
@@ -215,7 +215,7 @@ function preencherCamposProduto(detalhes, caminhoImagem) {
               pesoPallet = pesoPallet.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
            }
            document.getElementById('peso-pallet').value = pesoPallet || '' ;
-           // Calculo campo PESO PALLET:------inicio--------------------------------------------------------------------------
+           // Calculo campo PESO PALLET:------fim--------------------------------------------------------------------------
    
     
 

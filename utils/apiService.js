@@ -63,7 +63,8 @@ async function fetchOrderDetails(status = 6) {
 
 
   try {
-    const response = await fetch(`https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?DataPedidoInicio=${dataInicio}&DataPedidoFim=${dataFim}&status=${status}`, {
+    const response = await fetch(
+      `https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?DataPedidoInicio=${dataInicio}&DataPedidoFim=${dataFim}&status=${status}&EmpresaCodigo=2&PageNumber=1&PageSize=500`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${authToken}`,
