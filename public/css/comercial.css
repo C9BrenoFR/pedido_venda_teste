@@ -16,6 +16,14 @@ table {
     margin: 20px 0;
 }
 
+table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #333; /* Fundo escuro para contraste */
+    color: #f9f9f9; /* Texto branco */
+    z-index: 1; /* Para garantir que o cabeçalho fique acima do conteúdo */
+}
+
 table th, table td {
     border: 1px solid #ccc;
     padding: 10px;

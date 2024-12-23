@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes dos Pedidos</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon"  type="image/png" sizes="32x32" href="/images/favicon-32x32.png" >
+    <link rel="icon"  type="image/png" sizes="16x16" href="/images/favicon-16x16.png" >
+    <link rel="manifest" href="/images/site.webmanifest">
     <link rel="stylesheet" href="/css/comercial.css">
 </head>
 <body>
@@ -203,13 +207,18 @@
                 const statusFilter = document.getElementById('statusFilter').value;
 
                 const filteredData = ordersData.filter(order => {
-                    const matchRepresentante = !representanteFilter || order.representante?.id?.toString() === representanteFilter;
-                    const matchClienteCNPJ = !clienteCNPJFilter || order.cliente.documento.numeroTexto === clienteCNPJFilter;
-                    const matchDataPedidoInicio = !dataPedidoInicioFilter || new Date(order.dataPedido) >= new Date(dataPedidoInicioFilter);
-                    const matchDataPedidoFim = !dataPedidoFimFilter || new Date(order.dataPedido) <= new Date(dataPedidoFimFilter);
-                    const matchStatus = !statusFilter || order.status.toString() === statusFilter;
-                    return matchRepresentante && matchClienteCNPJ && matchDataPedidoInicio && matchDataPedidoFim && matchStatus;
-                });
+                        const matchRepresentante = !representanteFilter || 
+                            (order.representante?.id && order.representante.id.toString() === representanteFilter);
+                        const matchClienteCNPJ = !clienteCNPJFilter || 
+                            (order.cliente?.documento?.numeroTexto === clienteCNPJFilter);
+                        const matchDataPedidoInicio = !dataPedidoInicioFilter || 
+                            new Date(order.dataPedido).toISOString().split('T')[0] >= dataPedidoInicioFilter;
+                        const matchDataPedidoFim = !dataPedidoFimFilter || 
+                            new Date(order.dataPedido).toISOString().split('T')[0] <= dataPedidoFimFilter;
+                        const matchStatus = !statusFilter || order.status === Number(statusFilter);
+
+                        return matchRepresentante && matchClienteCNPJ && matchDataPedidoInicio && matchDataPedidoFim && matchStatus;
+                  });
 
                 if (filteredData.length === 0) {
                     showFeedback("Nenhum dado encontrado com os filtros aplicados.");
@@ -225,13 +234,25 @@
         }
 
         // Limpar Filtros
-        function clearFilters() {
+        async function clearFilters() {
+            showFeedback("Carregando dados padrão, aguarde...");
+            
             document.getElementById('representanteFilter').value = '';
             document.getElementById('clienteCNPJFilter').value = '';
             document.getElementById('dataPedidoInicioFilter').value = '';
             document.getElementById('dataPedidoFimFilter').value = '';
-            document.getElementById('statusFilter').value = '';
-            renderTable(ordersData);
+            document.getElementById('statusFilter').value = "6";
+
+             // Chamar API no modo padrão (status = 6)
+            const response = await fetch('/api/pedidos?PageNumber=1&PageSize=200&status=6');
+            if (!response.ok) throw new Error(`Erro ao buscar dados padrão: ${response.statusText}`);
+
+            const defaultData = await response.json();
+
+            ordersData = defaultData; // Atualiza os dados locais
+            renderTable(defaultData); // Renderiza os dados padrão
+
+            hideFeedback();
         }
 
         // Eventos dos botões de filtro
