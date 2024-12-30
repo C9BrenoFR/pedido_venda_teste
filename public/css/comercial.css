@@ -2,6 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0px;
     padding: 10px;
+    background-color: #caccc6;
 }
 
 h2 {
@@ -28,6 +29,7 @@ table th, table td {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
+    background-color: #f9f9f9;
 }
 
 table th {
@@ -64,4 +66,10 @@ table tr:hover {
 
 #statusFilter {
     padding: 7px;
+}
+
+button:hover{
+    background-color: rgba(225, 0, 152);/* Cor de fundo ao passar o mouse */
+    color: rgb(250, 242, 247); /* Mantém a cor do texto */
+    border:none;
 }

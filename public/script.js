@@ -281,8 +281,11 @@ document.getElementById('adicionarLinha').addEventListener('click', function () 
         let td = document.createElement('td');
         let input = document.createElement('input');
         input.type = 'text';
+        input.style.padding = '5px';
         input.style.width = '100%';
         input.style.boxSizing = 'border-box';
+        input.style.marginLeft ='-0px';
+        
 
         if (i === 0) {
             input.addEventListener('blur', function () {
@@ -420,7 +423,7 @@ function preencherLinha(tr, listaPrecos, promocao = null, ufCliente) {
     }
 
     if (listaPrecos) {
-        cells[1].querySelector('input').value = '1';
+        cells[1].querySelector('input').value = '';
         cells[2].querySelector('input').value = listaPrecos[9];
         cells[3].querySelector('input').value = listaPrecos[10];
         cells[4].querySelector('input').value = listaPrecos[4];

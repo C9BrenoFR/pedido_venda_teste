@@ -1,5 +1,5 @@
  /* Definição da animação */
-@keyframes animationButtonSend {
+ @keyframes animationButtonSend {
     0% {
         transform: rotateZ(10deg);
     }
@@ -15,16 +15,21 @@
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-
-    background-color: #f3f3f3;
+    width: 100%;
+    /* background-color: #f3f3f3;*/
+    background-color: #caccc6;
+    /* background-color: rgb(248, 184, 228)*/
 }
 .container {
-    width: 100%;
+    width: 95%;
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
     border: 1px solid #ddd;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
 }
 
 
@@ -64,6 +69,7 @@
     cursor: pointer;
     flex: 1;
     min-width: 150px;
+    font-size: 95%;
 }
 
 #button_pdf:hover {
@@ -117,11 +123,12 @@
     width: 128%;
     margin-left: -60px;
 }
+
 .table-container {
      overflow-x: auto;
 }
 .table {
-    width: 100%;
+    width: 1000px;
     border-collapse: collapse;
     margin-top: 10px;
     min-width: 800px;
@@ -138,6 +145,43 @@
 .table th {
     background-color: #333;
     color: #ffffff;
+    font-size: 15px;
+}
+
+/* Seção tabela de dados dos itens */
+.descricao{
+    width: 30%;
+}
+.pack {
+    width: 1%;
+}
+
+.uv{
+    width: 6%;
+}
+
+.cod{
+    width: 7%;
+}
+
+.qtd{
+    width: 8%;
+}
+
+.ipi{
+    width: 8%;
+}
+
+.unit{
+    width: 11%;
+}
+
+.vipi{
+    width: 11%;
+}
+
+.total{
+    width: 13%;
 }
 
 /* Seção Condição de Pagamento e Observações */
@@ -157,10 +201,10 @@
     padding: 5px;
 }
 
-.payment-conditions .spaceInputCod{
-  width: 30% ;
-
+.payment-conditions input {
+    padding: 5px;
 }
+
 
 .observations{
     margin-top: 20px;
@@ -173,11 +217,11 @@
     text-align: center;
 }
 .observations textarea {
-    width: 98%;
+    width: 99.5%;
     height: 100px;
     margin-top: 10px;
     resize: vertical;
-    padding: 10px;
+    /*padding: 10px;*/
     border-radius: 5px;
     border: 1px solid #3d3c3c;
 }
@@ -187,8 +231,9 @@
     .no-print {
         display: flex;
         flex-wrap: nowrap;
-        gap: 10px;
+        gap: 12px;
         padding: 10px 0;
+  
     }
 
 footer {
@@ -196,10 +241,13 @@ footer {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin-top: 20px;;
+    margin-top: 20px;
     padding-top: 20px;
     background-color: #333;
     width: 100%;
+ 
+    margin: 0 auto;
+   
 
 }
 
@@ -207,7 +255,11 @@ footer {
     display: flex;
     justify-content:center;
     width: 100%;
-    padding: 15px;
+    padding-top: 20px;
+    padding-bottom: 30px;
+   /* padding: 15px;*/
+ 
+ 
 }
 
 
@@ -216,19 +268,26 @@ footer {
     justify-content:center;
     color:#ffffff ;
     text-align: center;
-    padding: 15px;
+    padding-left: 20px;
     text-decoration: none;
 
 }
 
 
-.link_sites a:hover{
+.link_sites a:hover {
     color:rgba(225,0,152);
     font-size: 140%;
     animation: animationButtonSend 1s;
 
 }
-
+#logoutButton:hover{
+    background-color: rgba(225, 0, 152);/* Cor de fundo ao passar o mouse */
+    color: rgb(250, 242, 247);
+    font-size: 140%;
+    animation: animationButtonSend 1s;
+    border:none;
+     
+}
 
 input:focus , textarea:focus{
     border-color: rgba(225,0,152); /* Cor da borda quando o input estiver ativo */
@@ -246,6 +305,13 @@ label[for="tipo_pedido"]::after {
     font-size: 22px; /* Tamanho do asterisco */
 }
 
+.no-print button{
+    border-radius: 8px;
+    border: 1px solid #3d3c3c;
+    padding: 5px;
+    font-weight: 600;
+}
+
 .no-print button:hover{
     background-color: rgba(225, 0, 152);/* Cor de fundo ao passar o mouse */
     color: rgb(250, 242, 247); /* Mantém a cor do texto */
@@ -253,6 +319,14 @@ label[for="tipo_pedido"]::after {
 }
 
 /* Media Queries para responsividade */
+
+@media (max-width: 1040px) {
+    footer {
+        width: 100%;
+     
+    }
+}
+
 
 /* Estilo Geral Responsivo */
 @media (max-width: 1024px) {
@@ -264,6 +338,8 @@ label[for="tipo_pedido"]::after {
         padding: 8px;
         font-size: 14px;
     }
+
+    
 }
 
 @media (max-width: 1020px) {
@@ -280,48 +356,104 @@ label[for="tipo_pedido"]::after {
 
 }
 
-@media (max-width: 975px) {
+@media (min-width: 827px) and (max-width: 914px) {
 
-    .payment-conditions {
+    .form-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        padding: 0px;
+        padding-top:15px ;
+        padding-bottom:15px ;
+        border: 1px solid #ddd;
+    }
+    .form-group input {
+    
+    }
 
+    #tipo_pedido {
+    
     }
     
-    .payment-conditions input {
-        width: 15%;
-        padding: 5px;
-    }
-    
+}
+
+@media (min-width: 789px) and (max-width: 975px) {
+   /* Seção Condição de Pagamento e Observações */
+.payment-conditions {
+    margin-top: 20px;
+    border: 1px solid #1b1a1a;
+    /*padding: 15px;*/
+    padding-left: 15px;
+    display: flex;
+    flex-wrap: wrap; /* Permite quebrar linha quando necessário */
+    gap: 15px; /* Espaço entre os itens */
+}
+
+/* Ajusta os elementos (rótulos e inputs) */
+.payment-conditions label {
+    flex: 1 1 90px; /* Define largura mínima */
+    min-width: 100px;
+    background-color: #333;
+    color: #ffffff;
+    /*padding: 5px;*/
+    text-align: center;
+}
+
+.payment-conditions input {
+    flex: 2 1 90px; /* Define largura mínima */
+    padding: 5px;
+}
+
 
 }
 
-@media (max-width: 875px) {
 
-    .payment-conditions {
+@media (min-width: 478px) and (max-width: 788px) {
+    /* Seção Condição de Pagamento e Observações */
+ .payment-conditions {
+     margin-top: 20px;
+     padding-left: 0px;
+     display: flex;
+     flex-direction: column;
+     gap: 5px;
 
+ }
+ 
+ /* Ajusta os elementos (rótulos e inputs) */
+ .payment-conditions label {
+     width: 70%;
+     background-color: #333;
+     color: #ffffff;
+
+
+ }
+ 
+ .payment-conditions input {
+    width: 50%;
+     padding: 5px;
+  
+ }
+ 
+ 
+ }
+
+@media (max-width: 891px) {
+    .payment-conditions label {
+        width: 50%;
+        padding-top:5px ;
+        padding-bottom: 5px;
+        font-size: 90%;
     }
-    
-    .payment-conditions input {
-        width: 13%;
-        padding: 5px;
+
+    .button-group button {
+        font-size: 100%;
     }
-    
+
+    .header img {
+        width: 160px;
+    }
 
 }
-
-@media (max-width: 794px) {
-
-    .payment-conditions {
-   
-    }
-    
-    .payment-conditions input {
-        width: 11%;
-        padding: 5px;
-    }
-    
-
-}
-
 
 @media (max-width: 768px) {
     /* Ajustes para dispositivos móveis (tela menor) */
@@ -368,6 +500,10 @@ label[for="tipo_pedido"]::after {
         overflow-x: scroll;
     }
 
+    .header img {
+        width: 150px;
+    }
+
 
 }
 
@@ -377,16 +513,28 @@ label[for="tipo_pedido"]::after {
         font-size: 10px;
     }
     .button-group button {
-        width: 100%;
-        font-size: 12px;
+        font-size: 95%;
     }
+
     .table {
         font-size: 12px;
     }
     .observations textarea {
         font-size: 12px;
-        padding: 8px;
+        /*padding: 8px;*/
+        width: 98%;
     }
+
+    .link_sites {
+        padding-left: 15px;
+         
+      
+      }
+
+      .header img {
+        width: 140px;
+    }
+  
 }
 
 @media (max-width: 896px) {
@@ -412,4 +560,45 @@ label[for="tipo_pedido"]::after {
         width: 82%;
         margin:auto
     }
+}
+
+@media (max-width: 560px) {
+   
+    .link_sites a{
+      font-size: 80%;
+      padding-left: 15px;
+       
+    
+    }
+
+}
+
+@media (max-width: 477px) {
+
+/* Seção Condição de Pagamento e Observações */
+.payment-conditions {
+    margin-top: 20px;
+    border: 1px solid #1b1a1a;
+    /*padding: 15px;*/
+    padding-left: 15px;
+    display: flex;
+    flex-wrap: wrap; /* Permite quebrar linha quando necessário */
+    gap: 15px; /* Espaço entre os itens */
+}
+
+/* Ajusta os elementos (rótulos e inputs) */
+.payment-conditions label {
+    flex: 1 1 120px; /* Define largura mínima */
+    min-width: 100px;
+    background-color: #333;
+    color: #ffffff;
+    /*padding: 5px;*/
+    text-align: center;
+}
+
+.payment-conditions input {
+    flex: 2 1 120px; /* Define largura mínima */
+    padding: 5px;
+}
+
 }

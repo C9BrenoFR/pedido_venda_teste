@@ -4,21 +4,30 @@ async function getOrderDetails(req, res) {
 
   const status = req.query.status || 6; // Usa status 6 como padrão
   const codRep = req.query.codRep || null; // Novo parâmetro codRep
+  const cnpj = req.query.cnpj || null; // Filtro por CNPJ do cliente
+  const dataInicio = req.query.DataPedidoInicio ? new Date(req.query.DataPedidoInicio) : null; // Filtro de data início
+  const dataFim = req.query.DataPedidoFim ? new Date(req.query.DataPedidoFim) : null; // Filtro de data fim
+  const statusSeparacao = req.query.statusSeparacao ? Number(req.query.statusSeparacao) : null;
 
   console.log(`Recebendo pedidos para o status: ${status}`); // Log para depuração
 
   try {
     const orders  = await apiService.fetchOrdersWithdetailsAndRepresentativesWithTransport(status);
 
-       // Filtrar por código do representante, se fornecido
-       const filteredOrders = codRep
-       ? orders.filter(order => order.representante?.id?.toString() === codRep.toString())
-       : orders;
-
-       if (filteredOrders.length === 0 && codRep) {
-        console.warn(`Nenhum pedido encontrado para o representante ${codRep}`);
-       }
-
+      // Filtrar por codRep e CNPJ, se fornecidos
+      const filteredOrders = orders.filter(order => {
+        const matchRep = !codRep || (order.representante?.id?.toString() === codRep.toString());
+        const matchCNPJ = !cnpj || (order.cliente?.documento?.numeroTexto === cnpj);
+        const matchDataInicio = !dataInicio || new Date(order.dataPedido) >= dataInicio;
+        const matchDataFim = !dataFim || new Date(order.dataPedido) <= dataFim;
+        const matchStatusSeparacao = statusSeparacao === null || order.statusSeparacao === statusSeparacao;
+        return matchRep && matchCNPJ && matchDataInicio && matchDataFim && matchStatusSeparacao;
+      });
+  
+      if (filteredOrders.length === 0) {
+        console.warn('Nenhum pedido encontrado com os filtros aplicados.');
+        return res.status(404).send('Nenhum pedido encontrado.');
+      }
 
     res.status(200).json(filteredOrders);
   } catch (error) {
