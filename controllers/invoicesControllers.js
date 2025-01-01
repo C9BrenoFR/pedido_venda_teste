@@ -21,8 +21,12 @@ async function fetchLogisticsData(req, res) {
 
         const data = await getSpreadsheetData(driveId, itemId, sheetName);
 
+         // Filtro pelo número do representante, se aplicável
+         const userNumero = req.session?.userNumero || null;
+         console.log('Número do Representante na Sessão:', userNumero);
+
         // Processar os dados para o formato necessário
-        const formattedData = data.slice(4).map(row => ({
+        let formattedData = data.slice(4).map(row => ({
             NF: row[0],
             EMISSÃO: row[1] ? (excelDateToJSDate(row[1]) ? excelDateToJSDate(row[1]).toISOString(): null) : null,
             codCliente: row[2],
@@ -41,6 +45,10 @@ async function fetchLogisticsData(req, res) {
             CNPJ: row[5],
             STATUS_ENTREGA: row[14]
         }));
+
+        if (userNumero) {
+            formattedData = formattedData.filter(order => order.Rep.toString() === userNumero.toString());
+        }
 
         res.json(formattedData);
     } catch (error) {

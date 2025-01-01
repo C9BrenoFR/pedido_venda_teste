@@ -467,7 +467,7 @@ label[for="tipo_pedido"]::after {
     }
 
     #button_pdf::after{
-        content: "Salvar em PDF";
+        content: "SALVAR EM PDF";
         color: #fafcfa;
         font-size: 107%;
         position: absolute; /* Garante que o ::after não interfira no layout */

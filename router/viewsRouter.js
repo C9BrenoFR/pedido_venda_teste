@@ -46,7 +46,7 @@ router.get('/detalhesProdutos',(req, res) => {
 
 
 // Rota para a página de detalhes do pedido (detalhes.html)
-router.get('/logistica', (req, res) => {
+router.get('/logistica',authMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'logistica.html'));
 });
 

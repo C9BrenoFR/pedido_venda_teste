@@ -63,6 +63,7 @@ async function getSpreadsheetData(driveId, itemId, sheetName) {
             return jsDate && jsDate >= fourMonthsAgo;
         });
 
+        
         return filteredData;
     } catch (error) {
         console.error("Erro ao buscar dados da planilha:", error.response?.data || error.message);

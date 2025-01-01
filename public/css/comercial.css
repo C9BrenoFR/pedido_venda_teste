@@ -60,16 +60,46 @@ table tr:hover {
     padding: 5px;
 }
 
-#representanteFilter {
+#representanteFilter , #representanteFilter1{
     width:50px;
+    border-radius: 5px;
+    border: 1px solid #0f0f0f;
 }
 
-#statusFilter {
+#statusFilter , #statusFilter1 ,#statusSeparacaoFilter{
     padding: 7px;
+    width: 120px;
+    border-radius: 5px;
+    border: 1px solid #0f0f0f;
 }
 
 button:hover{
     background-color: rgba(225, 0, 152);/* Cor de fundo ao passar o mouse */
     color: rgb(250, 242, 247); /* Mantém a cor do texto */
     border:none;
+}
+
+#applyFilters , #clearFilters ,#logoutButton , #logoutButton1{
+    padding: 6px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border: 1px solid #0f0f0f;
+}
+
+#clienteCNPJFilter1 , 
+#clienteCNPJFilter , 
+#dataPedidoInicioFilter1 , 
+#dataPedidoInicioFilter ,
+#dataPedidoFimFilter1 ,
+#dataPedidoFimFilter {
+    padding: 7px;
+    border-radius: 5px;
+    border: 1px solid #0f0f0f;
+
+}
+
+#applyFilters1 , #clearFilters1 {
+    border-radius: 5px;
+    border: 1px solid #0f0f0f;
+    
 }

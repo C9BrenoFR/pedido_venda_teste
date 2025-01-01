@@ -12,6 +12,7 @@
 </head>
 <body>
     <h2>Acompanhamento de entrega</h2>
+    <button id="logoutButton1">Sair</button>
 
     <!-- Feedback -->
     <div id="feedback1" style="display: none; text-align: center; font-weight: bold; margin: 10px; color: red;"></div>
@@ -32,6 +33,7 @@
         
         <label for="statusFilter1">Status:</label>
         <select id="statusFilter1">
+            <option value="2"></option>
             <option value="1">Entregue</option>
             <option value="0">Pendente</option>
         </select>
@@ -92,6 +94,14 @@
                 const response = await fetch('/api/logistica/onedrive');
                 if (!response.ok) throw new Error("Erro ao buscar dados do SharePoint");
                 ordersData1 = await response.json();
+
+                // Se o usuário for um representante, filtre os dados
+                const userNumero = window.sessionData?.userNumero || null;
+                if (userNumero) {
+                    ordersData1 = ordersData1.filter(order => order.Rep.toString() === userNumero);
+                    console.log('Dados Filtrados:', ordersData1);
+                }
+
                 hideFeedback();
                 renderTable(ordersData1);
           
@@ -128,6 +138,39 @@
                 orderTableBody1.appendChild(row);
             });
         }
+
+  // Inicializar ao carregar a página
+    document.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    // Faz a requisição para obter os dados da sessão
+                    const response = await fetch('/session-data');
+                    if (!response.ok) throw new Error('Erro ao buscar dados da sessão');
+
+                        const sessionData = await response.json();
+
+                        // Define os dados no front-end
+                        if (sessionData.isAuthenticated) {
+                            window.sessionData = sessionData;
+
+                            const userNumero = window.sessionData?.userNumero || null;
+                            const representanteFilter = document.getElementById('representanteFilter1');
+
+                            if (userNumero) {
+                                representanteFilter.value = userNumero;
+                                representanteFilter.disabled = true; // Bloqueia o campo
+                            }
+
+                            loadOrderDetailsFromSharePoint();
+                        } else {
+                            console.warn('Usuário não autenticado');
+                            window.location.href = '/login2'; // Redireciona para a página de login
+                        }
+                    } catch (error) {
+                        console.error('Erro ao carregar os dados da sessão:', error);
+                    }
+        });
+
+
 
         // Aplicar Filtros
         async function applyFilters1() {
@@ -169,7 +212,7 @@
             document.getElementById('clienteCNPJFilter1').value = '';
             document.getElementById('dataPedidoInicioFilter1').value = '';
             document.getElementById('dataPedidoFimFilter1').value = '';
-            document.getElementById('statusFilter1').value = "0";
+            document.getElementById('statusFilter1').value = "2";
             renderTable(ordersData1);
         }
 
@@ -178,14 +221,34 @@
         document.getElementById('clearFilters1').addEventListener('click', clearFilters1);
 
 
-        document.getElementById('statusFilter1').addEventListener('change', function () {
-            const selectedStatus1 = this.value || 1; // Padrão para "Pendente"
-            console.log(`Filtro de status alterado para: ${selectedStatus1}`);
-            loadOrderDetails(selectedStatus1);
-        });
+       // document.getElementById('statusFilter1').addEventListener('change', function () {
+           // const selectedStatus1 = this.value || 1; // Padrão para "Pendente"
+           // console.log(`Filtro de status alterado para: ${selectedStatus1}`);
+           // loadOrderDetailsFromSharePoint(selectedStatus1);
+       // });
+
+
+         // Função para limpar dados do usuário e redirecionar para a página de login
+         document.getElementById('logoutButton1').addEventListener('click', async () => {
+            // Limpa os dados locais
+            sessionStorage.clear();
+            localStorage.clear();
+
+            // Faz a requisição ao servidor para destruir a sessão
+            await fetch('/logout', { method: 'POST' });
+
+            // Limpa cookies manualmente (como precaução)
+            document.cookie.split(";").forEach(cookie => {
+                document.cookie = cookie.split("=")[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+            });
+
+            // Redireciona para a página de login
+            window.location.href = '/login2';
+         });
+
 
         // Inicializar tabela ao carregar a página
-        loadOrderDetailsFromSharePoint();
+        //loadOrderDetailsFromSharePoint();
     </script>
 </body>
 </html>
