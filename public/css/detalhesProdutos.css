@@ -183,7 +183,7 @@ img {
 
 .imagem-produto img {
     max-width: 100%; /* A imagem se ajusta ao contêiner */
-    width: 70%;
+    width: 80%;
     height: 350px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -197,6 +197,53 @@ img {
    
 }
 
+    .imagem-produto a {
+        display: inline-block;
+        text-decoration: none; /* Remove sublinhado */
+    }
+
+    .imagem-produto a:hover img {
+        transform: scale(1.1); /* Aumenta a imagem em 10% */
+        transition: transform 0.3s ease; /* Suaviza a transição */
+        border: 2px solid rgba(225, 0, 152); /* Adiciona uma borda */
+    }
+
+    .imagem-produto a:hover {
+        cursor: pointer; /* Muda o cursor para "mãozinha" */
+    }
+
+/* Container do link */
+.tooltip-container {
+    position: relative; /* Necessário para posicionar a tooltip */
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* Tooltip personalizada */
+.tooltip {
+    visibility: hidden; /* Esconde por padrão */
+    position: absolute;
+    bottom: 120%; /* Posiciona acima do elemento */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(225, 0, 152, 0.9); /* Fundo da tooltip */
+    color: white; /* Cor do texto */
+    padding: 8px 12px; /* Espaçamento interno */
+    border-radius: 5px; /* Borda arredondada */
+    font-size: 16px; /* Tamanho da fonte */
+    font-weight: bold; /* Texto em negrito */
+    white-space: nowrap; /* Evita quebra de linha */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+    z-index: 1000; /* Garante que esteja acima de outros elementos */
+    opacity: 0; /* Esconde visualmente */
+    transition: opacity 0.3s ease-in-out; /* Animação suave */
+}
+
+/* Mostra a tooltip ao passar o mouse */
+.tooltip-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
 
 
 

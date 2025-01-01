@@ -32,10 +32,11 @@ function buscarProduto(codigo) {
         }
     }
 
-    // Buscar imagem do produto
-    for (let i = 1; i < imgProdutosData.length; i++) {
+
+     // Buscar imagem e link do produto
+     for (let i = 0; i < imgProdutosData.length; i++) {
         if (imgProdutosData[i][0].toString() === codigo) {
-            produtoImagem = imgProdutosData[i][1]; // Campo "CAMINHO"
+            produtoImagem = imgProdutosData[i]; // Array completo para capturar imagem e link
             break;
         }
     }
@@ -111,7 +112,62 @@ document.getElementById('descricao').addEventListener('keyup', function (event) 
 
 
 // Função para preencher os campos do produto
-function preencherCamposProduto(detalhes, caminhoImagem) {
+function preencherCamposProduto(detalhes, imagem) {
+
+    const imgContainer = document.querySelector('.imagem-produto');
+    const imgElemento = document.getElementById('imagem');
+
+     // Verificar se imagem está disponível
+     if (imagem && imagem[1]) {
+        imgElemento.src = imagem[1]; // Caminho da imagem
+        imgElemento.alt = detalhes[1] || 'Imagem do Produto';
+
+        // Capturar o link (último elemento do array da imagem)
+        const linkProduto = imagem[imagem.length - 1];
+
+        // Verificar se o link já existe
+        let linkElement = imgContainer.querySelector('a');
+        if (!linkElement) {
+            // Criar o link apenas se ele ainda não existir
+            linkElement = document.createElement('a');
+            linkElement.appendChild(imgElemento);
+            imgContainer.appendChild(linkElement);
+        }
+
+        // Configurar o link dinâmico
+        linkElement.href = linkProduto;
+        linkElement.target = '_blank'; // Abrir em nova aba
+
+         // Criar tooltip personalizada
+         linkElement.classList.add('tooltip-container'); // Classe para o link
+         let tooltip = linkElement.querySelector('.tooltip');
+         if (!tooltip) {
+             tooltip = document.createElement('span');
+             tooltip.classList.add('tooltip');
+             tooltip.textContent = 'Clique aqui para mais imagens do produto';
+             linkElement.appendChild(tooltip);
+         }
+
+        // Garantir que a imagem está dentro do link
+        linkElement.innerHTML = '';
+        linkElement.appendChild(imgElemento);
+        linkElement.appendChild(tooltip);
+
+    } else {
+        // Caso a imagem não esteja disponível, exibir imagem padrão
+        imgElemento.src = 'placeholder.jpg'; // Caminho da imagem padrão
+        imgElemento.alt = 'Imagem não disponível';
+
+        // Remover link caso exista
+        const linkElement = imgContainer.querySelector('a');
+        if (linkElement) {
+            imgContainer.removeChild(linkElement);
+            imgContainer.appendChild(imgElemento);
+        }
+    }
+
+
+    
     document.getElementById('descricao').value = detalhes[1]; // Descrição
     document.getElementById('classificacao').value = detalhes[2]; // Classificação Fiscal
     document.getElementById('ipi').value =  detalhes[24] 
@@ -217,19 +273,9 @@ function preencherCamposProduto(detalhes, caminhoImagem) {
            document.getElementById('peso-pallet').value = pesoPallet || '' ;
            // Calculo campo PESO PALLET:------fim--------------------------------------------------------------------------
    
-    
 
-    const imgElemento = document.getElementById('imagem');
-    if (caminhoImagem) {
-        imgElemento.src = caminhoImagem;
-        imgElemento.alt = detalhes[1] || 'Imagem do Produto';
-    } else {
-        imgElemento.src = 'placeholder.jpg'; // Imagem padrão
-        imgElemento.alt = 'Imagem não disponível';
-    }
 
-    console.log('Detalhes do Produto:', detalhes);
-    console.log('Caminho da Imagem:', caminhoImagem);
+
 }
 
 // Função para limpar os campos do produto
@@ -263,8 +309,18 @@ function limparCamposProduto() {
     document.getElementById('cx-plt').value = ``;
     document.getElementById('alt-pallet').value = ``;
     document.getElementById('peso-pallet').value = ``;
-    document.getElementById('imagem').src = 'placeholder.jpg';
-    document.getElementById('imagem').alt = 'Imagem não disponível';
+  
+
+   const imgElemento = document.getElementById('imagem');
+    imgElemento.src = 'placeholder.jpg';
+    imgElemento.alt = 'Imagem não disponível';
+
+    const imgContainer = document.querySelector('.imagem-produto');
+    const linkElement = imgContainer.querySelector('a');
+    if (linkElement) {
+        imgContainer.removeChild(linkElement);
+        imgContainer.appendChild(imgElemento);
+    }
     
 }
 
