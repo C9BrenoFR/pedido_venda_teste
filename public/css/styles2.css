@@ -72,7 +72,7 @@
     font-size: 95%;
 }
 
-#button_pdf:hover {
+#button_pdf:hover , #button_sistema:hover {
     background: linear-gradient(90deg,rgba(225,0,152) 0%,#f18fc7 100%);
     color:#fafcfa;
     font-weight: bold;
@@ -236,6 +236,12 @@
   
     }
 
+    .esconder , #esconder{
+        display: none;
+       
+    }
+
+
 footer {
 
     display: flex;
@@ -318,6 +324,15 @@ label[for="tipo_pedido"]::after {
     border:none;
 }
 
+/* Estilo para a label */
+.label-referencia {
+    color: rgba(225, 0, 152);
+}
+
+/* Estilo para o placeholder */
+#referencia::placeholder {
+    color: rgba(225, 0, 152);
+}
 /* Media Queries para responsividade */
 
 @media (max-width: 1040px) {

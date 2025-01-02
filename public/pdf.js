@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const elementsToHide = document.querySelectorAll('.no-print');
         elementsToHide.forEach(el => el.style.display = 'none');
 
+        const elementsToHide1 = document.querySelectorAll('.button-group');
+        elementsToHide1.forEach(el1 => el1.style.display = 'none');
+
         const content = document.querySelector('.container');
         const razaoSocial = document.getElementById('razao_social').value;
         const codCliente = document.getElementById('cod_cliente').value;
@@ -46,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!confirmSend) {
                 console.log('Envio de e-mail cancelado.');
                 elementsToHide.forEach(el => el.style.display = 'block');
+                elementsToHide1.forEach(el1 => el1.style.display = 'flex');
                 return;
             }
 
@@ -65,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error('Erro ao salvar ou enviar o PDF:', error);
         } finally {
             elementsToHide.forEach(el => el.style.display = 'block');
+            elementsToHide1.forEach(el1 => el1.style.display = 'flex');
         }
     });
 });

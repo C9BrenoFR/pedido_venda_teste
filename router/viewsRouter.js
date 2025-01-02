@@ -4,7 +4,7 @@ const pdfController = require('../controllers/pdfController');
 const orderController = require('../controllers/orderController'); // Importa o controlador
 const invoicesController = require('../controllers/invoicesControllers');
 const { authMiddleware, authenticateUser } = require('../middleware/authMiddleware');
-const imputOrdersController = require('../controllers/imputOrdersControllers');
+const inputOrdersController = require('../controllers/inputOrdersControllers');
 
 const router = express.Router();
 
@@ -109,7 +109,7 @@ router.post('/logout', (req, res) => {
 
 //Rota post para pedidos
 
-router.post('/api/pedidos/imput', imputOrdersController.fetchImputOrders)
+router.post('/api/pedidos/input', inputOrdersController.fetchImputOrders)
 
 
 

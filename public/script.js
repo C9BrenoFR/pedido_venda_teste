@@ -193,6 +193,14 @@ document.getElementById('cnpj').addEventListener('blur', function () {
         document.getElementById('group').value = cliente[19];
         document.getElementById('transp').value = cliente[20];
         document.getElementById('codgroup').value = cliente[18];
+        document.getElementById('representanteId').value = cliente[15];
+        document.getElementById('formPagId').value = cliente[25];
+        document.getElementById('condPagId').value = cliente[27];
+        document.getElementById('PercentualComissaoItem').value = cliente[23];
+        document.getElementById('PercentualComissaoServico').value = cliente[24];
+        document.getElementById('ContatoClienteId').value = cliente[28];
+        document.getElementById('formPagDescricao').value = cliente[26];
+
     } else {
         alert("Cliente não encontrado.");
     }
@@ -277,7 +285,7 @@ document.getElementById('adicionarLinha').addEventListener('click', function () 
     let tbody = document.querySelector('#dadosPedido tbody');
     let tr = document.createElement('tr');
 
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 10; i++) {
         let td = document.createElement('td');
         let input = document.createElement('input');
         input.type = 'text';
@@ -285,6 +293,11 @@ document.getElementById('adicionarLinha').addEventListener('click', function () 
         input.style.width = '100%';
         input.style.boxSizing = 'border-box';
         input.style.marginLeft ='-0px';
+
+           // Oculta dinamicamente a coluna "Item ID" (10ª coluna)
+           if (i === 9) {
+            td.style.display = 'none'; // Oculta a célula visualmente
+        }
         
 
         if (i === 0) {
@@ -364,6 +377,7 @@ function verificarCodigoDuplicado(codigo) {
 function preencherLinha(tr, listaPrecos, promocao = null, ufCliente) { 
     let cells = tr.getElementsByTagName('td');
     let codProduto = cells[0].querySelector('input').value;
+    
 
     if (verificarCodigoDuplicado(codProduto)) {
         alert(`O código "${codProduto}" já existe na lista. Por favor, digite outro código.`);
@@ -427,6 +441,7 @@ function preencherLinha(tr, listaPrecos, promocao = null, ufCliente) {
         cells[2].querySelector('input').value = listaPrecos[9];
         cells[3].querySelector('input').value = listaPrecos[10];
         cells[4].querySelector('input').value = listaPrecos[4];
+        cells[9].querySelector('input').value = listaPrecos[13];
     }
 
     function atualizarValorTotal() {
@@ -465,17 +480,105 @@ function preencherLinha(tr, listaPrecos, promocao = null, ufCliente) {
     cells[8].querySelector('input').addEventListener('input', atualizarTotalComImposto);
 }
 
-const btcnpjGeneration = document.getElementById('button_cnpj');
 
-btcnpjGeneration.addEventListener("click", () => {
-    
-    // Obtém o elemento de entrada do CNPJ
-    const inputCNPJ = document.getElementById('cnpj');
+//--inicio-----envio de dados para o sistema DBCorp-----------------------------------------------------------------------------------------////
 
-    // Define o foco no campo de entrada
-    inputCNPJ.focus();
+const btSistema = document.getElementById('button_sistema');
+const feedbackDiv = document.getElementById('feedback1');
 
+btSistema.addEventListener("click", async () => {
+    // Exibe a mensagem de feedback
+    feedbackDiv.style.display = "block";
+
+    try {
+
+        // Captura as linhas da tabela
+        const tableRows = document.querySelectorAll('#dadosPedido tbody tr');
+
+        // Cria o array dinâmico para ItensPedidoVenda
+        const itensPedidoVenda = Array.from(tableRows)
+            .map(row => {
+                const cells = row.querySelectorAll('td input'); // Captura os inputs da linha
+
+                // Verifica se a linha tem dados válidos antes de adicioná-la
+                const itemId = Number(cells[9]?.value || 0); // ID do item na décima célula
+                const quantidade = Number(cells[1]?.value || 0); // Quantidade na segunda célula
+
+                // Só adiciona a linha se tiver um ItemId e Quantidade válidos
+                if (itemId > 0 && quantidade > 0) {
+                    return {
+                        ItemValorDesconto: 0,
+                        ItemPercentualDesconto: 0,
+                        EntregasItemPedidoVenda: [
+                            {
+                                Data: new Date().toISOString(), 
+                                DataPrevista: new Date().toISOString(),
+                                Quantidade: quantidade,
+                            }
+                        ],
+                        ItemId: itemId,
+                        Quantidade: quantidade,
+                    };
+                }
+
+                return null; // Retorna null para linhas inválidas
+            })
+            .filter(item => item !== null); // Remove itens nulos do array
+
+        // Cria o corpo da requisição com base nos inputs
+        const requestBody = {
+            ListaPrecoId: Number(document.getElementById('codgroup').value),
+            CondicaoPagamentoId: Number(document.getElementById('condPagId').value),
+            FormaPagamentoId: Number(document.getElementById('formPagId').value),
+            ValorDesconto: 0,
+            PercentualDesconto: 0,
+            ItensPedidoVenda: itensPedidoVenda,
+            RepresentantesPedidoVendas: [
+                {
+                    RepresentanteId: Number(document.getElementById('representanteId').value),
+                    RepresentantePrincipal: true,
+                    PercentualComissaoItem: Number(document.getElementById('PercentualComissaoItem').value),
+                    PercentualComissaoServico: Number(document.getElementById('PercentualComissaoServico').value),
+                }
+            ],
+            ClienteId: Number(document.getElementById('cod_cliente').value),
+            ContatoClienteId: Number(document.getElementById('ContatoClienteId').value || 0),
+            NumeroReferencia: document.getElementById('referencia').value,
+            Observacao: document.getElementById('observation').value,
+        };
+
+        // Loga o JSON no console
+        console.log("JSON enviado para a API:", requestBody);
+
+        // Envia os dados para a API
+        const response = await fetch('/api/pedidos/input', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && (!result.ErrorMessages || result.ErrorMessages.length === 0)) {
+            alert("Pedido enviado com sucesso!");
+            console.log("Resposta da API:", result);
+        } else {
+            alert(`Erro ao enviar pedido: ${result.ErrorMessages?.join(", ") || "Erro desconhecido"}`);
+            console.error("Erro da API:", result);
+        }
+    } catch (error) {
+        console.error("Erro de conexão:", error);
+        alert("Erro ao conectar com o servidor.");
+    } finally {
+        // Oculta a mensagem de feedback
+        feedbackDiv.style.display = "none";
+    }
 });
+//--fim-----envio de dados para o sistema DBCorp-----------------------------------------------------------------------------------------////
+
+
 
 btPdfGeneration.addEventListener("click", async () => {
     const razaoSocial = document.getElementById('razao_social').value;

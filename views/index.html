@@ -43,10 +43,15 @@
                     setInterval(atualizarDataHora, 1000);
                 </script>
 
+            <!-- Mensagem de feedback -->
+            <div id="feedback1" style="display: none; text-align: center; font-weight: bold; margin: 10px; color: red;">
+                Estamos enviando o pedido, aguarde...
+            </div>
+
         </div>
         <div class="button-group">
             <button id="button_pdf">SALVAR EM PDF E ENVIAR E-MAIL </button>
-            <button id="button_cnpj">INFORME O CNPJ</button>
+            <button id="button_sistema">ENVIAR PARA O SISTEMA</button>
         </div>
         
         <div class="section">
@@ -58,6 +63,30 @@
 
                 <label for="representante" class="label-espaco-esquerda">CÓDIGO REP:</label> 
                 <input type="text" id="representante" placeholder="Representante" readonly>
+
+
+
+                  <!-- input escondidos  -->
+                <label for="representanteId" class="esconder">Rep ID:</label> 
+                <input type="text" class="esconder" id="representanteId" placeholder="Rep ID" readonly>
+
+                <label for="formPagId" class="esconder">Forma de pagamento ID:</label> 
+                <input type="text" class="esconder" id="formPagId" placeholder="formPag ID" readonly>
+
+                <label for="condPagId" class="esconder">Condição de pagamento ID:</label> 
+                <input type="text" class="esconder" id="condPagId" placeholder="condPag ID" readonly>
+
+                <label for="PercentualComissaoItem" class="esconder"> % comissao item:</label> 
+                <input type="text" class="esconder" id="PercentualComissaoItem" placeholder="% comissao item" readonly>
+
+                <label for="PercentualComissaoServico" class="esconder"> % comissao servico:</label> 
+                <input type="text" class="esconder" id="PercentualComissaoServico" placeholder="% comissao servico" readonly>
+
+                <label for="ContatoClienteId" class="esconder"> contato id:</label> 
+                <input type="text" class="esconder" id="ContatoClienteId" placeholder="contato id" readonly>
+                  <!-- input escondidos  -->
+
+
 
                 <label class="IE" for="ie">INSCRIÇÃO ESTADO:</label> 
                 <input type="text" id="ie" placeholder="Inscrição Estadual" readonly>
@@ -111,6 +140,12 @@
                 <label class="label-espaco-esquerda" for="group">TABELA:</label> 
                 <input type="text" id="group" placeholder="Descrição Grupo" readonly>
 
+                <label  for="formPagDescricao">FORMA PAGAMENTO:</label> 
+                <input type="text" id="formPagDescricao" placeholder="Forma de Pagamento" readonly>
+
+                <label class="label-espaco-esquerda label-referencia" for="referencia">REFERÊNCIA:</label> 
+                <input type="text" id="referencia" placeholder="Digite o Número ">
+
             </form>
         </div>
 
@@ -129,6 +164,7 @@
                             <th class="unit">R$ UNIT.</th>
                             <th class="vipi">R$ C/ IPI</th>
                             <th class="total" >TOTAL R$</th>
+                            <th class="itemId" id="esconder">Item ID</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -161,7 +197,7 @@
         <!-- Seção de Observações -->
         <div class="observations">
             <div class="obs-title">OBSERVAÇÕES</div>
-            <textarea placeholder="Escreva alguma observação"></textarea>
+            <textarea id="observation" placeholder="Escreva alguma observação"></textarea>
         </div>
     </div>
 
