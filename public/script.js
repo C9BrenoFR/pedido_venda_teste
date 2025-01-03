@@ -6,33 +6,34 @@ let listaPrecosData;
 let icmsSTData;
 //// Variáveis globais 
 
+const timestamp = new Date().getTime();
 
 // Função para carregar os JSONs teste
-fetch('/data/cliente.json')
+fetch(`/data/cliente.json?cacheBust=${timestamp}`)
     .then(response => response.json())
     .then(data => {
         clientesData = data;
     });
 
-fetch('/data/Promocao.json')
+fetch(`/data/Promocao.json?cacheBust=${timestamp}`)
     .then(response => response.json())
     .then(data => {
         promocaoData = data;
     });
 
-fetch('/data/Fora de linha.json')
+fetch(`/data/Fora de linha.json?cacheBust=${timestamp}`)
     .then(response => response.json())
     .then(data => {
         foraDeLinhaData = data;
     });
 
-fetch('/data/Lista-precos.json')
+fetch(`/data/Lista-precos.json?cacheBust=${timestamp}`)
     .then(response => response.json())
     .then(data => {
         listaPrecosData = data;
     });
 
-fetch('/data/ICMS-ST.json')
+fetch(`/data/ICMS-ST.json?cacheBust=${timestamp}`)
     .then(response => response.json())
     .then(data => {
         icmsSTData = data;
