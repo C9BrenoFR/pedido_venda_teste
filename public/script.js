@@ -6,9 +6,10 @@ let listaPrecosData;
 let icmsSTData;
 //// Variáveis globais 
 
+//Função para atualizar os caches no navegador
 const timestamp = new Date().getTime();
 
-// Função para carregar os JSONs teste
+// Função para carregar os JSONs 
 fetch(`/data/cliente.json?cacheBust=${timestamp}`)
     .then(response => response.json())
     .then(data => {
@@ -603,5 +604,6 @@ btPdfGeneration.addEventListener("click", async () => {
         alert('Erro ao enviar o PDF por e-mail');
     }
 });
+
 
 

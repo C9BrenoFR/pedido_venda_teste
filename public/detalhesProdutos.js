@@ -2,15 +2,18 @@
 let detalhesProdutosData;
 let imgProdutosData;
 
+//Função para atualizar os caches no navegador
+const timestamp1 = new Date().getTime();
+
 // Função para carregar os JSONs
 function carregarDados() {
-    fetch('/data/detalhesProdutos.json') // Caminho do JSON de detalhes
+    fetch( `/data/detalhesProdutos.json?cacheBust=${timestamp1}` ) // Caminho do JSON de detalhes
         .then(response => response.json())
         .then(data => {
             detalhesProdutosData = data;
         });
 
-    fetch('/data/img_produtos.json') // Caminho do JSON de imagens
+    fetch(`/data/img_produtos.json?cacheBust=${timestamp1}`) // Caminho do JSON de imagens
         .then(response => response.json())
         .then(data => {
             imgProdutosData = data;
