@@ -43,7 +43,7 @@ async function checkToken() {
 function getLast30Days() {
   const hoje = new Date();
   const dataFim = hoje.toISOString().split('T')[0]; // Data de hoje no formato YYYY-MM-DD
-  const dataInicio = new Date(hoje.setDate(hoje.getDate() - 70)).toISOString().split('T')[0]; // Data 30 dias atrás
+  const dataInicio = new Date(hoje.setDate(hoje.getDate() - 90)).toISOString().split('T')[0]; // Data 30 dias atrás
   return { dataInicio, dataFim };
 }
 
