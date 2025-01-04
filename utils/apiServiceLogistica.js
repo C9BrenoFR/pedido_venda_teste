@@ -41,40 +41,32 @@ async function getAccessToken() {
 }
 
 // Função para buscar dados da planilha com filtro de últimos 4 meses
-async function getSpreadsheetData(driveId, itemId, sheetName,startRow) {
-
+async function getSpreadsheetData(driveId, itemId, sheetName) {
     const token = await getAccessToken();
-    const baseUrl = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')`;
+    const url = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')/range(address='A3700:Q4178')`;
 
     try {
-        // Obter o intervalo usado (usedRange)
-        const usedRangeResponse = await axios.get(`${baseUrl}/usedRange`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        const usedRange = usedRangeResponse.data.address; // Exemplo: 'A1:Q4178'
-
-        // Determinar a última linha preenchida
-        const lastRowMatch = usedRange.match(/(\d+)$/);
-        const lastRow = lastRowMatch ? parseInt(lastRowMatch[1], 10) : null;
-
-        if (!lastRow) throw new Error("Não foi possível determinar a última linha preenchida.");
-
-        // Construir o range dinâmico
-        const range = `A${startRow}:Q${lastRow}`;
-        const url = `${baseUrl}/range(address='${range}')`;
-
-        // Buscar dados do range dinâmico
         const response = await axios.get(url, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
 
-        const data = response.data.values || [];
+        // Filtrar os últimos 4 meses
+        const now = new Date();
+        const fourMonthsAgo = new Date();
+        fourMonthsAgo.setMonth(now.getMonth() - 12);
 
-        console.log("Dados retornados:", data); // Log para verificar os dados recebidos
-        return data;
+        const filteredData = response.data.values.filter(row => {
+            if (!row[1] || isNaN(row[1])) return false; // Ignorar datas inválidas
+            const jsDate = excelDateToJSDate(row[1]);
+            return jsDate && jsDate >= fourMonthsAgo;
+        });
+
+        return filteredData;
     } catch (error) {
         console.error("Erro ao buscar dados da planilha:", error.response?.data || error.message);
-        throw new Error("Falha ao buscar dados da planilha.");
+        throw new Error("Falha ao buscar dados da planilha");
     }
 }
 
