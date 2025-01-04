@@ -43,7 +43,7 @@ async function getAccessToken() {
 // Função para buscar dados da planilha com filtro de últimos 4 meses
 async function getSpreadsheetData(driveId, itemId, sheetName) {
     const token = await getAccessToken();
-    const url = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')/range(address='A3700:Q4178')`;
+    const url = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')/range(address='A3900:Q4818')`;
 
     try {
         const response = await axios.get(url, {
