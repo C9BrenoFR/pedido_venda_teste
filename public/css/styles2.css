@@ -333,6 +333,8 @@ label[for="tipo_pedido"]::after {
 #referencia::placeholder {
     color: rgba(225, 0, 152);
 }
+
+
 /* Media Queries para responsividade */
 
 @media (max-width: 1040px) {

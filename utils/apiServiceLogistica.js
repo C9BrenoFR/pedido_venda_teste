@@ -41,33 +41,46 @@ async function getAccessToken() {
 }
 
 // Função para buscar dados da planilha com filtro de últimos 4 meses
-async function getSpreadsheetData(driveId, itemId, sheetName) {
+async function getSpreadsheetData(driveId, itemId, sheetName,startRow) {
+
     const token = await getAccessToken();
-    const url = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')/range(address='A3700:Q4178')`;
+    const baseUrl = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')`;
 
     try {
+        // Obter o intervalo preenchido na planilha
+        const usedRangeResponse = await axios.get(`${baseUrl}/usedRange`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const usedRange = usedRangeResponse.data.address; // Exemplo: 'A1:Q4178'
+
+        // Determinar a última linha preenchida
+        const lastRowMatch = usedRange.match(/(\d+)$/);
+        const lastRow = lastRowMatch ? parseInt(lastRowMatch[1], 10) : null;
+
+        if (!lastRow) throw new Error("Não foi possível determinar a última linha preenchida.");
+
+        const range = `A${startRow}:Q${lastRow}`;
+        const url = `${baseUrl}/range(address='${range}')`;
+
+        // Obter os dados da planilha no intervalo calculado
         const response = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
         });
 
-        // Filtrar os últimos 4 meses
-        const now = new Date();
-        const fourMonthsAgo = new Date();
-        fourMonthsAgo.setMonth(now.getMonth() - 12);
+        const data = response.data.values || [];
 
-        const filteredData = response.data.values.filter(row => {
-            if (!row[1] || isNaN(row[1])) return false; // Ignorar datas inválidas
-            const jsDate = excelDateToJSDate(row[1]);
-            return jsDate && jsDate >= fourMonthsAgo;
-        });
+        // Parar ao encontrar '0' ou 'null' na coluna A
+        const validData = [];
+        for (const row of data) {
+            if (row[0] === 0 || row[0] === null) break;
+            validData.push(row);
+        }
 
-        
-        return filteredData;
+       // console.log("Dados retornados:", validData); // Log dos dados retornados
+        return validData;
     } catch (error) {
         console.error("Erro ao buscar dados da planilha:", error.response?.data || error.message);
-        throw new Error("Falha ao buscar dados da planilha");
+        throw new Error("Falha ao buscar dados da planilha.");
     }
 }
 

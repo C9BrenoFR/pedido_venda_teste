@@ -19,7 +19,10 @@ async function fetchLogisticsData(req, res) {
         const itemId = '01DKYK72E4OA25KFVSX5DIYRQ4A2BE57MQ';   // Substitua pelo ID correto do arquivo
         const sheetName = 'MASTER'; // Nome da aba na planilha
 
-        const data = await getSpreadsheetData(driveId, itemId, sheetName);
+
+        const startRow = 3800; // Define o início fixo
+
+        const data = await getSpreadsheetData(driveId, itemId, sheetName, startRow);
 
          // Filtro pelo número do representante, se aplicável
          const userNumero = req.session?.userNumero || null;

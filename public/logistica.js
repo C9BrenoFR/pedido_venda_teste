@@ -14,6 +14,7 @@ function hideFeedback() {
     feedback.textContent = '';
 }
 
+
 // Carregar detalhes dos pedidos
 async function loadOrderDetailsFromSharePoint() {
 
@@ -24,16 +25,8 @@ async function loadOrderDetailsFromSharePoint() {
         if (!response.ok) throw new Error("Erro ao buscar dados do SharePoint");
         ordersData1 = await response.json();
 
-        // Se o usuário for um representante, filtre os dados
-        const userNumero = window.sessionData?.userNumero || null;
-        if (userNumero) {
-            ordersData1 = ordersData1.filter(order => order.Rep.toString() === userNumero);
-            console.log('Dados Filtrados:', ordersData1);
-        }
-
-        hideFeedback();
         renderTable(ordersData1);
-  
+        hideFeedback();
     } catch (error) {
         console.error("Erro ao carregar dados do SharePoint:", error);
         showFeedback("Erro ao carregar dados do SharePoint. Recarregue a página.");
