@@ -20,7 +20,7 @@ async function fetchLogisticsData(req, res) {
         const sheetName = 'MASTER'; // Nome da aba na planilha
 
 
-        const startRow = 3800; // Define o início fixo
+        const startRow = 4000; // Define o início fixo
 
         const data = await getSpreadsheetData(driveId, itemId, sheetName, startRow);
 
