@@ -43,15 +43,12 @@ async function loadPedidoDetails() {
 
         // Preencher campos com os dados do pedido
         document.getElementById('cnpj').value = pedido.cliente?.documento?.numeroTexto || '';
-        document.getElementById('representante').value = pedido.representante?.nomeAbreviado || '';
+        document.getElementById('representante').value = 
+                                                   `${pedido.representante?.id || ''} - ${pedido.representante?.nomeAbreviado || ''}`;
         document.getElementById('razao_social').value = pedido.cliente?.nomeAbreviado || '';
         document.getElementById('cod_cliente').value = pedido.cliente?.codigo || '';
         document.getElementById('endereco').value = pedido.cliente?.endereco.logradouro || '';
-        document.getElementById('bairro').value = pedido.cliente?.bairro || '';
         document.getElementById('cidade').value = pedido.detalhes.cliente.endereco.cidade.nome || '';
-        document.getElementById('uf').value = pedido.cliente?.uf || '';
-        document.getElementById('cep').value = pedido.cliente?.cep || '';
-        document.getElementById('volume').value = pedido.volumes || '';
 
         document.getElementById('total').value = pedido.detalhes.financeiro.item.valorTotal
          ? pedido.detalhes.financeiro.item.valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -74,27 +71,31 @@ async function loadPedidoDetails() {
         // Certifique-se de acessar os itens dentro de 'detalhes'
         const detalheItens = pedido.detalhes?.itens || [];
 
+        let totalVolumes = 0;
+
         detalheItens.forEach(item => {
+
+            totalVolumes += item.quantidade || 0; // Soma a quantidade de cada item
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.itemEmpresaId || ''}</td>
                 <td>${item.quantidade || ''}</td>
                 <td>${item.unidadeMedidaAbreviado || ''}</td>
-                <td>${item.pack || ''}</td>
                 <td>${item.descricao || ''}</td>
                 <td>${item.tributos?.ipi?.aliquota 
                   ? item.tributos.ipi.aliquota.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%' 
-                  : ''}</td>
+                  : '0,00%'}</td>
                 <td>${item.financeiro.valorUnitarioFinal 
                   ? item.financeiro.valorUnitarioFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) 
                   : ''}</td>
-                <td>${item.valorComIpi || ''}</td>
-                <td>${item.financeiro.valorTotalFinal 
-                  ? item.financeiro.valorTotalFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) 
-                  : ''}</td>
+                <td>${(item.financeiro.valorUnitarioFinal * (1 + (item.tributos?.ipi?.aliquota / 100))).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }</td>
+                <td>${((item.financeiro.valorUnitarioFinal * (1 + (item.tributos?.ipi?.aliquota / 100))) * item.quantidade).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
             `;
             tbody.appendChild(row);
         });
+        // Preencher o campo de volumes com o total calculado
+        document.getElementById('volume').value = totalVolumes.toLocaleString('pt-BR');
     } catch (error) {
         console.error('Erro ao carregar os detalhes do pedido:', error);
         showFeedback("Erro ao carregar dados. Recarregue a página e tente novamente.");
