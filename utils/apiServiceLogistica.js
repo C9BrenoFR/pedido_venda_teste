@@ -47,7 +47,7 @@ async function getSpreadsheetData(driveId, itemId, sheetName,startRow) {
     const baseUrl = `${graphBaseUrl}/drives/${driveId}/items/${itemId}/workbook/worksheets('${sheetName}')`;
 
     try {
-        // Obter o intervalo preenchido na planilha
+        // Obter o intervalo usado (usedRange)
         const usedRangeResponse = await axios.get(`${baseUrl}/usedRange`, {
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -59,25 +59,19 @@ async function getSpreadsheetData(driveId, itemId, sheetName,startRow) {
 
         if (!lastRow) throw new Error("Não foi possível determinar a última linha preenchida.");
 
+        // Construir o range dinâmico
         const range = `A${startRow}:Q${lastRow}`;
         const url = `${baseUrl}/range(address='${range}')`;
 
-        // Obter os dados da planilha no intervalo calculado
+        // Buscar dados do range dinâmico
         const response = await axios.get(url, {
             headers: { Authorization: `Bearer ${token}` },
         });
 
         const data = response.data.values || [];
 
-        // Parar ao encontrar '0' ou 'null' na coluna A
-        const validData = [];
-        for (const row of data) {
-            if (row[0] === 0 || row[0] === null) break;
-            validData.push(row);
-        }
-
-       // console.log("Dados retornados:", validData); // Log dos dados retornados
-        return validData;
+        console.log("Dados retornados:", data); // Log para verificar os dados recebidos
+        return data;
     } catch (error) {
         console.error("Erro ao buscar dados da planilha:", error.response?.data || error.message);
         throw new Error("Falha ao buscar dados da planilha.");

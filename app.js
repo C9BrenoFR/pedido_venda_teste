@@ -16,8 +16,8 @@ const PORT = process.env.PORT || 3000;
 
 
 // Configurar o tamanho máximo do corpo da requisição
-app.use(express.json({ limit: '200mb' }));
-app.use(express.urlencoded({ limit: '200mb', extended: true }));
+app.use(express.json({ limit: '500mb' }));
+app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
 // Middleware para parsing de JSON
 app.use(express.json());
