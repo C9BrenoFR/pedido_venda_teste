@@ -4,7 +4,7 @@ async function getOrderDetails(req, res) {
 
   const status = req.query.status || 6; // Usa status 6 como padrão
   const codRep = req.query.codRep || null; // Novo parâmetro codRep
-  const cnpj = req.query.cnpj || null; // Filtro por CNPJ do cliente
+  const cnpj = req.query.clienteCNPJ || null; // Filtro por CNPJ do cliente
   const dataInicio = req.query.DataPedidoInicio ? new Date(req.query.DataPedidoInicio) : null; // Filtro de data início
   const dataFim = req.query.DataPedidoFim ? new Date(req.query.DataPedidoFim) : null; // Filtro de data fim
   const statusSeparacao = req.query.statusSeparacao ? Number(req.query.statusSeparacao) : null;
