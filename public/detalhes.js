@@ -58,11 +58,13 @@ async function loadPedidoDetails() {
          ? pedido.detalhes.financeiro.item.valorFinanceiro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
           : '';  
 
-        document.getElementById('observacoes').value = pedido.detalhes.cliente.observacao || '';
+        document.getElementById('observacoes').value = pedido.observacao || '';
         document.getElementById('pay').value = pedido.detalhes.condicaoPagamento.descricao || '';
         document.getElementById('codgroup').value = pedido.detalhes.listaPreco.id || '';
         document.getElementById('group').value = pedido.detalhes.listaPreco.descricao || '';
         document.getElementById('transp').value = pedido.detalhes_transporte.nomeAbreviado || '';
+        document.getElementById('ref').value = pedido.detalhes.numeroReferencia || '';
+        document.getElementById('pedido').value = pedido.codigo|| '';
 
         // Preencher tabela de itens do pedido
         const tbody = document.getElementById('dadosPedido').querySelector('tbody');

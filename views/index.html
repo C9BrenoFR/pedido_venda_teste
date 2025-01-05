@@ -11,7 +11,7 @@
     <link rel="manifest" href="/images/site.webmanifest">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" integrity="sha512-MpDFIChbcXl2QgipQrt1VcPHMldRILetapBl5MPCA9Y8r7qvlwx1/Mc9hNTzY+kS5kX6PdoDq41ws1HiVNLdZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="/css/styles2.css?v=1736062043946">
+    <link rel="stylesheet" href="/css/styles2.css?v=1736072359283">
 </head>
 
 <body id="corpo">
@@ -60,7 +60,9 @@
             <div class="section-title">DADOS DO CLIENTE</div>
             <form class="form-group">
 
-                <label for="cnpj">CNPJ:</label> 
+                <label for="cnpj" class="label-obrigatorio">CNPJ:
+                    <span class="tooltip2">Campo Obrigatório</span>
+                </label> 
                 <input type="text" id="cnpj" placeholder="Digite o CNPJ" maxlength="14">
 
                 <label for="representante" class="label-espaco-esquerda">CÓDIGO REP:</label> 
@@ -93,7 +95,9 @@
                 <label class="IE" for="ie">INSCRIÇÃO ESTADO:</label> 
                 <input type="text" id="ie" placeholder="Inscrição Estadual" readonly>
 
-                <label class="label-espaco-esquerda" for="tipo_pedido">TIPO PEDIDO:</label>
+                <label class="label-espaco-esquerda label-obrigatorio" for="tipo_pedido">TIPO PEDIDO:
+                     <span class="tooltip2">Campo Obrigatório</span>
+                </label>
                 <select id="tipo_pedido">
                     <option value="Venda">Venda</option>
                     <option value="Promoção">Promoção</option>
@@ -216,7 +220,7 @@
         
     </footer>
     
-    <script src="/script.js?v=1736062043946"></script>
+    <script src="/script.js?v=1736072359283"></script>
     <script  src="/pdf.js"></script>
 
     <script>

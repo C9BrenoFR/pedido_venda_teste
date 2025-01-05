@@ -321,7 +321,7 @@ label[for="referencia"]::after {
     
 }
 
-.label-referencia {
+.label-referencia , .label-obrigatorio {
     position: relative;
     display: inline-block;
 }
@@ -356,11 +356,52 @@ label[for="referencia"]::after {
     border-color: rgba(225, 0, 152) transparent transparent transparent;
 }
 
-.label-referencia:hover .tooltip1 {
+.label-referencia:hover .tooltip1  {
     visibility: visible;
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
 }
+
+
+.tooltip2 {
+    visibility: hidden;
+    width: 290px;
+    background-color: rgba(225, 0, 152);
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 8px;
+    position: absolute;
+    bottom: 125%; /* Ajusta a posição acima do texto */
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.tooltip2::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Triângulo abaixo da tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(225, 0, 152) transparent transparent transparent;
+}
+
+.label-obrigatorio:hover .tooltip2 {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+
+
+
 
 
 .no-print button{
