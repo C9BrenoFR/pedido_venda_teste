@@ -8,13 +8,23 @@
     <link rel="icon"  type="image/png" sizes="32x32" href="/images/favicon-32x32.png" >
     <link rel="icon"  type="image/png" sizes="16x16" href="/images/favicon-16x16.png" >
     <link rel="manifest" href="/images/site.webmanifest">
-    <link rel="stylesheet" href="/css/comercial.css?v=1736049006215">
+    <link rel="stylesheet" href="/css/comercial.css?v=1736055167002">
 </head>
 <body>
-    <h2>Detalhes dos Pedidos</h2>
+    <header class="header-container">
+        <a href="https://kidszoneworld.com.br/portal-do-representante/">
+            <img src="/images/logo.png" alt="Imagem KidsZone" class="logo">
+        </a> 
+        <h2 class="header-title">Detalhes dos Pedidos</h2>
+    </header>
+    
     <button id="logoutButton">Sair</button>
-    <button id="applyFilters">Aplicar Filtros</button>
-    <button id="clearFilters">Limpar Filtros</button>
+
+    <div class="buttons_filters">
+        <button id="applyFilters">Aplicar Filtros</button>
+        <button id="clearFilters">Limpar Filtros</button>
+    </div>
+  
 
     <!-- Feedback -->
     <div id="feedback" style="display: none; text-align: center; font-weight: bold; margin: 10px; color: red;"></div>
@@ -79,6 +89,6 @@
         </tbody>
     </table>
 
-    <script src="/comercial.js?v=1736049006215"></script>
+    <script src="/comercial.js?v=1736055167002"></script>
 </body>
 </html>

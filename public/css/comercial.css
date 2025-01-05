@@ -103,3 +103,33 @@ button:hover{
     border: 1px solid #0f0f0f;
     
 }
+
+.buttons_filters{
+    display: flex;
+    justify-content:flex-end;
+    gap: 10px;
+}
+
+.header-container {
+    display: flex;
+    align-items: center; /* Alinha verticalmente imagem e texto */
+    justify-content: center; /* Alinha horizontalmente */
+    margin-bottom: 10px; /* Ajuste o espaçamento entre o cabeçalho e a tabela */
+    gap: 15px; /* Espaçamento entre a imagem e o texto */
+}
+
+.logo {
+    width: 100px; /* Tamanho ajustável da imagem */
+    height: auto;
+}
+
+.header-title {
+    font-size: 24px; /* Tamanho do texto */
+    margin: 0; /* Remove espaçamentos padrão */
+    color: #333; /* Cor do texto */
+}
+
+table {
+    margin-top: 10px; /* Reduz a margem superior da tabela */
+}
+
