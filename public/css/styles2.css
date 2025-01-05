@@ -365,7 +365,7 @@ label[for="referencia"]::after {
 
 .tooltip2 {
     visibility: hidden;
-    width: 290px;
+    width: 170px;
     background-color: rgba(225, 0, 152);
     color: #fff;
     text-align: center;

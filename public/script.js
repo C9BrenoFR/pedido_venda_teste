@@ -489,6 +489,14 @@ const btSistema = document.getElementById('button_sistema');
 const feedbackDiv = document.getElementById('feedback1');
 
 btSistema.addEventListener("click", async () => {
+
+    // Pergunta ao usuário se deseja enviar os dados para o sistema
+    const confirmSend1 = confirm("Você deseja realmente enviar para o sistema ?");
+    if (!confirmSend1) {
+        console.log('Envio cancelado.');
+        return;
+    }
+
     // Exibe a mensagem de feedback
     feedbackDiv.style.display = "block";
 
