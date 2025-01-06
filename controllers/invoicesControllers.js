@@ -44,7 +44,8 @@ async function fetchLogisticsData(req, res) {
             AGENDA: row[15],
             OCORRÊNCIA: row[16],
             CNPJ: row[5],
-            STATUS_ENTREGA: row[14]
+            STATUS_ENTREGA: row[14],
+            xml: row[17]
         }));
 
         if (userNumero) {
