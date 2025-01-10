@@ -12,7 +12,7 @@ const viewsRouter = require('./router/viewsRouter');
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 
 // Configurar o tamanho máximo do corpo da requisição
