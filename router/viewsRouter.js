@@ -52,6 +52,12 @@ router.get('/logistica',authMiddleware, (req, res) => {
 
 
 
+// Rota para a página (video.html)
+router.get('/video',authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'video.html'));
+});
+
+
 // Rotas da API de pedidos
 router.get('/api/pedidos', orderController.getOrderDetails); // Pedidos com representantes
 router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes do pedido por ID
