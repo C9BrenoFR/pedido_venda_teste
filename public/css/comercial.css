@@ -91,7 +91,8 @@ button:hover{
 #dataPedidoInicioFilter1 , 
 #dataPedidoInicioFilter ,
 #dataPedidoFimFilter1 ,
-#dataPedidoFimFilter {
+#dataPedidoFimFilter ,
+#notaFilter1 {
     padding: 7px;
     border-radius: 5px;
     border: 1px solid #0f0f0f;
