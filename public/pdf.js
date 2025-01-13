@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     const btPdfGeneration = document.getElementById('button_pdf');
     const modal1 = document.getElementById('customModal1');
     const closeButton1 = document.querySelector('.close-button1');
     const confirmButton1 = document.getElementById('confirmButton1');
     const cancelButton1 = document.getElementById('cancelButton1');
     const feedbackDiv = document.getElementById('feedback1'); // Div de feedback para o envio do e-mail
+    const help = document.getElementById('helpContainer');
 
     btPdfGeneration.addEventListener("click", async () => {
         console.log('Botão de PDF clicado');
@@ -13,11 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const elementsToHide1 = document.querySelectorAll('.button-group');
         elementsToHide1.forEach(el1 => el1.style.display = 'none');
+        
+        help.style.display='none';
 
         const content = document.querySelector('.container');
         const razaoSocial = document.getElementById('razao_social').value;
         const codCliente = document.getElementById('cod_cliente').value;
         const representante = document.getElementById('representante').value;
+        const emailRep = document.getElementById('email_rep').value;
 
         const filename = `Pedido de Venda ${razaoSocial} - ${codCliente} e Rep ${representante}.pdf`;
 
@@ -63,7 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             confirmButton1.addEventListener("click", async () => {
+
                 modal1.style.display = "none";
+                help.style.display='none';
+                elementsToHide1.forEach(el1 => el1.style.display = 'none');
 
                 // Exibe a mensagem de feedback
                 feedbackDiv.textContent = 'Aguarde, estamos enviando o e-mail...';
@@ -74,15 +82,10 @@ document.addEventListener("DOMContentLoaded", () => {
                      // Oculta a mensagem de feedback antes de gerar o PDF para envio
                      feedbackDiv.style.display = 'none';
 
-                    // Reexibe os elementos antes de gerar o PDF para envio
-                    elementsToHide1.forEach(el1 => el1.style.display = 'none');
-
                     // Gera o PDF novamente em base64 para envio
                     const pdfBase64 = await html2pdf().set(options).from(content).outputPdf('datauristring');
 
-                    // Oculta os elementos novamente após a captura
-                    elementsToHide1.forEach(el1 => el1.style.display = 'flex');
-
+          
                      // Exibe a mensagem de feedback novamente enquanto envia o e-mail
                     feedbackDiv.style.display = 'block';
 
@@ -92,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ pdfBase64, razaoSocial, codCliente, representante })
+                        body: JSON.stringify({ pdfBase64, razaoSocial, codCliente, representante, emailRep })
                     });
 
                     const result = await response.text();
@@ -106,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     feedbackDiv.style.display = 'none';
                     elementsToHide.forEach(el => el.style.display = 'block');
                     elementsToHide1.forEach(el1 => el1.style.display = 'flex');
+                    help.style.display='block';
                 }
             });
         } catch (error) {
@@ -113,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } finally {
             elementsToHide.forEach(el => el.style.display = 'block');
             elementsToHide1.forEach(el1 => el1.style.display = 'flex');
+            help.style.display='block';
         }
     });
 });
