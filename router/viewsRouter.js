@@ -44,6 +44,10 @@ router.get('/detalhesProdutos',(req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'Detalhes_Produtos.html'));
 });
 
+// Rota para a página de eficiencia cliente (eficiencia.html)
+router.get('/eficiencia',(req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'eficiencia.html'));
+});
 
 // Rota para a página de detalhes do pedido (detalhes.html)
 router.get('/logistica',authMiddleware, (req, res) => {

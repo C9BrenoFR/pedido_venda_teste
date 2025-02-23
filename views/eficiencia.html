@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eficiência dos Clientes</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon"  type="image/png" sizes="32x32" href="/images/favicon-32x32.png" >
+    <link rel="icon"  type="image/png" sizes="16x16" href="/images/favicon-16x16.png" >
+    <link rel="manifest" href="/images/site.webmanifest">
+    <link rel="stylesheet" href="/css/eficiencia.css?v=1740295120096">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-logo">
+                <a href="https://kidszoneworld.com.br/portal-do-representante/">
+                    <img class="img_link" src="/images/logo.png" alt="Imagem KidsZone">
+                </a>
+            </div>
+            <h3>EFICIENCIA KZ - ANALISE POR CLIENTE</h3>
+        </div>
+        <div class="codigo-item">
+            <label for="codigo">Digite o CNPJ:</label>
+            <input type="text" id="codigo" placeholder="Digite o CNPJ">
+        </div>
+
+        <div class="descricao-container">
+            <div class="descricao">
+                <label for="classificacao">CÓDIGO CLIENTE:</label>
+                <input type="text" id="classificacao" placeholder="Código do Cliente"readonly>
+            </div>
+            <div class="descricao">
+                <label for="classificacao">CLIENTE:</label>
+                <input type="text" id="classificacao" placeholder="Nome do Cliente"readonly>
+            </div>
+        </div>
+
+        <div class="info-caixa-master">
+            <h3>Positivação :</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ano</th>
+                        <th>Meta</th>
+                        <th>Realizado</th>
+                        <th>% Atingido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ano">Jan/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Fev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mar/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Abr/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mai/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jun/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jul/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Ago/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Set/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Out/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Nov/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Dev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr class="total-row">
+                        <td class="total-linha">TOTAL:</td>
+                        <!-- O colspan pode ser ajustado se quiser mesclar células -->
+                        <td><input type="text" class="meta-total" readonly /></td>
+                        <td><input type="text" class="realizado-total" readonly /></td>
+                        <td><input type="text" class="atingido-total" readonly /></td>
+                      </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-display">
+            <h3>Sell in:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ano</th>
+                        <th>Meta</th>
+                        <th>Realizado</th>
+                        <th>% Atingido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ano">Jan/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Fev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mar/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Abr/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mai/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jun/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jul/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Ago/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Set/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Out/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Nov/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Dev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr class="total-row">
+                        <td class="total-linha">TOTAL:</td>
+                        <!-- O colspan pode ser ajustado se quiser mesclar células -->
+                        <td><input type="text" class="meta-total" readonly /></td>
+                        <td><input type="text" class="realizado-total" readonly /></td>
+                        <td><input type="text" class="atingido-total" readonly /></td>
+                      </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="info-unidade">
+            <h3>Investimentos (bonf. + desconto) :</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ano</th>
+                        <th>Meta</th>
+                        <th>Realizado</th>
+                        <th>% Base fat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ano">Jan/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Fev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mar/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Abr/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mai/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jun/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jul/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Ago/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Set/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Out/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Nov/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Dev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr class="total-row">
+                        <td class="total-linha">TOTAL:</td>
+                        <!-- O colspan pode ser ajustado se quiser mesclar células -->
+                        <td><input type="text" class="meta-total" readonly /></td>
+                        <td><input type="text" class="realizado-total" readonly /></td>
+                        <td><input type="text" class="atingido-total" readonly /></td>
+                      </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="calculo-palete">
+            <h3>Fatia no mercado :</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ano</th>
+                        <th>Meta</th>
+                        <th>Realizado</th>
+                        <th>% Fatia KZ </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ano">Jan/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Fev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mar/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Abr/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mai/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jun/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jul/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Ago/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Set/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Out/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Nov/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Dev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr class="total-row">
+                        <td class="total-linha">TOTAL:</td>
+                        <!-- O colspan pode ser ajustado se quiser mesclar células -->
+                        <td><input type="text" class="meta-total" readonly /></td>
+                        <td><input type="text" class="realizado-total" readonly /></td>
+                        <td><input type="text" class="atingido-total" readonly /></td>
+                      </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="calculo-palete">
+            <h3>Sell out:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ano</th>
+                        <th>Meta</th>
+                        <th>Realizado</th>
+                        <th>% Atingido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ano">Jan/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Fev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mar/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Abr/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Mai/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jun/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Jul/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Ago/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Set/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Out/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Nov/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr>
+                        <td class="ano">Dev/25</td>
+                        <td><input type="number" step="0.01" class="meta" /></td>
+                        <td><input type="number" step="0.01" class="realizado" /></td>
+                        <td><input type="text" class="atingido" readonly /></td>
+                      </tr>
+                      <tr class="total-row">
+                        <td class="total-linha">TOTAL:</td>
+                        <!-- O colspan pode ser ajustado se quiser mesclar células -->
+                        <td><input type="text" class="meta-total" readonly /></td>
+                        <td><input type="text" class="realizado-total" readonly /></td>
+                        <td><input type="text" class="atingido-total" readonly /></td>
+                      </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+    <footer>
+        <div class="link_sites">
+           <button id="logoutButton2">Sair</button>
+           <a target="_blank" href="/admin">Sell Out</a>
+           <a target="_blank" href="/comercial">Display</a>
+           <a target="_blank" href="/logistica">Redes</a>
+        </div>
+        
+    </footer>
+
+    <script src="/detalhesProdutos.js?v=1740295120096"></script>
+</body>
+</html>
