@@ -85,7 +85,7 @@ body {
     border-radius: 4px;
 }
 
-.descricao, .info-caixa-master, .info-display, .info-unidade, .calculo-palete {
+.descricao, .positivacao, .sellIn, .invest, .mercado, .sellOut{
     margin: 20px 0;
     padding: 10px;
     border: 1px solid #242323;
@@ -93,7 +93,7 @@ body {
     background-color: #f9f9f9;
 }
 
-.descricao h3, .info-caixa-master h3, .info-display h3, .info-unidade h3, .calculo-palete h3 {
+.descricao h3, .positivacao h3, .sellIn h3, .invest h3, .mercado h3, .sellOut h3 {
     background-color: #333;
     color: #ffffff;
     padding: 5px;
