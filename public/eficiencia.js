@@ -1,3 +1,14 @@
+
+function formatarMoeda(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function limparMoeda(valor) {
+    return parseFloat(valor.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     function calcularPositivacao() {
         let totalMeta = 0;
@@ -136,34 +147,54 @@ document.addEventListener("DOMContentLoaded", function () {
         const mesesmercado = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
 
         mesesmercado.forEach(mes => {
-            const metaInputmercado = document.getElementById(`mercado_Meta_${mes}`);
-            const realizadoInputmercado = document.getElementById(`mercado_Realizado_${mes}`);
-            const atingidoInputmercado = document.getElementById(`mercado_Atingido_${mes}`);
+            const metaInput = document.getElementById(`mercado_Meta_${mes}`);
+            const realizadoInput = document.getElementById(`mercado_Realizado_${mes}`);
+            const atingidoInput = document.getElementById(`mercado_Atingido_${mes}`);
 
-            const metamercado = parseFloat(metaInputmercado.value) || 0;
-            const realizadomercado = parseFloat(realizadoInputmercado.value) || 0;
+            const meta = parseFloat(metaInput.dataset.valor) || 0;
+            const realizado = parseFloat(realizadoInput.dataset.valor) || 0;
 
             // Calcula % Atingido, evita divisão por zero
-            const percentualmercado = metamercado > 0 ? ((realizadomercado / metamercado) * 100).toFixed(2) + "%" : "0%";
-            atingidoInputmercado.value = percentualmercado;
+            const percentual = meta > 0 ? ((realizado / meta) * 100).toFixed(2) + "%" : "0%";
+            atingidoInput.value = percentual;
 
             // Soma total das colunas
-            totalMetamercado += metamercado;
-            totalRealizadomercado += realizadomercado;
+            totalMetamercado += meta;
+            totalRealizadomercado += realizado;
         });
 
         // Atualiza totais na linha final
-        document.getElementById("mercado_Meta-total_total").value = totalMetamercado;
-        document.getElementById("mercado_Realizado-total_total").value = totalRealizadomercado;
+        document.getElementById("mercado_Meta-total_total").value = formatarMoeda(totalMetamercado);
+        document.getElementById("mercado_Realizado-total_total").value = formatarMoeda(totalRealizadomercado);
 
         // Calcula % Atingido total
-        const totalAtingidomercado = totalMetamercado > 0 ? ((totalRealizadomercado / totalMetamercado) * 100).toFixed(2) + "%" : "0%";
-        document.getElementById("mercado_Atingido-total_total").value = totalAtingidomercado;
+        const totalAtingido = totalMetamercado > 0 ? ((totalRealizadomercado / totalMetamercado) * 100).toFixed(2) + "%" : "0%";
+        document.getElementById("mercado_Atingido-total_total").value = totalAtingido;
     }
 
-    // Adiciona evento para recalcular ao digitar nos campos
     document.querySelectorAll(".mercado input").forEach(input => {
-        input.addEventListener("input", calcularmercado);
+        input.dataset.valor = "0"; // Inicializa o dataset para evitar NaN
+
+        // Ao focar no input, remove a formatação para facilitar edição
+        input.addEventListener("focus", function () {
+            this.value = this.dataset.valor; // Mostra apenas o número real para digitação
+        });
+
+        // Ao digitar, mantém apenas números e converte corretamente
+        input.addEventListener("input", function () {
+            let valor = limparMoeda(this.value);
+            this.dataset.valor = valor; // Salva valor limpo
+            this.value = valor; // Mantém apenas números enquanto digita
+            calcularmercado();
+        });
+
+        // Ao sair do input, formata como moeda e mantém o valor real salvo
+        input.addEventListener("blur", function () {
+            let valor = limparMoeda(this.value);
+            this.dataset.valor = valor; // Salva valor numérico puro
+            this.value = formatarMoeda(valor); // Exibe formatado em moeda
+            calcularmercado();
+        });
     });
 
     // Chamada inicial

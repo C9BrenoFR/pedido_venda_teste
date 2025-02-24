@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Display</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon"  type="image/png" sizes="32x32" href="/images/favicon-32x32.png" >
+  <link rel="icon"  type="image/png" sizes="16x16" href="/images/favicon-16x16.png" >
+  <link rel="manifest" href="/images/site.webmanifest">
+  <link rel="stylesheet" href="/css/display.css?v=1740371135321">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-logo">
+        <a href="https://kidszoneworld.com.br/portal-do-representante/">
+          <img class="img_link" src="/images/logo.png" alt="Imagem KidsZone">
+        </a>
+      </div>
+      <h3>CONTROLE DE DISPLAYS POR CLIENTE</h3>
+    </div> 
+    
+    <div class="client-info">
+      <label><strong>CNPJ Cliente:</strong></label>
+      <input type="text" id="cnpj-cliente" placeholder="Digite o CNPJ">
+      <label><strong>Cliente:</strong></label>
+      <input type="text" id="nome-cliente" placeholder="Nome do Cliente">
+    </div>
+    
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>RAZÃO SOCIAL</th>
+            <th>CNPJ</th>
+            <th>ENDEREÇO</th>
+            <th>BAIRRO</th>
+            <th>CIDADE</th>
+            <th>UF</th>
+            <th>VALOR COMPRA</th>
+            <th>MODELO DISPLAY</th>
+            <th>Jan/25</th>
+            <th>Fev/25</th>
+            <th>Mar/25</th>
+            <th>Abr/25</th>
+            <th>Mai/25</th>
+            <th>Jun/25</th>
+            <th>Jul/25</th>
+            <th>Ago/25</th>
+            <th>Set/25</th>
+            <th>Out/25</th>
+            <th>Nov/25</th>
+            <th>Dez/25</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Linhas serão adicionadas dinamicamente -->
+        </tbody>
+      </table>
+    </div>
+    <button onclick="addRow()">Adicionar Linha</button>
+  </div>
+  
+  <script>
+    function addRow() {
+      const tableBody = document.getElementById("table-body");
+      const row = document.createElement("tr");
+      const columns = 21;
+      for (let i = 0; i < columns - 1; i++) {
+        let cell = document.createElement("td");
+        let input = document.createElement("input");
+        input.type = "text";
+        cell.appendChild(input);
+        row.appendChild(cell);
+      }
+      let deleteCell = document.createElement("td");
+      let deleteButton = document.createElement("button");
+      deleteButton.innerText = "Remover";
+      deleteButton.onclick = function() {
+        tableBody.removeChild(row);
+      };
+      deleteCell.appendChild(deleteButton);
+      row.appendChild(deleteCell);
+      tableBody.appendChild(row);
+    }
+  </script>
+</body>
+</html>

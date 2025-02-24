@@ -49,6 +49,21 @@ router.get('/eficiencia',(req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'eficiencia.html'));
 });
 
+// Rota para a página de eficiencia cliente (sellOut.html)
+router.get('/sellOut',(req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'sellOut.html'));
+});
+
+// Rota para a página de eficiencia cliente (display.html)
+router.get('/display',(req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'display.html'));
+});
+
+// Rota para a página de eficiencia cliente (redes.html)
+router.get('/redes',(req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'redes.html'));
+});
+
 // Rota para a página de detalhes do pedido (detalhes.html)
 router.get('/logistica',authMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'logistica.html'));
