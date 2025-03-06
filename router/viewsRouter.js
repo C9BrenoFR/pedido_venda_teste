@@ -5,6 +5,7 @@ const orderController = require('../controllers/orderController'); // Importa o 
 const invoicesController = require('../controllers/invoicesControllers');
 const { authMiddleware, authenticateUser } = require('../middleware/authMiddleware');
 const inputOrdersController = require('../controllers/inputOrdersControllers');
+const eficienciaController = require('../controllers/eficienciaController');
 
 const router = express.Router();
 
@@ -137,9 +138,10 @@ router.post('/logout', (req, res) => {
 router.post('/api/pedidos/input', inputOrdersController.fetchImputOrders)
 
 
+/////banco de dados mogondb atlas
 
-
-
+router.get('/api/eficiencia/:cnpj', eficienciaController.getEficienciaByCNPJ);
+router.post('/api/eficiencia/salvar', eficienciaController.salvarEficiencia);
 
 
 

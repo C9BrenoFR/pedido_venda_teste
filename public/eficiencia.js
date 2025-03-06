@@ -1,4 +1,17 @@
 
+let clientesData1;
+
+//Função para atualizar os caches no navegador
+const timestamp1 = new Date().getTime();
+
+// Função para carregar os JSONs 
+fetch(`/data/cliente.json?cacheBust=${timestamp1}`)
+    .then(response => response.json())
+    .then(data => {
+        clientesData1 = data;
+    });
+
+
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
@@ -243,4 +256,80 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Chamada inicial
     calcularinvest();
+});
+
+
+// Função para ajustar o CNPJ com zeros à esquerda, se necessário
+function ajustarCNPJ1(cnpj) {
+    while (cnpj.length < 14) {
+        cnpj = '0' + cnpj;
+    }
+    return cnpj;
+}
+
+// Função para verificar se o CNPJ é composto apenas de zeros
+function cnpjInvalido1(cnpj) {
+    return /^0+$/.test(cnpj);
+}
+
+
+// Função para limpar todos os campos relacionados ao cliente
+function limparCamposCliente() {
+    document.getElementById('cliente').value = '';
+    document.getElementById('codgroup').value = '';
+
+}
+
+
+// Adiciona o evento de focus no campo CNPJ
+document.getElementById('cnpj').addEventListener('focus', function () {
+    limparCamposCliente(); // Limpa todos os campos relacionados ao cliente
+});
+
+
+// Função para buscar os dados do cliente pelo CNPJ
+function buscarCliente1(cnpj) {
+    // Ajusta o CNPJ com zeros à esquerda
+    cnpj = ajustarCNPJ1(cnpj);
+
+    for (let i = 1; i < clientesData1.length; i++) {
+        let cnpjCliente = ajustarCNPJ1(clientesData1[i][1].toString());
+        if (cnpjCliente === cnpj) {
+            return clientesData1[i];
+        }
+    }
+    return null;
+}
+
+
+document.getElementById('cnpj').addEventListener('blur', function () {
+
+       let cnpj = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+        // Verifica se o campo está vazio
+        if (cnpj === '') {
+            return; // Sai da função sem buscar dados
+         }
+
+        // Verifica se o CNPJ é inválido (apenas zeros)
+        if (cnpjInvalido1(cnpj)) {
+            alert("CNPJ inválido.");
+            this.value = ''; // Limpa o campo CNPJ
+            return; // Sai da função sem buscar dados
+        }
+
+        cnpj = ajustarCNPJ1(cnpj);
+
+        let cliente = buscarCliente1(cnpj);
+
+        if (cliente) {
+
+            document.getElementById('cliente').value = cliente[29];
+            document.getElementById('codgroup').value = cliente[30];
+    
+        } else {
+            alert("Cliente não encontrado.");
+        }
+
+
 });
