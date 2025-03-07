@@ -87,21 +87,13 @@ document.getElementById('cnpj').addEventListener('blur', function () {
 });
 
 
-function formatarMoeda(valor) {
-    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
-
-function limparMoeda(valor) {
-    return parseFloat(valor.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
-}
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
+    const btnSalvar = document.getElementById("btnSalvarDados");
+
+    // Função de cálculo para Positivação
     function calcularPositivacao() {
         let totalMeta = 0;
         let totalRealizado = 0;
-
         const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
 
         meses.forEach(mes => {
@@ -109,232 +101,130 @@ document.addEventListener("DOMContentLoaded", function () {
             const realizadoInput = document.getElementById(`positivacao_Realizado_${mes}`);
             const atingidoInput = document.getElementById(`positivacao_Atingido_${mes}`);
 
-            const meta = parseFloat(metaInput.value) || 0;
-            const realizado = parseFloat(realizadoInput.value) || 0;
+            console.log(`Buscando elemento positivacao_Meta_${mes}:`, metaInput); // Depuração
+            console.log(`Buscando elemento positivacao_Realizado_${mes}:`, realizadoInput); // Depuração
+            console.log(`Buscando elemento positivacao_Atingido_${mes}:`, atingidoInput); // Depuração
 
-            // Calcula % Atingido, evita divisão por zero
-            const percentual = meta > 0 ? ((realizado / meta) * 100).toFixed(2) + "%" : "0%";
-            atingidoInput.value = percentual;
+            if (metaInput && realizadoInput && atingidoInput) {
+                const meta = parseFloat(metaInput.value) || 0;
+                const realizado = parseFloat(realizadoInput.value) || 0;
+                const percentual = meta > 0 ? ((realizado / meta) * 100).toFixed(2) + "%" : "0%";
+                atingidoInput.value = percentual;
 
-            // Soma total das colunas
-            totalMeta += meta;
-            totalRealizado += realizado;
+                console.log(`Valor Meta (${mes}):`, meta);
+                console.log(`Valor Realizado (${mes}):`, realizado);
+                console.log(`Valor Atingido (${mes}):`, percentual);
+
+                totalMeta += meta;
+                totalRealizado += realizado;
+            } else {
+                console.log(`Um ou mais elementos para ${mes} não encontrados`);
+            }
         });
 
-        // Atualiza totais na linha final
         document.getElementById("positivacao_Meta-total_total").value = totalMeta;
         document.getElementById("positivacao_Realizado-total_total").value = totalRealizado;
+        document.getElementById("positivacao_Atingido-total_total").value = totalMeta > 0 ? ((totalRealizado / totalMeta) * 100).toFixed(2) + "%" : "0%";
 
-        // Calcula % Atingido total
-        const totalAtingido = totalMeta > 0 ? ((totalRealizado / totalMeta) * 100).toFixed(2) + "%" : "0%";
-        document.getElementById("positivacao_Atingido-total_total").value = totalAtingido;
+        console.log(`Total Meta: ${totalMeta}, Total Realizado: ${totalRealizado}`);
     }
 
-    // Adiciona evento para recalcular ao digitar nos campos
-    document.querySelectorAll(".positivacao input").forEach(input => {
-        input.addEventListener("input", calcularPositivacao);
-    });
-
-    // Chamada inicial
-    calcularPositivacao();
-});
-
-
-
-document.addEventListener("DOMContentLoaded", function () {
+    // Funções de cálculo para outras seções (ajuste similarmente)
     function calcularsellIn() {
         let totalMetasellIn = 0;
         let totalRealizadosellIn = 0;
-
         const mesessellIn = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
-
         mesessellIn.forEach(mes => {
             const metaInputsellIn = document.getElementById(`sellIn_Meta_${mes}`);
             const realizadoInputsellIn = document.getElementById(`sellIn_Realizado_${mes}`);
             const atingidoInputsellIn = document.getElementById(`sellIn_Atingido_${mes}`);
-
-            const metasellIn = parseFloat(metaInputsellIn.value) || 0;
-            const realizadosellIn = parseFloat(realizadoInputsellIn.value) || 0;
-
-            // Calcula % Atingido, evita divisão por zero
-            const percentualsellIn = metasellIn > 0 ? ((realizadosellIn / metasellIn) * 100).toFixed(2) + "%" : "0%";
-            atingidoInputsellIn.value = percentualsellIn;
-
-            // Soma total das colunas
-            totalMetasellIn += metasellIn;
-            totalRealizadosellIn += realizadosellIn;
+            if (metaInputsellIn && realizadoInputsellIn && atingidoInputsellIn) {
+                const metasellIn = parseFloat(metaInputsellIn.value) || 0;
+                const realizadosellIn = parseFloat(realizadoInputsellIn.value) || 0;
+                const percentualsellIn = metasellIn > 0 ? ((realizadosellIn / metasellIn) * 100).toFixed(2) + "%" : "0%";
+                atingidoInputsellIn.value = percentualsellIn;
+                totalMetasellIn += metasellIn;
+                totalRealizadosellIn += realizadosellIn;
+            }
         });
-
-        // Atualiza totais na linha final
         document.getElementById("sellIn_Meta-total_total").value = totalMetasellIn;
         document.getElementById("sellIn_Realizado-total_total").value = totalRealizadosellIn;
-
-        // Calcula % Atingido total
-        const totalAtingidosellIn = totalMetasellIn > 0 ? ((totalRealizadosellIn / totalMetasellIn) * 100).toFixed(2) + "%" : "0%";
-        document.getElementById("sellIn_Atingido-total_total").value = totalAtingidosellIn;
+        document.getElementById("sellIn_Atingido-total_total").value = totalMetasellIn > 0 ? ((totalRealizadosellIn / totalMetasellIn) * 100).toFixed(2) + "%" : "0%";
     }
 
-    // Adiciona evento para recalcular ao digitar nos campos
-    document.querySelectorAll(".sellIn input").forEach(input => {
-        input.addEventListener("input", calcularsellIn);
-    });
-
-    // Chamada inicial
-    calcularsellIn();
-});
-
-
-
-document.addEventListener("DOMContentLoaded", function () {
     function calcularsellOut() {
         let totalMetasellOut = 0;
         let totalRealizadosellOut = 0;
-
         const mesessellOut = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
-
         mesessellOut.forEach(mes => {
             const metaInputsellOut = document.getElementById(`sellOut_Meta_${mes}`);
             const realizadoInputsellOut = document.getElementById(`sellOut_Realizado_${mes}`);
             const atingidoInputsellOut = document.getElementById(`sellOut_Atingido_${mes}`);
-
-            const metasellOut = parseFloat(metaInputsellOut.value) || 0;
-            const realizadosellOut = parseFloat(realizadoInputsellOut.value) || 0;
-
-            // Calcula % Atingido, evita divisão por zero
-            const percentualsellOut = metasellOut > 0 ? ((realizadosellOut / metasellOut) * 100).toFixed(2) + "%" : "0%";
-            atingidoInputsellOut.value = percentualsellOut;
-
-            // Soma total das colunas
-            totalMetasellOut += metasellOut;
-            totalRealizadosellOut += realizadosellOut;
+            if (metaInputsellOut && realizadoInputsellOut && atingidoInputsellOut) {
+                const metasellOut = parseFloat(metaInputsellOut.value) || 0;
+                const realizadosellOut = parseFloat(realizadoInputsellOut.value) || 0;
+                const percentualsellOut = metasellOut > 0 ? ((realizadosellOut / metasellOut) * 100).toFixed(2) + "%" : "0%";
+                atingidoInputsellOut.value = percentualsellOut;
+                totalMetasellOut += metasellOut;
+                totalRealizadosellOut += realizadosellOut;
+            }
         });
-
-        // Atualiza totais na linha final
         document.getElementById("sellOut_Meta-total_total").value = totalMetasellOut;
         document.getElementById("sellOut_Realizado-total_total").value = totalRealizadosellOut;
-
-        // Calcula % Atingido total
-        const totalAtingidosellOut = totalMetasellOut > 0 ? ((totalRealizadosellOut / totalMetasellOut) * 100).toFixed(2) + "%" : "0%";
-        document.getElementById("sellOut_Atingido-total_total").value = totalAtingidosellOut;
+        document.getElementById("sellOut_Atingido-total_total").value = totalMetasellOut > 0 ? ((totalRealizadosellOut / totalMetasellOut) * 100).toFixed(2) + "%" : "0%";
     }
 
-    // Adiciona evento para recalcular ao digitar nos campos
-    document.querySelectorAll(".sellOut input").forEach(input => {
-        input.addEventListener("input", calcularsellOut);
-    });
-
-    // Chamada inicial
-    calcularsellOut();
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    function calcularmercado() {
-        let totalMetamercado = 0;
-        let totalRealizadomercado = 0;
-
-        const mesesmercado = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
-
-        mesesmercado.forEach(mes => {
-            const metaInput = document.getElementById(`mercado_Meta_${mes}`);
-            const realizadoInput = document.getElementById(`mercado_Realizado_${mes}`);
-            const atingidoInput = document.getElementById(`mercado_Atingido_${mes}`);
-
-            const meta = parseFloat(metaInput.dataset.valor) || 0;
-            const realizado = parseFloat(realizadoInput.dataset.valor) || 0;
-
-            // Calcula % Atingido, evita divisão por zero
-            const percentual = meta > 0 ? ((realizado / meta) * 100).toFixed(2) + "%" : "0%";
-            atingidoInput.value = percentual;
-
-            // Soma total das colunas
-            totalMetamercado += meta;
-            totalRealizadomercado += realizado;
-        });
-
-        // Atualiza totais na linha final
-        document.getElementById("mercado_Meta-total_total").value = formatarMoeda(totalMetamercado);
-        document.getElementById("mercado_Realizado-total_total").value = formatarMoeda(totalRealizadomercado);
-
-        // Calcula % Atingido total
-        const totalAtingido = totalMetamercado > 0 ? ((totalRealizadomercado / totalMetamercado) * 100).toFixed(2) + "%" : "0%";
-        document.getElementById("mercado_Atingido-total_total").value = totalAtingido;
-    }
-
-    document.querySelectorAll(".mercado input").forEach(input => {
-        input.dataset.valor = "0"; // Inicializa o dataset para evitar NaN
-
-        // Ao focar no input, remove a formatação para facilitar edição
-        input.addEventListener("focus", function () {
-            this.value = this.dataset.valor; // Mostra apenas o número real para digitação
-        });
-
-        // Ao digitar, mantém apenas números e converte corretamente
-        input.addEventListener("input", function () {
-            let valor = limparMoeda(this.value);
-            this.dataset.valor = valor; // Salva valor limpo
-            this.value = valor; // Mantém apenas números enquanto digita
-            calcularmercado();
-        });
-
-        // Ao sair do input, formata como moeda e mantém o valor real salvo
-        input.addEventListener("blur", function () {
-            let valor = limparMoeda(this.value);
-            this.dataset.valor = valor; // Salva valor numérico puro
-            this.value = formatarMoeda(valor); // Exibe formatado em moeda
-            calcularmercado();
-        });
-    });
-
-    // Chamada inicial
-    calcularmercado();
-});
-
-
-
-document.addEventListener("DOMContentLoaded", function () {
     function calcularinvest() {
         let totalRealizadosellIn1 = 0;
         let totalRealizadoinvest = 0;
-
         const mesesinvest = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
-
         mesesinvest.forEach(mes => {
             const sellinRealizado1 = document.getElementById(`sellIn_Realizado_${mes}`);
             const realizadoInputinvest = document.getElementById(`invest_Realizado_${mes}`);
             const atingidoInputinvest = document.getElementById(`invest_Atingido_${mes}`);
-
-            const seliinre = parseFloat(sellinRealizado1.value) || 0;
-            const realizadoinvest = parseFloat(realizadoInputinvest.value) || 0;
-
-            // Calcula % Atingido, evita divisão por zero
-            const percentualinvest = seliinre > 0 ? ((realizadoinvest / seliinre) * 100).toFixed(2) + "%" : "0%";
-            atingidoInputinvest.value = percentualinvest;
-
-            // Soma total das colunas
-            totalRealizadosellIn1 += seliinre;
-            totalRealizadoinvest += realizadoinvest;
+            if (sellinRealizado1 && realizadoInputinvest && atingidoInputinvest) {
+                const seliinre = parseFloat(sellinRealizado1.value) || 0;
+                const realizadoinvest = parseFloat(realizadoInputinvest.value) || 0;
+                const percentualinvest = seliinre > 0 ? ((realizadoinvest / seliinre) * 100).toFixed(2) + "%" : "0%";
+                atingidoInputinvest.value = percentualinvest;
+                totalRealizadosellIn1 += seliinre;
+                totalRealizadoinvest += realizadoinvest;
+            }
         });
-
-        // Atualiza totais na linha final
-        document.getElementById("sellIn_Realizado-total_total").value  = totalRealizadosellIn1;
+        document.getElementById("sellIn_Realizado-total_total").value = totalRealizadosellIn1;
         document.getElementById("invest_Realizado-total_total").value = totalRealizadoinvest;
-
-        // Calcula % Atingido total
-        const totalAtingidoinvest = totalRealizadosellIn1 > 0 ? ((totalRealizadoinvest / totalRealizadosellIn1) * 100).toFixed(2) + "%" : "0%";
-        document.getElementById("invest_Atingido-total_total").value = totalAtingidoinvest;
+        document.getElementById("invest_Atingido-total_total").value = totalRealizadosellIn1 > 0 ? ((totalRealizadoinvest / totalRealizadosellIn1) * 100).toFixed(2) + "%" : "0%";
     }
 
-    // Adiciona evento para recalcular ao digitar nos campos
-    document.querySelectorAll(".invest input").forEach(input => {
-        input.addEventListener("input", calcularinvest);
-    });
+    function calcularmercado() {
+        let totalMetamercado = 0;
+        let totalRealizadomercado = 0;
+        const mesesmercado = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
+        mesesmercado.forEach(mes => {
+            const metaInput = document.getElementById(`mercado_Meta_${mes}`);
+            const realizadoInput = document.getElementById(`mercado_Realizado_${mes}`);
+            const atingidoInput = document.getElementById(`mercado_Atingido_${mes}`);
+            if (metaInput && realizadoInput && atingidoInput) {
+                const meta = parseFloat(limparMoeda(metaInput.value)) || 0;
+                const realizado = parseFloat(limparMoeda(realizadoInput.value)) || 0;
+                const percentual = meta > 0 ? ((realizado / meta) * 100).toFixed(2) + "%" : "0%";
+                atingidoInput.value = percentual;
+                totalMetamercado += meta;
+                totalRealizadomercado += realizado;
+            }
+        });
+        document.getElementById("mercado_Meta-total_total").value = formatarMoeda(totalMetamercado);
+        document.getElementById("mercado_Realizado-total_total").value = formatarMoeda(totalRealizadomercado);
+        document.getElementById("mercado_Atingido-total_total").value = totalMetamercado > 0 ? ((totalRealizadomercado / totalMetamercado) * 100).toFixed(2) + "%" : "0%";
+    }
 
-    // Chamada inicial
-    calcularinvest();
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const btnSalvar = document.getElementById("btnSalvarDados");
+    function atualizarCalculos() {
+        calcularPositivacao();
+        calcularsellIn();
+        calcularsellOut();
+        calcularinvest();
+        calcularmercado();
+    }
 
     btnSalvar.addEventListener("click", async function () {
         const cnpj = document.getElementById("cnpj").value.trim();
@@ -346,20 +236,32 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const dados = {
-            CNPJ: cnpj,
-            codigo_cliente: codigoCliente,
-            nome: nomeCliente,
-            tabelas: {
-                positivacao: obterDadosPositivacao(),
-                sellIn: obterDadosSellIn(),
-                sellOut: obterDadosSellOut(),
-                investimentos: obterDadosInvestimentos(),
-                mercado: obterDadosMercado(),
-            }
-        };
-
         try {
+            atualizarCalculos();
+
+            const checkResponse = await fetch(`/api/eficiencia/${cnpj}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" }
+            });
+            const checkResult = await checkResponse.json();
+            const clienteExiste = checkResult.cliente && checkResult.cliente.codigo_cliente === codigoCliente;
+
+            const dados = {
+                CNPJ: cnpj,
+                codigo_cliente: codigoCliente,
+                nome: nomeCliente,
+                tabelas: {
+                    positivacao: obterDadosPositivacao(),
+                    sellIn: obterDadosSellIn(),
+                    sellOut: obterDadosSellOut(),
+                    investimentos: obterDadosInvestimentos(),
+                    mercado: obterDadosMercado(),
+                },
+                overwrite: clienteExiste
+            };
+
+            console.log("Dados a serem enviados:", dados);
+
             const response = await fetch("/api/eficiencia/salvar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -375,19 +277,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function obterDadosPositivacao() {
-        return obterDadosTabela("positivacao", ["meta", "realizado", "atingido"]);
+        return obterDadosTabela("positivacao", ["Meta", "Realizado", "Atingido"]);
     }
 
     function obterDadosSellIn() {
-        return obterDadosTabela("sellIn", ["meta", "realizado", "atingido"]);
+        return obterDadosTabela("sellIn", ["Meta", "Realizado", "Atingido"]);
     }
 
     function obterDadosSellOut() {
-        return obterDadosTabela("sellOut", ["meta", "realizado", "atingido"]);
+        return obterDadosTabela("sellOut", ["Meta", "Realizado", "Atingido"]);
     }
 
     function obterDadosInvestimentos() {
-        return obterDadosTabela("invest", ["realizado", "base_faturamento"]);
+        return obterDadosTabela("invest", ["Realizado", "base_faturamento"]);
     }
 
     function obterDadosMercado() {
@@ -400,9 +302,55 @@ document.addEventListener("DOMContentLoaded", function () {
             let dadosMes = { ano: "2025", mes: mes };
             campos.forEach(campo => {
                 const elemento = document.getElementById(`${tabela}_${campo}_${mes}`);
-                dadosMes[campo] = elemento ? elemento.value || 0 : 0;
+                console.log(`Buscando elemento ${tabela}_${campo}_${mes}:`, elemento);
+                if (elemento) {
+                    let valor = elemento.value;
+                    console.log(`Valor bruto de ${tabela}_${campo}_${mes}:`, valor);
+                    if (campo === "Atingido" && valor) {
+                        valor = parseFloat(valor.replace("%", "")) || 0;
+                    } else {
+                        valor = parseFloat(valor) || 0;
+                    }
+                    console.log(`Valor processado de ${tabela}_${campo}_${mes}:`, valor);
+                    dadosMes[campo] = valor;
+                } else {
+                    console.log(`Elemento ${tabela}_${campo}_${mes} não encontrado`);
+                    dadosMes[campo] = 0;
+                }
             });
             return dadosMes;
         });
     }
+
+    // Eventos de input
+    document.querySelectorAll(".positivacao input").forEach(input => {
+        input.addEventListener("input", calcularPositivacao);
+    });
+    document.querySelectorAll(".sellIn input").forEach(input => {
+        input.addEventListener("input", calcularsellIn);
+    });
+    document.querySelectorAll(".sellOut input").forEach(input => {
+        input.addEventListener("input", calcularsellOut);
+    });
+    document.querySelectorAll(".invest input").forEach(input => {
+        input.addEventListener("input", calcularinvest);
+    });
+    document.querySelectorAll(".mercado input").forEach(input => {
+        input.addEventListener("input", calcularmercado);
+    });
+
+    // Chamadas iniciais
+    calcularPositivacao();
+    calcularsellIn();
+    calcularsellOut();
+    calcularinvest();
+    calcularmercado();
 });
+
+function formatarMoeda(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function limparMoeda(valor) {
+    return parseFloat(valor.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
+}
