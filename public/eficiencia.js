@@ -11,6 +11,81 @@ fetch(`/data/cliente.json?cacheBust=${timestamp1}`)
         clientesData1 = data;
     });
 
+    // Função para ajustar o CNPJ com zeros à esquerda, se necessário
+function ajustarCNPJ1(cnpj) {
+    while (cnpj.length < 14) {
+        cnpj = '0' + cnpj;
+    }
+    return cnpj;
+}
+
+// Função para verificar se o CNPJ é composto apenas de zeros
+function cnpjInvalido1(cnpj) {
+    return /^0+$/.test(cnpj);
+}
+
+
+// Função para limpar todos os campos relacionados ao cliente
+function limparCamposCliente() {
+    document.getElementById('cliente').value = '';
+    document.getElementById('codgroup').value = '';
+
+}
+
+
+// Adiciona o evento de focus no campo CNPJ
+document.getElementById('cnpj').addEventListener('focus', function () {
+    limparCamposCliente(); // Limpa todos os campos relacionados ao cliente
+});
+
+
+// Função para buscar os dados do cliente pelo CNPJ
+function buscarCliente1(cnpj) {
+    // Ajusta o CNPJ com zeros à esquerda
+    cnpj = ajustarCNPJ1(cnpj);
+
+    for (let i = 1; i < clientesData1.length; i++) {
+        let cnpjCliente = ajustarCNPJ1(clientesData1[i][1].toString());
+        if (cnpjCliente === cnpj) {
+            return clientesData1[i];
+        }
+    }
+    return null;
+}
+
+
+document.getElementById('cnpj').addEventListener('blur', function () {
+
+       let cnpj = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+        // Verifica se o campo está vazio
+        if (cnpj === '') {
+            return; // Sai da função sem buscar dados
+         }
+
+        // Verifica se o CNPJ é inválido (apenas zeros)
+        if (cnpjInvalido1(cnpj)) {
+            alert("CNPJ inválido.");
+            this.value = ''; // Limpa o campo CNPJ
+            return; // Sai da função sem buscar dados
+        }
+
+        cnpj = ajustarCNPJ1(cnpj);
+
+        let cliente = buscarCliente1(cnpj);
+
+        if (cliente) {
+
+            document.getElementById('cliente').value = cliente[29];
+            document.getElementById('codgroup').value = cliente[30];
+    
+        } else {
+            alert("Cliente não encontrado.");
+        }
+
+
+});
+
 
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -258,78 +333,76 @@ document.addEventListener("DOMContentLoaded", function () {
     calcularinvest();
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const btnSalvar = document.getElementById("btnSalvarDados");
 
-// Função para ajustar o CNPJ com zeros à esquerda, se necessário
-function ajustarCNPJ1(cnpj) {
-    while (cnpj.length < 14) {
-        cnpj = '0' + cnpj;
+    btnSalvar.addEventListener("click", async function () {
+        const cnpj = document.getElementById("cnpj").value.trim();
+        const codigoCliente = document.getElementById("codgroup").value.trim();
+        const nomeCliente = document.getElementById("cliente").value.trim();
+        
+        if (!cnpj || !codigoCliente) {
+            alert("Por favor, preencha o CNPJ e o Código do Cliente antes de salvar.");
+            return;
+        }
+
+        const dados = {
+            CNPJ: cnpj,
+            codigo_cliente: codigoCliente,
+            nome: nomeCliente,
+            tabelas: {
+                positivacao: obterDadosPositivacao(),
+                sellIn: obterDadosSellIn(),
+                sellOut: obterDadosSellOut(),
+                investimentos: obterDadosInvestimentos(),
+                mercado: obterDadosMercado(),
+            }
+        };
+
+        try {
+            const response = await fetch("/api/eficiencia/salvar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dados)
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        } catch (error) {
+            console.error("Erro ao salvar dados:", error);
+            alert("Erro ao salvar os dados. Verifique a conexão com o servidor.");
+        }
+    });
+
+    function obterDadosPositivacao() {
+        return obterDadosTabela("positivacao", ["meta", "realizado", "atingido"]);
     }
-    return cnpj;
-}
 
-// Função para verificar se o CNPJ é composto apenas de zeros
-function cnpjInvalido1(cnpj) {
-    return /^0+$/.test(cnpj);
-}
-
-
-// Função para limpar todos os campos relacionados ao cliente
-function limparCamposCliente() {
-    document.getElementById('cliente').value = '';
-    document.getElementById('codgroup').value = '';
-
-}
-
-
-// Adiciona o evento de focus no campo CNPJ
-document.getElementById('cnpj').addEventListener('focus', function () {
-    limparCamposCliente(); // Limpa todos os campos relacionados ao cliente
-});
-
-
-// Função para buscar os dados do cliente pelo CNPJ
-function buscarCliente1(cnpj) {
-    // Ajusta o CNPJ com zeros à esquerda
-    cnpj = ajustarCNPJ1(cnpj);
-
-    for (let i = 1; i < clientesData1.length; i++) {
-        let cnpjCliente = ajustarCNPJ1(clientesData1[i][1].toString());
-        if (cnpjCliente === cnpj) {
-            return clientesData1[i];
-        }
+    function obterDadosSellIn() {
+        return obterDadosTabela("sellIn", ["meta", "realizado", "atingido"]);
     }
-    return null;
-}
 
+    function obterDadosSellOut() {
+        return obterDadosTabela("sellOut", ["meta", "realizado", "atingido"]);
+    }
 
-document.getElementById('cnpj').addEventListener('blur', function () {
+    function obterDadosInvestimentos() {
+        return obterDadosTabela("invest", ["realizado", "base_faturamento"]);
+    }
 
-       let cnpj = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+    function obterDadosMercado() {
+        return obterDadosTabela("mercado", ["KZ", "fatia_demais", "fatia_KZ"]);
+    }
 
-        // Verifica se o campo está vazio
-        if (cnpj === '') {
-            return; // Sai da função sem buscar dados
-         }
-
-        // Verifica se o CNPJ é inválido (apenas zeros)
-        if (cnpjInvalido1(cnpj)) {
-            alert("CNPJ inválido.");
-            this.value = ''; // Limpa o campo CNPJ
-            return; // Sai da função sem buscar dados
-        }
-
-        cnpj = ajustarCNPJ1(cnpj);
-
-        let cliente = buscarCliente1(cnpj);
-
-        if (cliente) {
-
-            document.getElementById('cliente').value = cliente[29];
-            document.getElementById('codgroup').value = cliente[30];
-    
-        } else {
-            alert("Cliente não encontrado.");
-        }
-
-
+    function obterDadosTabela(tabela, campos) {
+        const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
+        return meses.map(mes => {
+            let dadosMes = { ano: "2025", mes: mes };
+            campos.forEach(campo => {
+                const elemento = document.getElementById(`${tabela}_${campo}_${mes}`);
+                dadosMes[campo] = elemento ? elemento.value || 0 : 0;
+            });
+            return dadosMes;
+        });
+    }
 });

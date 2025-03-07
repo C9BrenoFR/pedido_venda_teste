@@ -70,6 +70,8 @@ body {
     margin: 15px 0;
     font-size: 1.2em;
     font-weight: bold;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .codigo-item label {
@@ -406,6 +408,30 @@ table td input[readonly] {
 .ano {
     background-color: #b4b1b1;
 }
+
+.btn-salvar-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0;
+}
+
+#btnSalvarDados {
+    background-color: #e10098;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#btnSalvarDados:hover {
+    background-color: #b8007d;
+    transform: scale(1.05);
+}
+
 
 
 @media (max-width: 768px) {

@@ -25,14 +25,51 @@ exports.getEficienciaByCNPJ = async (req, res) => {
 
 exports.salvarEficiencia = async (req, res) => {
     try {
-        const { CNPJ, codigo_cliente, ano, mes, meta, realizado } = req.body;
-        const atingido = meta > 0 ? ((realizado / meta) * 100).toFixed(2) : 0;
+        const { CNPJ, codigo_cliente,nome,tabelas } = req.body;
         
-        await Positivacao.findOneAndUpdate(
-            { CNPJ, codigo_cliente, ano, mes },
-            { meta, realizado, atingido },
-            { upsert: true, new: true }
-        );
+        let cliente = await Cliente.findOne({ CNPJ });
+        if (!cliente) {
+            cliente = new Cliente({ CNPJ, codigo_cliente, nome });
+            await cliente.save();
+        }
+        
+        await Promise.all([
+            ...tabelas.positivacao.map(dado => 
+                Positivacao.findOneAndUpdate(
+                    { CNPJ, codigo_cliente,nome, ano: dado.ano, mes: dado.mes },
+                    dado,
+                    { upsert: true, new: true }
+                )
+            ),
+            ...tabelas.sellIn.map(dado => 
+                SellIn.findOneAndUpdate(
+                    { CNPJ, codigo_cliente,nome,ano: dado.ano, mes: dado.mes },
+                    dado,
+                    { upsert: true, new: true }
+                )
+            ),
+            ...tabelas.sellOut.map(dado => 
+                SellOut.findOneAndUpdate(
+                    { CNPJ, codigo_cliente,nome ,ano: dado.ano, mes: dado.mes },
+                    dado,
+                    { upsert: true, new: true }
+                )
+            ),
+            ...tabelas.investimentos.map(dado => 
+                Investimentos.findOneAndUpdate(
+                    { CNPJ, codigo_cliente,nome,ano: dado.ano, mes: dado.mes },
+                    dado,
+                    { upsert: true, new: true }
+                )
+            ),
+            ...tabelas.mercado.map(dado => 
+                Mercado.findOneAndUpdate(
+                    { CNPJ, codigo_cliente,nome ,ano: dado.ano, mes: dado.mes },
+                    dado,
+                    { upsert: true, new: true }
+                )
+            )
+        ]);
         
         res.json({ message: "Dados salvos com sucesso!" });
     } catch (error) {
