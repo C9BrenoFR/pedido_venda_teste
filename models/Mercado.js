@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const MercadoSchema = new mongoose.Schema({
-    CNPJ: { type: String, required: true },
     codigo_cliente: { type: String, required: true },
     nome: { type: String, required: true },
     ano: String,

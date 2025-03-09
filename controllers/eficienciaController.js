@@ -5,17 +5,17 @@ const SellOut = require('../models/SellOut');
 const Investimentos = require('../models/Investimentos');
 const Mercado = require('../models/Mercado');
 
-exports.getEficienciaByCNPJ = async (req, res) => {
+exports.getEficienciaBycodgroup = async (req, res) => {
     try {
-        const { cnpj } = req.params;
-        const cliente = await Cliente.findOne({ CNPJ: cnpj });
+        const { codgroup } = req.params;
+        const cliente = await Cliente.findOne({ codigo_cliente: codgroup });
         if (!cliente) return res.status(404).json({ message: "Cliente não encontrado." });
         
-        const positivacao = await Positivacao.find({ CNPJ: cnpj });
-        const sellIn = await SellIn.find({ CNPJ: cnpj });
-        const sellOut = await SellOut.find({ CNPJ: cnpj });
-        const investimentos = await Investimentos.find({ CNPJ: cnpj });
-        const mercado = await Mercado.find({ CNPJ: cnpj });
+        const positivacao = await Positivacao.find({ codigo_cliente: codgroup });
+        const sellIn = await SellIn.find({ codigo_cliente: codgroup });
+        const sellOut = await SellOut.find({ codigo_cliente: codgroup });
+        const investimentos = await Investimentos.find({ codigo_cliente: codgroup });
+        const mercado = await Mercado.find({ codigo_cliente: codgroup });
         
         res.json({ cliente, positivacao, sellIn, sellOut, investimentos, mercado });
     } catch (error) {
@@ -25,14 +25,14 @@ exports.getEficienciaByCNPJ = async (req, res) => {
 
 exports.salvarEficiencia = async (req, res) => {
     try {
-        const { CNPJ, codigo_cliente, nome, tabelas, overwrite } = req.body;
+        const {codigo_cliente, nome, tabelas, overwrite } = req.body;
         
-        let cliente = await Cliente.findOne({ CNPJ });
+        let cliente = await Cliente.findOne({codigo_cliente});
         if (!cliente) {
             if (overwrite) {
                 return res.status(400).json({ message: "Cliente não encontrado para sobrescrever." });
             }
-            cliente = new Cliente({ CNPJ, codigo_cliente, nome });
+            cliente = new Cliente({codigo_cliente, nome });
             await cliente.save();
         }
 
@@ -42,15 +42,15 @@ exports.salvarEficiencia = async (req, res) => {
             ...tabelas.positivacao.map(dado => {
                 console.log("Dados recebidos para positivacao:", dado); // Log dos dados brutos
                 // Converter apenas se necessário, evitando perda de valores
-                const meta = typeof dado.meta === 'string' ? parseFloat(dado.meta) : dado.meta || 0;
-                const realizado = typeof dado.realizado === 'string' ? parseFloat(dado.realizado) : dado.realizado || 0;
-                const atingido = typeof dado.atingido === 'string' ? parseFloat(dado.atingido) : dado.atingido || 0;
+                const meta =  parseFloat(dado.Meta)
+                const realizado =  parseFloat(dado.Realizado)
+                const atingido = parseFloat(dado.Atingido)
 
                 console.log("Valores convertidos para positivacao:", { meta, realizado, atingido }); // Log após conversão
 
                 return Positivacao.findOneAndUpdate(
-                    { CNPJ, codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
-                    { ...dado, meta, realizado, atingido }, // Usar valores convertidos diretamente
+                    { codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    { ...dado, meta, realizado, atingido}, // Usar valores convertidos diretamente
                     updateOptions
                 ).then(result => {
                     console.log("Documento salvo em positivacao:", result); // Log do resultado salvo
@@ -59,14 +59,15 @@ exports.salvarEficiencia = async (req, res) => {
             }),
             ...tabelas.sellIn.map(dado => {
                 console.log("Dados recebidos para sellIn:", dado);
-                const meta = typeof dado.meta === 'string' ? parseFloat(dado.meta) : dado.meta || 0;
-                const realizado = typeof dado.realizado === 'string' ? parseFloat(dado.realizado) : dado.realizado || 0;
-                const atingido = typeof dado.atingido === 'string' ? parseFloat(dado.atingido) : dado.atingido || 0;
+
+                const meta =  parseFloat(dado.Meta)
+                const realizado =  parseFloat(dado.Realizado)
+                const atingido = parseFloat(dado.Atingido)
 
                 console.log("Valores convertidos para sellIn:", { meta, realizado, atingido });
 
                 return SellIn.findOneAndUpdate(
-                    { CNPJ, codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    {codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
                     { ...dado, meta, realizado, atingido },
                     updateOptions
                 ).then(result => {
@@ -76,14 +77,15 @@ exports.salvarEficiencia = async (req, res) => {
             }),
             ...tabelas.sellOut.map(dado => {
                 console.log("Dados recebidos para sellOut:", dado);
-                const meta = typeof dado.meta === 'string' ? parseFloat(dado.meta) : dado.meta || 0;
-                const realizado = typeof dado.realizado === 'string' ? parseFloat(dado.realizado) : dado.realizado || 0;
-                const atingido = typeof dado.atingido === 'string' ? parseFloat(dado.atingido) : dado.atingido || 0;
+
+                const meta =  parseFloat(dado.Meta)
+                const realizado =  parseFloat(dado.Realizado)
+                const atingido = parseFloat(dado.Atingido)
 
                 console.log("Valores convertidos para sellOut:", { meta, realizado, atingido });
 
                 return SellOut.findOneAndUpdate(
-                    { CNPJ, codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    { codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
                     { ...dado, meta, realizado, atingido },
                     updateOptions
                 ).then(result => {
@@ -93,13 +95,14 @@ exports.salvarEficiencia = async (req, res) => {
             }),
             ...tabelas.investimentos.map(dado => {
                 console.log("Dados recebidos para investimentos:", dado);
-                const realizado = typeof dado.realizado === 'string' ? parseFloat(dado.realizado) : dado.realizado || 0;
-                const base_faturamento = typeof dado.base_faturamento === 'string' ? parseFloat(dado.base_faturamento) : dado.base_faturamento || 0;
+
+                const realizado =  parseFloat(dado.Realizado)
+                const base_faturamento = parseFloat(dado.base_faturamento) 
 
                 console.log("Valores convertidos para investimentos:", { realizado, base_faturamento });
 
                 return Investimentos.findOneAndUpdate(
-                    { CNPJ, codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    { codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
                     { ...dado, realizado, base_faturamento },
                     updateOptions
                 ).then(result => {
@@ -109,14 +112,14 @@ exports.salvarEficiencia = async (req, res) => {
             }),
             ...tabelas.mercado.map(dado => {
                 console.log("Dados recebidos para mercado:", dado);
-                const KZ = typeof dado.KZ === 'string' ? parseFloat(dado.KZ) : dado.KZ || 0;
-                const fatia_demais = typeof dado.fatia_demais === 'string' ? parseFloat(dado.fatia_demais) : dado.fatia_demais || 0;
-                const fatia_KZ = typeof dado.fatia_KZ === 'string' ? parseFloat(dado.fatia_KZ) : dado.fatia_KZ || 0;
+                const KZ = parseFloat(dado.KZ) 
+                const fatia_demais = parseFloat(dado.fatia_demais) 
+                const fatia_KZ = parseFloat(dado.fatia_KZ) 
 
                 console.log("Valores convertidos para mercado:", { KZ, fatia_demais, fatia_KZ });
 
                 return Mercado.findOneAndUpdate(
-                    { CNPJ, codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    { codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
                     { ...dado, KZ, fatia_demais, fatia_KZ },
                     updateOptions
                 ).then(result => {

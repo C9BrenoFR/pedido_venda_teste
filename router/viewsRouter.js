@@ -140,7 +140,7 @@ router.post('/api/pedidos/input', inputOrdersController.fetchImputOrders)
 
 /////banco de dados mogondb atlas
 
-router.get('/api/eficiencia/:cnpj', eficienciaController.getEficienciaByCNPJ);
+router.get('/api/eficiencia/:codgroup', eficienciaController.getEficienciaBycodgroup);
 router.post('/api/eficiencia/salvar', eficienciaController.salvarEficiencia);
 
 
