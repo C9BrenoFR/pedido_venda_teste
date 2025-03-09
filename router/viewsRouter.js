@@ -7,6 +7,7 @@ const { authMiddleware, authenticateUser } = require('../middleware/authMiddlewa
 const inputOrdersController = require('../controllers/inputOrdersControllers');
 const eficienciaController = require('../controllers/eficienciaController');
 const displayController = require('../controllers/displayController');  
+const redesController = require('../controllers/redesController');  
 
 const router = express.Router();
 
@@ -147,6 +148,10 @@ router.post('/api/eficiencia/salvar', eficienciaController.salvarEficiencia);
 router.get('/api/display/:codgroup', displayController.getDisplayBycodgroup);
 router.post('/api/display/salvar', displayController.salvarDisplay);
 router.delete('/api/display/remover', displayController.removerLinhaDisplay);
+
+router.get('/api/redes/:codgroup', redesController.getRedesBycodgroup);
+router.post('/api/redes/salvar', redesController.salvarRedes);
+router.delete('/api/redes/remover', redesController.removerLinhaRedes);
 
 
 module.exports = router;

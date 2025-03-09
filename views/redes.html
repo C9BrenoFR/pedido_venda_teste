@@ -39,25 +39,25 @@
       <table>
         <thead>
           <tr>
-            <th>RAZÃO SOCIAL</th>
-            <th>NOME FANTASIA </th>
-            <th>QTD LOJAS </th>
-            <th>UF </th>
-            <th>QTD SKU </th>
-            <th>MODELO DISPLAY </th>
-            <th>Jan/25</th>
-            <th>Fev/25</th>
-            <th>Mar/25</th>
-            <th>Abr/25</th>
-            <th>Mai/25</th>
-            <th>Jun/25</th>
-            <th>Jul/25</th>
-            <th>Ago/25</th>
-            <th>Set/25</th>
-            <th>Out/25</th>
-            <th>Nov/25</th>
-            <th>Dez/25</th>
-            <th>Ação</th>
+            <th id="razao_social">RAZÃO SOCIAL</th>
+            <th id="nome_fantasia">NOME FANTASIA </th>
+            <th id="qtd_lojas">QTD LOJAS </th>
+            <th id="uf">UF</th>
+            <th id="qtd_sku">QTD SKU </th>
+            <th id="modelo_display">MODELO DISPLAY</th>
+            <th id="jan25">Jan/25</th>
+            <th id="fev25">Fev/25</th>
+            <th id="mar25">Mar/25</th>
+            <th id="abr25">Abr/25</th>
+            <th id="mai25">Mai/25</th>
+            <th id="jun25">Jun/25</th>
+            <th id="jul25">Jul/25</th>
+            <th id="ago25">Ago/25</th>
+            <th id="set25">Set/25</th>
+            <th id="out25">Out/25</th>
+            <th id="nov25">Nov/25</th>
+            <th id="dez25">Dez/25</th>
+            <th id="acao">Ação</th>
           </tr>
         </thead>
         <tbody id="table-body">
@@ -65,31 +65,10 @@
         </tbody>
       </table>
     </div>
-    <button onclick="addRow()">Adicionar Linha</button>
+    <button id="adicionaLinha" >Adicionar Linha</button>
   </div>
   
-  <script>
-    function addRow() {
-      const tableBody = document.getElementById("table-body");
-      const row = document.createElement("tr");
-      const columns = 20;
-      for (let i = 0; i < columns - 1; i++) {
-        let cell = document.createElement("td");
-        let input = document.createElement("input");
-        input.type = "text";
-        cell.appendChild(input);
-        row.appendChild(cell);
-      }
-      let deleteCell = document.createElement("td");
-      let deleteButton = document.createElement("button");
-      deleteButton.innerText = "Remover";
-      deleteButton.onclick = function() {
-        tableBody.removeChild(row);
-      };
-      deleteCell.appendChild(deleteButton);
-      row.appendChild(deleteCell);
-      tableBody.appendChild(row);
-    }
-  </script>
+  <script src="/redes.js"></script>
+
 </body>
 </html>
