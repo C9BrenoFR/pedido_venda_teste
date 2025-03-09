@@ -6,6 +6,7 @@ const invoicesController = require('../controllers/invoicesControllers');
 const { authMiddleware, authenticateUser } = require('../middleware/authMiddleware');
 const inputOrdersController = require('../controllers/inputOrdersControllers');
 const eficienciaController = require('../controllers/eficienciaController');
+const displayController = require('../controllers/displayController');  
 
 const router = express.Router();
 
@@ -143,6 +144,9 @@ router.post('/api/pedidos/input', inputOrdersController.fetchImputOrders)
 router.get('/api/eficiencia/:codgroup', eficienciaController.getEficienciaBycodgroup);
 router.post('/api/eficiencia/salvar', eficienciaController.salvarEficiencia);
 
+router.get('/api/display/:codgroup', displayController.getDisplayBycodgroup);
+router.post('/api/display/salvar', displayController.salvarDisplay);
+router.delete('/api/display/remover', displayController.removerLinhaDisplay);
 
 
 module.exports = router;

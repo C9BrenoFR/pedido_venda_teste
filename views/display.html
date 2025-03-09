@@ -22,11 +22,20 @@
     </div> 
     
     <div class="client-info">
-      <label><strong>CNPJ Cliente:</strong></label>
-      <input type="text" id="cnpj-cliente" placeholder="Digite o CNPJ">
-      <label><strong>Cliente:</strong></label>
-      <input type="text" id="nome-cliente" placeholder="Nome do Cliente">
+
+      <div class="btn-salvar-container">
+        <button id="btnSalvarDados1">Salvar Dados</button>
+      </div>
+
+      <label for="cnpj"><strong>CNPJ:</strong></label>
+      <input type="text" id="cnpj" placeholder="Digite o CNPJ">
+      <label for="codgroup"><strong>CÓDIGO CLIENTE:</strong></label>
+      <input type="text" id="codgroup" placeholder="Código do Cliente" readonly>
+      <label for="cliente"><strong>Cliente:</strong></label>
+      <input type="text" id="cliente" placeholder="Nome do Cliente" readonly>
+
     </div>
+  
     
     <div class="table-container">
       <table>
@@ -60,31 +69,9 @@
         </tbody>
       </table>
     </div>
-    <button onclick="addRow()">Adicionar Linha</button>
+    <button id="adicionaLinha" >Adicionar Linha</button>
   </div>
   
-  <script>
-    function addRow() {
-      const tableBody = document.getElementById("table-body");
-      const row = document.createElement("tr");
-      const columns = 21;
-      for (let i = 0; i < columns - 1; i++) {
-        let cell = document.createElement("td");
-        let input = document.createElement("input");
-        input.type = "text";
-        cell.appendChild(input);
-        row.appendChild(cell);
-      }
-      let deleteCell = document.createElement("td");
-      let deleteButton = document.createElement("button");
-      deleteButton.innerText = "Remover";
-      deleteButton.onclick = function() {
-        tableBody.removeChild(row);
-      };
-      deleteCell.appendChild(deleteButton);
-      row.appendChild(deleteCell);
-      tableBody.appendChild(row);
-    }
-  </script>
+  <script src="/display.js"></script>
 </body>
 </html>

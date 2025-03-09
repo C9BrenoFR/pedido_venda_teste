@@ -21,10 +21,18 @@
       <h3>CONTROLE DE DISPLAYS CLIENTE/DISTRIBUIDORES</h3>
     </div>
     <div class="client-info">
-      <label><strong>CNPJ Cliente:</strong></label>
-      <input type="text" id="cnpj-cliente" placeholder="Digite o CNPJ">
-      <label><strong>Cliente:</strong></label>
-      <input type="text" id="nome-cliente" placeholder="Nome do Cliente">
+
+      <div class="btn-salvar-container">
+        <button id="btnSalvarDados1">Salvar Dados</button>
+      </div>
+
+      <label for="cnpj"><strong>CNPJ:</strong></label>
+      <input type="text" id="cnpj" placeholder="Digite o CNPJ">
+      <label for="codgroup"><strong>CÓDIGO CLIENTE:</strong></label>
+      <input type="text" id="codgroup" placeholder="Código do Cliente" readonly>
+      <label for="cliente"><strong>Cliente:</strong></label>
+      <input type="text" id="cliente" placeholder="Nome do Cliente" readonly>
+
     </div>
     
     <div class="table-container">

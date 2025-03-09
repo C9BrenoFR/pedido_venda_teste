@@ -51,7 +51,7 @@ body {
     font-size: 16px;
     font-weight: bold;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
 }
 
@@ -61,11 +61,13 @@ body {
 }
 
 .client-info input {
-    width: 300px;
-    padding: 8px;
+    width: 600px;
+    height: 35px;
+    padding: 2px;
     border: 1px solid #fb29d1;
     border-radius: 6px;
     font-size: 14px;
+    text-align: center;
     background-color: #fff;
 }
 
@@ -104,4 +106,39 @@ tbody tr:nth-child(even) {
 
 tbody tr:hover {
     background-color: #f1f1f1;
+}
+
+.btn-salvar-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0;
+}
+
+#btnSalvarDados1 {
+    background-color: #e10098;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#btnSalvarDados1:hover {
+    background-color: #9f056f;
+    transform: scale(1.15);
+}
+
+@media (max-width: 990px) {
+    .client-info {
+     flex-direction: column;
+     
+    }
+
+    .client-info input {
+        width: 90%;
+    }
+
 }

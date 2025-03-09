@@ -428,8 +428,8 @@ table td input[readonly] {
 }
 
 #btnSalvarDados:hover {
-    background-color: #b8007d;
-    transform: scale(1.05);
+    background-color: #9f056f;
+    transform: scale(1.15);
 }
 
 
