@@ -1,111 +1,194 @@
-// variavel global
-let clientesData2;
+// Variáveis globais
+let clientesData;
 
-// Função para atualizar os caches no navegador
-const timestamp2 = new Date().getTime();
+// Função para atualizar o cache
+const timestamp = new Date().getTime();
 
-// Função para carregar os JSONs 
-fetch(`/data/cliente.json?cacheBust=${timestamp2}`)
+// Carregar dados do cliente.json
+fetch(`/data/cliente.json?cacheBust=${timestamp}`)
     .then(response => response.json())
     .then(data => {
-        clientesData2 = data;
-});
+        clientesData = data;
+    })
+    .catch(error => console.error('Erro ao carregar cliente.json:', error));
 
-// Função para ajustar o CNPJ com zeros à esquerda, se necessário
-function ajustarCNPJ2(cnpj) {
+// Funções auxiliares
+function ajustarCNPJ(cnpj) {
     while (cnpj.length < 14) {
         cnpj = '0' + cnpj;
     }
     return cnpj;
 }
 
-// Função para verificar se o CNPJ é composto apenas de zeros
-function cnpjInvalido2(cnpj) {
+function cnpjInvalido(cnpj) {
     return /^0+$/.test(cnpj);
 }
 
-
-// Função para limpar todos os campos relacionados ao cliente
-function limparCamposCliente1() {
+function limparCamposCliente() {
     document.getElementById('cliente').value = '';
     document.getElementById('codgroup').value = '';
-   
+    document.getElementById('table-body').innerHTML = '';
 }
 
-// Adiciona o evento de focus no campo CNPJ
-document.getElementById('cnpj').addEventListener('focus', function () {
-    limparCamposCliente1(); // Limpa todos os campos relacionados ao cliente
-});
-
-
-// Função para buscar os dados do cliente pelo CNPJ
-function buscarCliente2(cnpj) {
-    // Ajusta o CNPJ com zeros à esquerda
-    cnpj = ajustarCNPJ2(cnpj);
-
-    for (let i = 1; i < clientesData2.length; i++) {
-        let cnpjCliente = ajustarCNPJ2(clientesData2[i][1].toString());
-        if (cnpjCliente === cnpj) {
-            return clientesData2[i];
-        }
+// Buscar cliente pelo CNPJ
+function buscarCliente(cnpj) {
+    cnpj = ajustarCNPJ(cnpj);
+    for (let i = 1; i < clientesData.length; i++) {
+        let cnpjCliente = ajustarCNPJ(clientesData[i][1].toString());
+        if (cnpjCliente === cnpj) return clientesData[i];
     }
     return null;
 }
 
+// Adicionar linha na tabela
+function adicionarLinha(dados = {}) {
+    const tableBody = document.getElementById('table-body');
+    const row = document.createElement('tr');
+    const campos = [
+        'razao_social', 'cnpj', 'endereco', 'bairro', 'cidade', 'uf', 
+        'valor_compra', 'modelo_display', 'jan25', 'fev25', 'mar25', 
+        'abr25', 'mai25', 'jun25', 'jul25', 'ago25', 'set25', 'out25', 
+        'nov25', 'dez25'
+    ];
+
+    campos.forEach(campo => {
+        const cell = document.createElement('td');
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = dados[campo] || '';
+        cell.appendChild(input);
+        row.appendChild(cell);
+    });
+
+    const deleteCell = document.createElement('td');
+    const deleteButton = document.createElement('button');
+    deleteButton.innerText = 'Remover';
+    deleteButton.onclick = () => removerLinha(row, dados._id);
+    deleteCell.appendChild(deleteButton);
+    row.appendChild(deleteCell);
+
+    tableBody.appendChild(row);
+}
+
+// Remover linha
+async function removerLinha(row, id) {
+    if (id) {
+        try {
+            const response = await fetch('/api/display/remover', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            if (!response.ok) throw new Error('Erro ao remover linha');
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao remover linha');
+            return;
+        }
+    }
+    row.parentNode.removeChild(row);
+}
+
+// Buscar dados do MongoDB
+async function buscarDadosDisplay(codgroup) {
+    try {
+        const response = await fetch(`/api/display/${codgroup}`);
+        if (!response.ok) {
+            if (response.status === 404) return;
+            throw new Error('Erro na requisição');
+        }
+        const { cliente, display } = await response.json();
+        
+        document.getElementById('cliente').value = cliente.nome;
+        document.getElementById('codgroup').value = cliente.codigo_cliente;
+        
+        display.forEach(dados => adicionarLinha(dados));
+    } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+    }
+}
+
+// Salvar dados
+async function salvarDados() {
+    const codgroup = document.getElementById('codgroup').value;
+    const nome = document.getElementById('cliente').value;
+    const cnpj = document.getElementById('cnpj').value.trim();
+
+    if (!cnpj || !codgroup) {
+        alert('Preencha o CNPJ e o Código do Cliente.');
+        return;
+    }
+
+    const linhas = Array.from(document.getElementById('table-body').rows);
+    const dados = linhas.map(row => {
+        const inputs = row.querySelectorAll('input');
+        return {
+            codigo_cliente: codgroup,
+            nome,
+            razao_social: inputs[0].value,
+            cnpj: inputs[1].value,
+            endereco: inputs[2].value,
+            bairro: inputs[3].value,
+            cidade: inputs[4].value,
+            uf: inputs[5].value,
+            valor_compra: parseFloat(inputs[6].value) || 0,
+            modelo_display: inputs[7].value,
+            jan25: parseFloat(inputs[8].value) || 0,
+            fev25: parseFloat(inputs[9].value) || 0,
+            mar25: parseFloat(inputs[10].value) || 0,
+            abr25: parseFloat(inputs[11].value) || 0,
+            mai25: parseFloat(inputs[12].value) || 0,
+            jun25: parseFloat(inputs[13].value) || 0,
+            jul25: parseFloat(inputs[14].value) || 0,
+            ago25: parseFloat(inputs[15].value) || 0,
+            set25: parseFloat(inputs[16].value) || 0,
+            out25: parseFloat(inputs[17].value) || 0,
+            nov25: parseFloat(inputs[18].value) || 0,
+            dez25: parseFloat(inputs[19].value) || 0
+        };
+    });
+
+    try {
+        const response = await fetch('/api/display/salvar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo_cliente: codgroup, nome, displays: dados })
+        });
+        const result = await response.json();
+        alert(result.message);
+    } catch (error) {
+        console.error('Erro ao salvar:', error);
+        alert('Erro ao salvar dados');
+    }
+}
+
+// Eventos
+document.getElementById('cnpj').addEventListener('focus', limparCamposCliente);
 
 document.getElementById('cnpj').addEventListener('blur', async function () {
-    let cnpj = this.value.replace(/\D/g, ''); // Remove caracteres não numéricos
-
-    // Verifica se o campo está vazio
-    if (cnpj === '') {
-        limparCamposCliente1();
-        return; // Sai da função sem buscar dados
+    const cnpj = this.value.replace(/\D/g, '');
+    if (!cnpj) {
+        limparCamposCliente();
+        return;
+    }
+    if (cnpjInvalido(cnpj)) {
+        alert('CNPJ inválido.');
+        this.value = '';
+        limparCamposCliente();
+        return;
     }
 
-    // Verifica se o CNPJ é inválido (apenas zeros)
-    if (cnpjInvalido2(cnpj)) {
-        alert("CNPJ inválido.");
-        this.value = ''; // Limpa o campo CNPJ
-        limparCamposCliente1();
-        return; // Sai da função sem buscar dados
-    }
-
-    cnpj = ajustarCNPJ2(cnpj);
-
-    let cliente = buscarCliente2(cnpj);
-
+    const cliente = buscarCliente(cnpj);
     if (cliente) {
         document.getElementById('cliente').value = cliente[29];
-        document.getElementById('codgroup').value = cliente[30]
+        document.getElementById('codgroup').value = cliente[30];
+        await buscarDadosDisplay(cliente[30]);
     } else {
-        alert("Cliente não encontrado.");
-        limparCamposCliente1();
+        alert('Cliente não encontrado.');
+        limparCamposCliente();
     }
 });
 
+document.getElementById('adicionaLinha').addEventListener('click', () => adicionarLinha());
 
-document.getElementById('adicionaLinha').addEventListener('click', function () {
-
-        const tableBody = document.getElementById("table-body");
-        const row = document.createElement("tr");
-        const columns = 21;
-
-        for (let i = 0; i < columns - 1; i++) {
-          let cell = document.createElement("td");
-          let input = document.createElement("input");
-          input.type = "text";
-          cell.appendChild(input);
-          row.appendChild(cell);
-        }
-        let deleteCell = document.createElement("td");
-        let deleteButton = document.createElement("button");
-        deleteButton.innerText = "Remover";
-        deleteButton.onclick = function() {
-          tableBody.removeChild(row);
-        };
-        deleteCell.appendChild(deleteButton);
-        row.appendChild(deleteCell);
-        tableBody.appendChild(row);
-    
-        
-}); 
+document.getElementById('btnSalvarDados1').addEventListener('click', salvarDados);
