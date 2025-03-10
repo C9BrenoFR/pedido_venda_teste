@@ -8,7 +8,7 @@
   <link rel="icon"  type="image/png" sizes="32x32" href="/images/favicon-32x32.png" >
   <link rel="icon"  type="image/png" sizes="16x16" href="/images/favicon-16x16.png" >
   <link rel="manifest" href="/images/site.webmanifest">
-  <link rel="stylesheet" href="/css/display.css?v=1741234570365">
+  <link rel="stylesheet" href="/css/sellOut.css">
 </head>
 <body>
   <div class="container">
@@ -21,37 +21,43 @@
       <h3>SELL-OUT POR SKU (EM CXs) POR  CLIENTE</h3>
     </div>
     <div class="client-info">
-      <label><strong>CNPJ Cliente:</strong></label>
-      <input type="text" id="cnpj-cliente" placeholder="Digite o CNPJ">
-      <label><strong>Cliente:</strong></label>
-      <input type="text" id="nome-cliente" placeholder="Nome do Cliente">
+      <div class="btn-salvar-container">
+        <button id="btnSalvarDados1">Salvar Dados</button>
+      </div>
+
+      <label for="cnpj"><strong>CNPJ:</strong></label>
+      <input type="text" id="cnpj" placeholder="Digite o CNPJ">
+      <label for="codgroup"><strong>CÓDIGO CLIENTE:</strong></label>
+      <input type="text" id="codgroup" placeholder="Código do Cliente" readonly>
+      <label for="cliente"><strong>Cliente:</strong></label>
+      <input type="text" id="cliente" placeholder="Nome do Cliente" readonly>
     </div>
     
     <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th>COD</th>
-            <th>SKU</th>
-            <th>Sell in</th>
-            <th>BAIRRO</th>
-            <th>CIDADE</th>
-            <th>UF</th>
-            <th>VALOR COMPRA</th>
-            <th>MODELO DISPLAY</th>
-            <th>Jan/25</th>
-            <th>Fev/25</th>
-            <th>Mar/25</th>
-            <th>Abr/25</th>
-            <th>Mai/25</th>
-            <th>Jun/25</th>
-            <th>Jul/25</th>
-            <th>Ago/25</th>
-            <th>Set/25</th>
-            <th>Out/25</th>
-            <th>Nov/25</th>
-            <th>Dez/25</th>
-            <th>Ação</th>
+            <th id="cod_item">COD_item</th>
+            <th id="sku">SKU</th>
+            <th id="sellIn">Sell in</th>
+            <th id="bairro">BAIRRO</th>
+            <th id="cidade">CIDADE</th>
+            <th id="uf">UF</th>
+            <th id="valor_compra">VALOR COMPRA</th>
+            <th id="modelo_display">MODELO DISPLAY</th>
+            <th id="jan25">Jan/25</th>
+            <th id="fev25">Fev/25</th>
+            <th id="mar25">Mar/25</th>
+            <th id="abr25">Abr/25</th>
+            <th id="mai25">Mai/25</th>
+            <th id="jun25">Jun/25</th>
+            <th id="jul25">Jul/25</th>
+            <th id="ago25">Ago/25</th>
+            <th id="set25">Set/25</th>
+            <th id="out25">Out/25</th>
+            <th id="nov25">Nov/25</th>
+            <th id="dez25">Dez/25</th>
+            <th id="acao">Ação</th>
           </tr>
         </thead>
         <tbody id="table-body">
@@ -59,31 +65,9 @@
         </tbody>
       </table>
     </div>
-    <button onclick="addRow()">Adicionar Linha</button>
+    <button id="adicionaLinha" >Adicionar Linha</button>
   </div>
   
-  <script>
-    function addRow() {
-      const tableBody = document.getElementById("table-body");
-      const row = document.createElement("tr");
-      const columns = 21;
-      for (let i = 0; i < columns - 1; i++) {
-        let cell = document.createElement("td");
-        let input = document.createElement("input");
-        input.type = "text";
-        cell.appendChild(input);
-        row.appendChild(cell);
-      }
-      let deleteCell = document.createElement("td");
-      let deleteButton = document.createElement("button");
-      deleteButton.innerText = "Remover";
-      deleteButton.onclick = function() {
-        tableBody.removeChild(row);
-      };
-      deleteCell.appendChild(deleteButton);
-      row.appendChild(deleteCell);
-      tableBody.appendChild(row);
-    }
-  </script>
+  <script src="/sellOut.js"></script>
 </body>
 </html>
