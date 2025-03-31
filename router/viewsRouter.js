@@ -11,6 +11,7 @@ const redesController = require('../controllers/redesController');
 const sellOutController = require('../controllers/sellOutController');
 const fernandoController = require('../controllers/fernandoController');
 const clientController = require('../controllers/clientController');
+const itemListController = require('../controllers/itemListController'); 
 
 const router = express.Router();
 
@@ -96,6 +97,7 @@ router.get('/api/pedidos', orderController.getOrderDetails); // Pedidos com repr
 router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes do pedido por ID
 
 router.get('/api/cliente/:cnpj', clientController.getClientDetails); // Detalhes do cliente por cnpj
+router.get('/api/lista/:codgroup', itemListController.getItemList); // Detalhes do cliente por lista de preço
 
 
 // Rotas da API de Logistica
