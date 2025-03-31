@@ -200,6 +200,22 @@ document.getElementById('cnpj').addEventListener('blur', async function (event) 
 
         const clienteApi = await response.json();
 
+        // Verifica os campos ATIVO e SUSPENSO antes de prosseguir
+        const ativo = clienteApi["ATIVO"];
+        const suspenso = clienteApi["SUSPENSO"];
+
+        if (ativo === false) {
+            alert("Cliente inativo.");
+            limparCamposCliente(); // Limpa os campos para evitar preenchimento
+            return; // Interrompe o processo
+        }
+
+        if (suspenso === true) {
+            alert("Cliente suspenso.");
+            limparCamposCliente(); // Limpa os campos para evitar preenchimento
+            return; // Interrompe o processo
+        }
+
         // Simula o formato do clientesData como um array de arrays
         clientesData = [
             null, // Índice 0 não era usado no JSON antigo
