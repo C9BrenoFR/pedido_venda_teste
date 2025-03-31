@@ -27,7 +27,9 @@ function cnpjInvalido(cnpj) {
 function limparCamposCliente() {
     document.getElementById('cliente').value = '';
     document.getElementById('codgroup').value = '';
+    document.getElementById("rep").value = '';
     document.getElementById('table-body').innerHTML = '';
+
 }
 
 // Buscar cliente pelo CNPJ
@@ -113,6 +115,7 @@ async function salvarDados() {
     const codgroup = document.getElementById('codgroup').value;
     const nome = document.getElementById('cliente').value;
     const cnpj = document.getElementById('cnpj').value.trim();
+    const representante = document.getElementById("rep").value.trim();
 
     if (!cnpj || !codgroup) {
         alert('Preencha o CNPJ e o Código do Cliente.');
@@ -124,14 +127,15 @@ async function salvarDados() {
         const inputs = row.querySelectorAll('input');
         return {
             codigo_cliente: codgroup,
-            nome,
+            nome:nome,
+            representante: representante,
             razao_social: inputs[0].value,
             cnpj: inputs[1].value,
             endereco: inputs[2].value,
             bairro: inputs[3].value,
             cidade: inputs[4].value,
             uf: inputs[5].value,
-            valor_compra: parseFloat(inputs[6].value) || 0,
+            qtd_display: parseFloat(inputs[6].value) || 0,
             modelo_display: inputs[7].value,
             jan25: parseFloat(inputs[8].value) || 0,
             fev25: parseFloat(inputs[9].value) || 0,
@@ -152,7 +156,7 @@ async function salvarDados() {
         const response = await fetch('/api/display/salvar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codigo_cliente: codgroup, nome, displays: dados })
+            body: JSON.stringify({ codigo_cliente: codgroup, nome:nome, representante:representante ,displays: dados })
         });
         const result = await response.json();
         alert(result.message);
@@ -182,6 +186,7 @@ document.getElementById('cnpj').addEventListener('blur', async function () {
     if (cliente) {
         document.getElementById('cliente').value = cliente[29];
         document.getElementById('codgroup').value = cliente[30];
+        document.getElementById('rep').value = cliente[15];
         await buscarDadosDisplay(cliente[30]);
     } else {
         alert('Cliente não encontrado.');

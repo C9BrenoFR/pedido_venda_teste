@@ -8,7 +8,13 @@
     <link rel="icon"  type="image/png" sizes="32x32" href="/images/favicon-32x32.png" >
     <link rel="icon"  type="image/png" sizes="16x16" href="/images/favicon-16x16.png" >
     <link rel="manifest" href="/images/site.webmanifest">
-    <link rel="stylesheet" href="/css/detalhesProdutos.css?v=1741234570343">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" integrity="sha512-MpDFIChbcXl2QgipQrt1VcPHMldRILetapBl5MPCA9Y8r7qvlwx1/Mc9hNTzY+kS5kX6PdoDq41ws1HiVNLdZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <link rel="stylesheet" href="/css/detalhesProdutos.css?v=1743380629231">
+
 </head>
 <body>
     <div class="container">
@@ -19,11 +25,19 @@
                 </a>
             </div>
             <h3>KIDS ZONE - CADASTRO DE PRODUTOS / INFORMAÇÕES FISCAIS</h3>
+            <button id="button_pdf1">SALVAR PDF</button>
         </div>
         <div class="codigo-item">
             <label for="codigo">CÓDIGO ITEM:</label>
             <input type="text" id="codigo" placeholder="Digite o código">
         </div>
+
+        
+           <!-- Mensagem de feedback -->
+           <div id="feedback1" style="display: none; text-align: center; font-weight: bold; margin: 10px; color: red;">
+                 Salvando o pdf , aguarde...
+           </div>
+
         <div class="descricao-container">
             <div class="descricao">
                 <h3>DESCRIÇÃO DO ITEM</h3>
@@ -53,11 +67,11 @@
             <input type="number" id="qtd-caixa" placeholder="Quantidade"readonly>
             <label for="peso-caixa">PESO CAIXA MASTER:</label>
             <input type="text" id="peso-caixa" placeholder="Peso"readonly>
-            <label for="comprimento-caixa">COMPRIMENTO CAIXA MASTER:</label>
+            <label for="comprimento-caixa">COMPRIMENTO CAIXA MASTER(CM):</label>
             <input type="text" id="comprimento-caixa" placeholder="Comprimento"readonly>
-            <label for="largura-caixa">LARGURA CAIXA MASTER:</label>
+            <label for="largura-caixa">LARGURA CAIXA MASTER(CM):</label>
             <input type="text" id="largura-caixa" placeholder="Largura"readonly>
-            <label for="altura-caixa">ALTURA CAIXA MASTER:</label>
+            <label for="altura-caixa">ALTURA CAIXA MASTER(CM):</label>
             <input type="text" id="altura-caixa" placeholder="Altura"readonly>
         </div>
         <div class="info-display">
@@ -68,11 +82,11 @@
             <input type="number" id="qtd-display" placeholder="Quantidade"readonly>
             <label for="peso-display">PESO DISPLAY:</label>
             <input type="text" id="peso-display" placeholder="Peso"readonly>
-            <label for="comprimento-display">COMPRIMENTO DISPLAY:</label>
+            <label for="comprimento-display">COMPRIMENTO DISPLAY(CM):</label>
             <input type="text" id="comprimento-display" placeholder="Comprimento"readonly>
-            <label for="largura-display">LARGURA DISPLAY:</label>
+            <label for="largura-display">LARGURA DISPLAY(CM):</label>
             <input type="text" id="largura-display" placeholder="Largura"readonly>
-            <label for="altura-display">ALTURA DISPLAY:</label>
+            <label for="altura-display">ALTURA DISPLAY(CM):</label>
             <input type="text" id="altura-display" placeholder="Altura"readonly>
         </div>
         <div class="info-unidade">
@@ -81,11 +95,11 @@
             <input type="text" id="codigo-unidade" placeholder="Código de Barras"readonly>
             <label for="peso-unitario">PESO UNITÁRIO:</label>
             <input type="text" id="peso-unitario" placeholder="Peso Unitário"readonly>
-            <label for="comprimento-unitario">COMPRIMENTO UNITÁRIO:</label>
+            <label for="comprimento-unitario">COMPRIMENTO UNITÁRIO(CM):</label>
             <input type="text" id="comprimento-unitario" placeholder="Comprimento Unitário"readonly>
-            <label for="largura-unitario">LARGURA UNITÁRIO:</label>
+            <label for="largura-unitario">LARGURA UNITÁRIO(CM):</label>
             <input type="text" id="largura-unitario" placeholder="Largura Unitária"readonly>
-            <label for="altura-unitario">ALTURA UNITÁRIO:</label>
+            <label for="altura-unitario">ALTURA UNITÁRIO(CM):</label>
             <input type="text" id="altura-unitario" placeholder="Altura Unitária"readonly>
         </div>
         <div class="calculo-palete">
@@ -107,6 +121,7 @@
         </div>
     </div>
 
-    <script src="/detalhesProdutos.js?v=1741234570343"></script>
+    <script src="/detalhesProdutos.js?v=1743380629231"></script>
+   
 </body>
 </html>

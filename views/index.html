@@ -10,8 +10,9 @@
     <link rel="icon"  type="image/png" sizes="16x16" href="/images/favicon-16x16.png" >
     <link rel="manifest" href="/images/site.webmanifest">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" integrity="sha512-MpDFIChbcXl2QgipQrt1VcPHMldRILetapBl5MPCA9Y8r7qvlwx1/Mc9hNTzY+kS5kX6PdoDq41ws1HiVNLdZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="/css/styles2.css?v=1741234570353">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="/css/styles2.css?v=1743380629237">
 </head>
 
 <body id="corpo">
@@ -34,6 +35,16 @@
               <p>Você deseja realmente enviar o e-mail?</p>
               <button id="confirmButton1">Sim</button>
               <button id="cancelButton1">Não</button>
+            </div>
+          </div>
+
+          <div id="blockModal" class="modal">
+            <div class="modal-content">
+              <span class="close-button">&times;</span>
+              <h2>Aviso!</h2>
+              <p>Por favor enviar o pedido para o sistema para liberar um novo cadastro.</p>
+              <p id="timestamp"></p>
+              <button id="okButton">OK</button>
             </div>
           </div>
 
@@ -92,26 +103,26 @@
 
 
                   <!-- input escondidos  -->
-                <label for="representanteId" class="esconder">Rep ID:</label> 
-                <input type="text" class="esconder" id="representanteId" placeholder="Rep ID" readonly>
+                <label for="representanteId" class="">Rep ID:</label> 
+                <input type="text" class="" id="representanteId" placeholder="Rep ID" readonly>
 
-                <label for="formPagId" class="esconder">Forma de pagamento ID:</label> 
-                <input type="text" class="esconder" id="formPagId" placeholder="formPag ID" readonly>
+                <label for="formPagId" class="">Forma de pagamento ID:</label> 
+                <input type="text" class="" id="formPagId" placeholder="formPag ID" readonly>
 
-                <label for="condPagId" class="esconder">Condição de pagamento ID:</label> 
-                <input type="text" class="esconder" id="condPagId" placeholder="condPag ID" readonly>
+                <label for="condPagId" class="">Condição de pagamento ID:</label> 
+                <input type="text" class="" id="condPagId" placeholder="condPag ID" readonly>
 
-                <label for="PercentualComissaoItem" class="esconder"> % comissao item:</label> 
-                <input type="text" class="esconder" id="PercentualComissaoItem" placeholder="% comissao item" readonly>
+                <label for="PercentualComissaoItem" class=""> % comissao item:</label> 
+                <input type="text" class="" id="PercentualComissaoItem" placeholder="% comissao item" readonly>
 
-                <label for="PercentualComissaoServico" class="esconder"> % comissao servico:</label> 
-                <input type="text" class="esconder" id="PercentualComissaoServico" placeholder="% comissao servico" readonly>
+                <label for="PercentualComissaoServico" class=""> % comissao servico:</label> 
+                <input type="text" class="" id="PercentualComissaoServico" placeholder="% comissao servico" readonly>
 
-                <label for="ContatoClienteId" class="esconder"> contato id:</label> 
-                <input type="text" class="esconder" id="ContatoClienteId" placeholder="contato id" readonly>
+                <label for="ContatoClienteId" class=""> contato id:</label> 
+                <input type="text" class="" id="ContatoClienteId" placeholder="contato id" readonly>
 
-                <label class="esconder" for="email_rep">Email_Rep</label> 
-                <input type="text" class="esconder" id="email_rep" placeholder="Descrição Grupo" readonly>
+                <label class="" for="email_rep">Email_Rep</label> 
+                <input type="text" class="" id="email_rep" placeholder="Descrição Grupo" readonly>
 
                   <!-- input escondidos  -->
 
@@ -125,7 +136,7 @@
                 </label>
                 <select id="tipo_pedido">
                     <option value="Venda">Venda</option>
-                    <option value="Promoção">Promoção</option>
+                  <!--  <option value="Promoção">Promoção</option> -->
                     <option value="Bonificação">Bonificação</option>
                 </select>
 
@@ -174,10 +185,10 @@
                 <label  for="formPagDescricao">FORMA PAGAMENTO:</label> 
                 <input type="text" id="formPagDescricao" placeholder="Forma de Pagamento" readonly>
 
-                <label class="label-espaco-esquerda label-referencia" for="referencia">REFERÊNCIA:
-                    <span class="tooltip1">Digite o código de referência do pedido</span>
+                <label class="label-espaco-esquerda label-referencia" for="referencia">ORDEM DE COMPRA:
+                    <span class="tooltip1">Digite a ordem de compra do cliente</span>
                 </label> 
-                <input type="text" id="referencia" placeholder="Digite o Número (opcional) ">
+                <input type="text" id="referencia" placeholder="Digite o numero do pedido do cliente (opcional) ">
 
             </form>
         </div>
@@ -250,6 +261,12 @@
                                 Falar com o T.I.
                             </a>
                         </li>
+                        <li>
+                            <a href="https://wa.me/5511932974527?text=Olá%20estou%20usando%20o%20site%20de%20pedidos%20de%20venda%20e%20estou%20com%20uma%20dúvida,%20poderia%20me%20ajudar?" 
+                                target="_blank">
+                                Falar com o Comercial.
+                            </a>
+                        </li> 
                     </ul>
                     <button id="closeModal" class="close-modal">Fechar</button>
                 </div>
@@ -265,15 +282,15 @@
            <button id="logoutButton2">Sair</button>
            <a target="_blank" href="/admin">Área T.I.</a>
            <a target="_blank" href="/comercial">Área Comercial</a>
-           <a target="_blank" href="/logistica">Área logística</a>
+           <a target="_blank" href="/logistica03">Área logística</a>
            <a target="_blank" href="/detalhesProdutos">Detalhes do Produto</a>
            <a target="_blank" href="/eficiencia">Eficiência</a>
         </div>
         
     </footer>
     
-    <script src="/script.js?v=1741234570353"></script>
-    <script  src="/pdf.js"></script>
+    <script src="/script.js?v=1743380629237"></script>
+    <script  src="/pdf.js?v=1742259354185"></script>
 
     <script>
          // Função para limpar dados do usuário e redirecionar para a página de login

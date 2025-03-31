@@ -432,6 +432,10 @@ table td input[readonly] {
     transform: scale(1.15);
 }
 
+.representante{
+    display: none;
+}
+
 
 
 @media (max-width: 768px) {

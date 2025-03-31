@@ -327,5 +327,85 @@ function limparCamposProduto() {
     
 }
 
+
 // Inicializar os dados ao carregar a página
 document.addEventListener('DOMContentLoaded', carregarDados);
+
+
+// Evento para gerar PDF
+document.getElementById("button_pdf1").addEventListener("click", async () => {
+
+    const content1 = document.querySelector('.container');
+    const cod_item = document.getElementById('codigo').value;
+    const descricao = document.getElementById('descricao').value;
+    const feedbackDiv = document.getElementById('feedback1'); // Div de feedback
+    const imagemDiv = document.querySelector('.imagem-produto'); // Div da imagem
+    const button_save= document.getElementById('button_pdf1'); // Botão de salvar PDF
+
+    // Exibe a mensagem de feedback
+    feedbackDiv.textContent = 'Aguarde, estamos salvando o PDF...';
+    feedbackDiv.style.display = 'block';
+
+    imagemDiv.style.display = 'none'; // Oculta a imagem no PDF
+    button_save.style.display = 'none'; // Oculta o botão de salvar
+
+    // Cria uma cópia do conteúdo para manipular sem afetar a página
+    const contentClone = content1.cloneNode(true);
+    const feedbackClone = contentClone.querySelector('#feedback1');
+    if (feedbackClone) {
+        feedbackClone.style.display = 'none'; // Oculta a mensagem no clone
+    }
+
+    const filename1 = `Codigo do item: ${cod_item} - Descrição: ${descricao}.pdf`;
+
+    // Garante que a imagem seja pré-carregada no DOM
+    const imgElement = contentClone.querySelector("#imagem");
+    if (imgElement && imgElement.src) {
+        console.log("Imagem a ser carregada:", imgElement.src); // Log para depuração
+        try {
+            // Pré-carregar a imagem
+            const imgPreload = new Image();
+            imgPreload.crossOrigin = "anonymous"; // Tenta carregar a imagem com CORS
+            await new Promise((resolve, reject) => {
+                imgPreload.onload = () => {
+                    console.log("Imagem pré-carregada com sucesso");
+                    imgElement.src = imgPreload.src; // Atualiza o src no clone
+                    resolve();
+                };
+                imgPreload.onerror = () => {
+                    console.error("Erro ao pré-carregar a imagem");
+                    reject(new Error("Falha ao carregar a imagem"));
+                };
+                imgPreload.src = imgElement.src;
+            });
+        } catch (error) {
+            console.error("Erro ao pré-carregar a imagem:", error);
+            imgElement.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=='; // Imagem placeholder em Base64 (1x1 pixel)
+        }
+    } else {
+        console.warn("Nenhuma imagem encontrada para carregar");
+    }
+
+    const options1 = {
+        margin: [0, 0, 0, 0],
+        filename: filename1,
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            backgroundColor: null // Garante fundo transparente
+        },
+        jsPDF: { unit: "mm", format: "a4", orientation: "Portrait" },
+        pagebreak: { mode: 'avoid-all' }
+    };
+
+    // Gera o PDF após garantir que a imagem está pronta
+    html2pdf().set(options1).from(contentClone).save().then(() => {
+        alert('PDF criado e baixado na pasta de downloads');
+        feedbackDiv.style.display = 'none';
+        imagemDiv.style.display = 'block'; // Exibe a imagem novamente
+        button_save.style.display = 'block'; // Exibe o botão de salvar
+    }).catch((error) => {
+        console.error("Erro ao gerar o PDF:", error);
+        feedbackDiv.textContent = 'Erro ao salvar o PDF.';
+    });
+});

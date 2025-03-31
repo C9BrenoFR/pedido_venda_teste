@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const DisplaySchema = new mongoose.Schema({
     codigo_cliente: { type: String, required: true },
     nome: { type: String, required: true },
+    representante:Number,
     razao_social: String,
     cnpj: String,
     endereco: String,
     bairro: String,
     cidade: String,   
     uf: String,
-    valor_compra: Number,
+    qtd_display: Number,
     modelo_display: String,
     jan25: Number,
     fev25: Number,
@@ -23,6 +24,7 @@ const DisplaySchema = new mongoose.Schema({
     out25: Number,
     nov25: Number,
     dez25: Number
+    
 }, { collection: 'display' });
 
 module.exports = mongoose.model('Display', DisplaySchema);

@@ -2,7 +2,7 @@ const apiService = require('../utils/apiService');
 
 async function getOrderDetails(req, res) {
 
-  const status = req.query.status || 6; // Usa status 6 como padrão
+  const status = req.query.status || 3; // Usa status 3 como padrão
   const codRep = req.query.codRep || null; // Novo parâmetro codRep
   const cnpj = req.query.clienteCNPJ || null; // Filtro por CNPJ do cliente
   const dataInicio = req.query.DataPedidoInicio ? new Date(req.query.DataPedidoInicio) : null; // Filtro de data início
@@ -20,7 +20,9 @@ async function getOrderDetails(req, res) {
         const matchCNPJ = !cnpj || (order.cliente?.documento?.numeroTexto === cnpj);
         const matchDataInicio = !dataInicio || new Date(order.dataPedido) >= dataInicio;
         const matchDataFim = !dataFim || new Date(order.dataPedido) <= dataFim;
-        const matchStatusSeparacao = statusSeparacao === null || order.statusSeparacao === statusSeparacao;
+        //const matchStatusSeparacao = (statusSeparacao === null || statusSeparacao === undefined)  || order.statusSeparacao === statusSeparacao;
+        //const matchStatusSeparacao = statusSeparacao != null ? order.statusSeparacao === statusSeparacao : true;
+        const matchStatusSeparacao = !statusSeparacao || order.statusSeparacao === statusSeparacao;               
         return matchRep && matchCNPJ && matchDataInicio && matchDataFim && matchStatusSeparacao;
       });
   

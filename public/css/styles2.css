@@ -288,7 +288,7 @@ footer {
     text-align: center;
     padding-left: 20px;
     text-decoration: none;
-    font-size: 90%;
+    font-size: 100%;
 
 }
 
@@ -429,6 +429,7 @@ label[for="referencia"]::after {
 /* Estilo para a label */
 .label-referencia {
     color: rgba(225, 0, 152);
+    font-size: 90%;
 }
 
 /* Estilo para o placeholder */
@@ -494,18 +495,43 @@ label[for="referencia"]::after {
 .help-icon {
     display: flex;
     align-items: center;
-    background-color: #25D366;
+    flex-direction: column;
+   /* background-color: #25D366; */
     color: #fff;
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  /*   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
+    position: relative; /* Necessário para posicionar o span */
+}
+
+/* Oculta o texto inicialmente */
+.help-icon span {
+    position: absolute;
+    bottom: 100%; /* Posiciona acima do ícone */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    margin-right: 50px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+
+/* Exibe o texto ao passar o mouse */
+.help-icon:hover span {
+    opacity: 1;
+    visibility: visible;
 }
 
 .help-icon img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
+    width: 60px;
+    height: 60px;
+
 }
 
 .help-icon:hover {
@@ -608,6 +634,48 @@ label[for="referencia"]::after {
     background-color: #d32f2f;
 }
 
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#okButton:hover{  
+    background-color: rgba(225, 0, 152);
+}
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
 /* Animação para o modal */
 @keyframes fadeIn {
     from {
@@ -632,12 +700,12 @@ label[for="referencia"]::after {
 
     .link_sites {
         flex-direction: column; /* Garante que os itens fiquem em coluna */
-      align-items: center;
+        align-items: center;
        
     }
 
     .link_sites button#logoutButton2 {
-        width: 30%; /* Mantém a largura relativa em telas menores */
+        width: 10%; /* Mantém a largura relativa em telas menores */
         margin-top: 20px;
         text-align: center;
         margin-bottom: 15px; /* Espaçamento abaixo do botão */
@@ -817,19 +885,6 @@ label[for="referencia"]::after {
         width: 150px;
     }
 
-    .help-modal-content {
-        width: 95%;
-    }
-
-    .help-icon {
-        padding: 8px 12px;
-    }
-
-    .help-icon img {
-        width: 20px;
-        height: 20px;
-    }
-
     .help-modal-content h2 {
         font-size: 20px;
     }
@@ -842,6 +897,10 @@ label[for="referencia"]::after {
         font-size: 14px;
     }
 
+    .help-modal-content {
+        width: 95%;
+    }
+    
 
 }
 
@@ -876,6 +935,10 @@ label[for="referencia"]::after {
     #helpContainer {
         bottom: 75px;
      
+    }
+    .help-icon img {
+        width: 40px;
+        height: 40px;
     }
   
 }

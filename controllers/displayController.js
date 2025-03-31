@@ -18,11 +18,11 @@ exports.getDisplayBycodgroup = async (req, res) => {
 
 exports.salvarDisplay = async (req, res) => {
     try {
-        const { codigo_cliente, nome, displays } = req.body;
+        const { codigo_cliente, nome,representante, displays } = req.body;
 
         let cliente = await Cliente.findOne({ codigo_cliente });
         if (!cliente) {
-            cliente = new Cliente({ codigo_cliente, nome });
+            cliente = new Cliente({ codigo_cliente, nome , representante });
             await cliente.save();
         }
 

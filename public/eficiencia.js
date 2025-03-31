@@ -171,6 +171,8 @@ function atualizarCalculos() {
 function limparCamposCliente() {
     document.getElementById('cliente').value = '';
     document.getElementById('codgroup').value = '';
+    document.getElementById('rep').value = '';
+    document.getElementById('nomeRep').value = '';
     const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dev"];
     const tabelas = ['positivacao', 'sellIn', 'sellOut', 'invest', 'mercado'];
 
@@ -238,6 +240,8 @@ document.getElementById('cnpj').addEventListener('blur', async function () {
     if (cliente) {
         document.getElementById('cliente').value = cliente[29];
         document.getElementById('codgroup').value = cliente[30];
+        document.getElementById('rep').value = cliente[15];
+        document.getElementById('nomeRep').value = cliente[16];
 
         // Após preencher o codgroup, buscar os dados no MongoDB
         const codgroup = document.getElementById('codgroup').value;
@@ -365,6 +369,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const cnpj = document.getElementById("cnpj").value.trim();
         const codigoCliente = document.getElementById("codgroup").value.trim();
         const nomeCliente = document.getElementById("cliente").value.trim();
+        const representante = document.getElementById("rep").value.trim();
         
         if (!cnpj || !codigoCliente) {
             alert("Por favor, preencha o CNPJ e o Código do Cliente antes de salvar.");
@@ -384,6 +389,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const dados = {
                 codigo_cliente: codigoCliente,
                 nome: nomeCliente,
+                representante: representante,
                 tabelas: {
                     positivacao: obterDadosPositivacao(),
                     sellIn: obterDadosSellIn(),

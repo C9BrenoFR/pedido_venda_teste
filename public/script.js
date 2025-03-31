@@ -132,8 +132,34 @@ function limparCamposCliente() {
 }
 
 // Adiciona o evento de focus no campo CNPJ
-document.getElementById('cnpj').addEventListener('focus', function () {
-    limparCamposCliente(); // Limpa todos os campos relacionados ao cliente
+const cnpjInput1 = document.getElementById('cnpj');
+const blockModal = document.getElementById('blockModal');
+const okButton = document.getElementById('okButton');
+const closeButtonBlock = blockModal.querySelector('.close-button');
+
+cnpjInput1.addEventListener('focus', function () {
+    if (cnpjInput1.readOnly) {
+        blockModal.style.display = "block";
+        const now = new Date();
+        const timestamp = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
+        document.getElementById('timestamp').textContent = timestamp;
+        return;
+    }
+    limparCamposCliente();
+});
+
+okButton.addEventListener('click', () => {
+    blockModal.style.display = "none";
+});
+
+closeButtonBlock.addEventListener('click', () => {
+    blockModal.style.display = "none";
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target == blockModal) {
+        blockModal.style.display = "none";
+    }
 });
 
 // Função para buscar os dados do cliente pelo CNPJ
@@ -225,7 +251,16 @@ function zerarCamposPedido() {
 }
 
 // Adiciona o evento para zerar os campos quando o tipo de pedido for alterado
-document.getElementById('tipo_pedido').addEventListener('change', zerarCamposPedido);
+
+document.getElementById('tipo_pedido').addEventListener('change', function () {
+    zerarCamposPedido();
+    let tipoPedido1 = this.value;
+    if (tipoPedido1 === 'Bonificação') {
+        document.getElementById('referencia').value = 'BONIFICAÇÃO';
+    } else {
+        document.getElementById('referencia').value = '';
+    }
+});
 
 // Função para atualizar o total com imposto de todas as linhas
 function atualizarTotalComImposto() {
@@ -296,18 +331,24 @@ document.getElementById('adicionarLinha').addEventListener('click', function () 
         input.style.padding = '5px';
         input.style.width = '100%';
         input.style.boxSizing = 'border-box';
-        input.style.marginLeft ='-0px';
-
-           // Oculta dinamicamente a coluna "Item ID" (10ª coluna)
-           if (i === 9) {
+        input.style.marginLeft = '-0px';
+        
+        // Oculta dinamicamente a coluna "Item ID" (10ª coluna)
+        if (i === 9) {
             td.style.display = 'none'; // Oculta a célula visualmente
         }
-        
 
+        // Se for o primeiro input (CÓD), adiciona conversão para maiúsculas
         if (i === 0) {
+            // Evento para converter para maiúsculas em tempo real
+            input.addEventListener('input', function () {
+                this.value = this.value.toUpperCase();
+            });
+
+            // Evento blur para validação do código
             input.addEventListener('blur', function () {
                 let tipoPedido = document.getElementById('tipo_pedido').value;
-                let cod = this.value;
+                let cod = this.value; // O valor já estará em maiúsculas devido ao evento 'input'
                 let ufCliente = document.getElementById('uf').value;
 
                 if (verificarForaDeLinha(cod)) {
@@ -448,6 +489,22 @@ function preencherLinha(tr, listaPrecos, promocao = null, ufCliente) {
         cells[9].querySelector('input').value = listaPrecos[13];
     }
 
+    if( cells[6].querySelector('input').value == 0 || cells[6].querySelector('input').value == '' )   {
+        alert("Item não disponivel para este cliente no momento , por favor verificar com Edmundo")
+        cells[0].querySelector('input').value = '';
+        cells[1].querySelector('input').value = '';
+        cells[2].querySelector('input').value = '';
+        cells[3].querySelector('input').value = '';
+        cells[4].querySelector('input').value = '';
+        cells[5].querySelector('input').value = '';
+        cells[7].querySelector('input').value = '';
+        cells[8].querySelector('input').value = '';
+
+    }
+
+ 
+
+
     function atualizarValorTotal() {
         if (codProduto) {
             let quantidade = Number(cells[1].querySelector('input').value);
@@ -493,6 +550,7 @@ const modal = document.getElementById('customModal');
 const closeButton = document.querySelector('.close-button');
 const confirmButton = document.getElementById('confirmButton');
 const cancelButton = document.getElementById('cancelButton');
+const cnpjInput = document.getElementById('cnpj');
 
 // Função para abrir o modal
 btSistema.addEventListener("click", () => {
@@ -514,7 +572,9 @@ confirmButton.addEventListener("click", async () => {
     modal.style.display = "none"; // Fecha o modal
 
     // Exibe a mensagem de feedback
+    feedbackDiv.textContent = 'Estamos enviando o pedido, aguarde...';
     feedbackDiv.style.display = "block";
+    cnpjInput.readOnly = false; // Habilita o campo CNPJ
 
     try {
 
@@ -598,6 +658,7 @@ confirmButton.addEventListener("click", async () => {
         console.error("Erro de conexão:", error);
         alert("Erro ao conectar com o servidor.");
     } finally {
+        limparCamposCliente()
         // Oculta a mensagem de feedback
         feedbackDiv.style.display = "none";
     }
@@ -632,30 +693,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-
-btPdfGeneration.addEventListener("click", async () => {
-    const razaoSocial = document.getElementById('razao_social').value;
-    const codCliente = document.getElementById('cod_cliente').value;
-    const representante = document.getElementById('representante').value;
-    const emailRep = document.getElementById('email_rep').value;
-    const pdfBase64 = await html2pdf().set(options).from(content).outputPdf('datauristring');
-
-    try {
-        const response = await fetch('/send-pdf', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ pdfBase64, razaoSocial, codCliente ,representante,emailRep}) // Envia os dados necessários
-        });
-
-        const result = await response.text();
-        alert(result);
-    } catch (error) {
-        console.error('Erro ao enviar o PDF:', error);
-        alert('Erro ao enviar o PDF por e-mail');
-    }
-});
 
 
 

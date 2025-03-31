@@ -3,8 +3,10 @@ const mongoose = require('mongoose');
 const SellOutSchema = new mongoose.Schema({
     codigo_cliente: { type: String, required: true },
     nome: { type: String, required: true },
+    representante:Number,
     cod_item: String,
     sku: String,
+    
     meses: {
         jan25: { sellIn: Number, sellOut: Number, saldo: Number, sold: Number },
         fev25: { sellIn: Number, sellOut: Number, saldo: Number, sold: Number },

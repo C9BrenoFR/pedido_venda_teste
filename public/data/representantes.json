@@ -1,10 +1,10 @@
 {
   "ti.kz@kidszoneworld.com.br": {"nome":"kidszoneworld","dadoTi":"TiKids@2024"},
-  "rep01@kidszoneworld.com.br": {"nome": "Daniel Sussmann", "numero": "01"},
-  "rep02@kidszoneworld.com.br": {"nome": "Celso", "numero": "02"},
-  "rep03@kidszoneworld.com.br": {"nome": "Abilio", "numero": "03"},
-  "rep03.1@kidszoneworld.com.br": {"nome": "Edson", "numero": "03.1"},
-  "rep08@kidszoneworld.com.br": {"nome": "Ricardo", "numero": "08"},
+  "rep01@kidszoneworld.com.br": {"nome": "Daniel Sussmann", "numero": "1"},
+  "rep02@kidszoneworld.com.br": {"nome": "Celso", "numero": "2"},
+  "rep03@kidszoneworld.com.br": {"nome": "Abilio", "numero": "3"},
+  "rep03.1@kidszoneworld.com.br": {"nome": "Edson", "numero": "3"},
+  "rep08@kidszoneworld.com.br": {"nome": "Ricardo", "numero": "8"},
   "rep16@kidszoneworld.com.br": {"nome": "Vivian", "numero": "16"},
   "rep28@kidszoneworld.com.br": {"nome": "Isidoro", "numero": "28"},
   "rep37@kidszoneworld.com.br": {"nome": "Antonio Carlos Gimenes", "numero": "37"},
@@ -34,7 +34,9 @@
   "rep75@kidszoneworld.com.br": {"nome": "C. M. A. Representações Comerciais Ltda", "numero": "75"},
   "rep76@kidszoneworld.com.br": {"nome": "Gutemberg Silva", "numero": "76"},
   "rep77@kidszoneworld.com.br": {"nome": "RJS Representações Ltda", "numero": "77"},
-  "rep78@kidszoneworld.com.br": {"nome": "Farid Neto", "numero": "78"},
-  "rep30@kidszoneworld.com.br": {"nome": "Kidszone", "numero": "30"}
-
+  "comercial.kz@kidszoneworld.com.br": {"nome": "Comercial", "dadocm": "CmKids@2024"},
+  "financeiro.kz@kidszoneworld.com.br": {"nome": "Financeiro", "dadofn": "FnKids@2024"},
+  "gerencia.kz@kidszoneworld.com.br": {"nome": "Gerencia", "dadogr": "GrKids@2024"},
+  "rep30@kidszoneworld.com.br": {"nome": "Kids Zone", "numero": "30"},
+  "logistica.kz@kidszoneworld.com.br": {"nome": "Gerencia", "dadolg": "LgKids@2024"}
 }

@@ -6,10 +6,11 @@ let tokenExpirationTime = null;
 // Função para autenticar e obter o token
 async function authenticate() {
   try {
-    const response = await fetch('https://homolog-gateway-ng.dbcorp.com.br:44400/identidade-service/autenticar', {
+    const response = await fetch('https://gateway-ng.dbcorp.com.br:55500/identidade-service/autenticar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': 'https://kidszone-ng.dbcorp.com.br'
       },
       body: JSON.stringify({
         usuario: "alex.l",
@@ -48,7 +49,7 @@ function getLast30Days() {
 }
 
 // Função para buscar os pedidos de venda
-async function fetchOrderDetails(status = 6) {
+async function fetchOrderDetails(status = 3) {
   await checkToken();
 
   if (!authToken) {
@@ -64,7 +65,7 @@ async function fetchOrderDetails(status = 6) {
 
   try {
     const response = await fetch(
-      `https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?DataPedidoInicio=${dataInicio}&DataPedidoFim=${dataFim}&status=${status}&EmpresaCodigo=2&PageNumber=1&PageSize=100`, {
+      `https://gateway-ng.dbcorp.com.br:55500/vendas-service/pedido?DataPedidoInicio=${dataInicio}&DataPedidoFim=${dataFim}&status=${status}&EmpresaCodigo=2&PageNumber=1&PageSize=200`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${authToken}`,
@@ -86,11 +87,11 @@ async function fetchOrderDetails(status = 6) {
 }
 
 // Função para buscar representantes para cada cliente
-async function fetchOrdersWithRepresentatives(status = 6) {
+async function fetchOrdersWithRepresentatives(status = 3) {
 
   const orders = await fetchOrderDetails(status);
 
-  const representativeEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/pessoa-service/representante/cliente/';
+  const representativeEndpoint = 'https://gateway-ng.dbcorp.com.br:55500/pessoa-service/representante/cliente/';
 
   const ordersWithRepresentatives = await Promise.all(
     orders.map(async (order) => {
@@ -124,11 +125,11 @@ async function fetchOrdersWithRepresentatives(status = 6) {
 }
 
 // Função para buscar detalhes do pedido de venda
-async function fetchOrdersWithdetailsAndRepresentatives (status = 6) {
+async function fetchOrdersWithdetailsAndRepresentatives (status = 3) {
 
    const orders2 = await fetchOrdersWithRepresentatives(status) ;
 
-   const IdOrdersDetailsEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/vendas-service/pedido/';
+   const IdOrdersDetailsEndpoint = 'https://gateway-ng.dbcorp.com.br:55500/vendas-service/pedido/';
 
    const ordersWithDetails = await Promise.all(
 
@@ -166,11 +167,11 @@ async function fetchOrdersWithdetailsAndRepresentatives (status = 6) {
 }
 
 
-async function  fetchOrdersWithdetailsAndRepresentativesWithTransport(status = 6) {
+async function  fetchOrdersWithdetailsAndRepresentativesWithTransport(status = 3) {
 
     const orders3 = await fetchOrdersWithdetailsAndRepresentatives(status) ;   
 
-    const transportEndpoint = 'https://homolog-gateway-ng.dbcorp.com.br:44400/pessoa-service/transportadora/codigo/'
+    const transportEndpoint = 'https://gateway-ng.dbcorp.com.br:55500/pessoa-service/transportadora/codigo/'
 
     const transportWithDetails = await Promise.all(
       
@@ -213,7 +214,7 @@ async function  fetchOrdersWithdetailsAndRepresentativesWithTransport(status = 6
     
 }
 
-const fetchOrderDetailsById = async (id, status = 6) => {
+const fetchOrderDetailsById = async (id, status = 3) => {
   try {
     const response = await fetch(`/api/pedidos/${id}?status=${status}`);
     if (!response.ok) throw new Error(`Erro ao carregar pedido ${id}: ${response.statusText}`);

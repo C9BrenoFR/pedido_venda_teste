@@ -45,7 +45,7 @@ async function fetchLogisticsData(req, res) {
             OCORRÊNCIA: row[16],
             CNPJ: row[5],
             STATUS_ENTREGA: row[14]
-       
+     
         }));
 
         if (userNumero) {

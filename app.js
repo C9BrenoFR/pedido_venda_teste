@@ -69,6 +69,7 @@ app.get('/teste', (req, res) => {
    // next();
 //});
 
+
 /////banco de dados mogondb atlas
 const mongoose = require('mongoose');
 
@@ -79,14 +80,12 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("MongoDB Conectado"))
 .catch(err => console.error("Erro ao conectar MongoDB", err));
 
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'https://pedido-venda-teste.vercel.app'); // Substitua pela URL do seu site
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
-
-
-
 
 // Iniciar o servidor
 app.listen(PORT, () => {

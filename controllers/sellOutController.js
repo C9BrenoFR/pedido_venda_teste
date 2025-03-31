@@ -19,11 +19,11 @@ exports.getSellOutBycodgroup = async (req, res) => {
 exports.salvarSellOut = async (req, res) => {
     try {
 
-                const { codigo_cliente, nome, sellOut } = req.body;
+                const { codigo_cliente, nome, representante, sellOut } = req.body;
         
                 let cliente = await Cliente.findOne({ codigo_cliente });
                 if (!cliente) {
-                    cliente = new Cliente({ codigo_cliente, nome });
+                    cliente = new Cliente({ codigo_cliente, nome ,representante});
                     await cliente.save();
                 }
         

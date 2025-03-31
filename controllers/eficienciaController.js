@@ -25,14 +25,14 @@ exports.getEficienciaBycodgroup = async (req, res) => {
 
 exports.salvarEficiencia = async (req, res) => {
     try {
-        const {codigo_cliente, nome, tabelas, overwrite } = req.body;
+        const {codigo_cliente, nome,representante, tabelas, overwrite } = req.body;
         
         let cliente = await Cliente.findOne({codigo_cliente});
         if (!cliente) {
             if (overwrite) {
                 return res.status(400).json({ message: "Cliente não encontrado para sobrescrever." });
             }
-            cliente = new Cliente({codigo_cliente, nome });
+            cliente = new Cliente({codigo_cliente, nome ,representante});
             await cliente.save();
         }
 
@@ -49,7 +49,7 @@ exports.salvarEficiencia = async (req, res) => {
                 console.log("Valores convertidos para positivacao:", { meta, realizado, atingido }); // Log após conversão
 
                 return Positivacao.findOneAndUpdate(
-                    { codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    { codigo_cliente, nome, representante ,ano: dado.ano, mes: dado.mes },
                     { ...dado, meta, realizado, atingido}, // Usar valores convertidos diretamente
                     updateOptions
                 ).then(result => {
@@ -67,7 +67,7 @@ exports.salvarEficiencia = async (req, res) => {
                 console.log("Valores convertidos para sellIn:", { meta, realizado, atingido });
 
                 return SellIn.findOneAndUpdate(
-                    {codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    {codigo_cliente, nome, representante ,ano: dado.ano, mes: dado.mes },
                     { ...dado, meta, realizado, atingido },
                     updateOptions
                 ).then(result => {
@@ -85,7 +85,7 @@ exports.salvarEficiencia = async (req, res) => {
                 console.log("Valores convertidos para sellOut:", { meta, realizado, atingido });
 
                 return SellOut.findOneAndUpdate(
-                    { codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    { codigo_cliente, nome, representante, ano: dado.ano, mes: dado.mes },
                     { ...dado, meta, realizado, atingido },
                     updateOptions
                 ).then(result => {
@@ -102,7 +102,7 @@ exports.salvarEficiencia = async (req, res) => {
                 console.log("Valores convertidos para investimentos:", { realizado, base_faturamento });
 
                 return Investimentos.findOneAndUpdate(
-                    { codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    { codigo_cliente, nome, representante , ano: dado.ano, mes: dado.mes },
                     { ...dado, realizado, base_faturamento },
                     updateOptions
                 ).then(result => {
@@ -119,7 +119,7 @@ exports.salvarEficiencia = async (req, res) => {
                 console.log("Valores convertidos para mercado:", { KZ, fatia_demais, fatia_KZ });
 
                 return Mercado.findOneAndUpdate(
-                    { codigo_cliente, nome, ano: dado.ano, mes: dado.mes },
+                    { codigo_cliente, nome,representante , ano: dado.ano, mes: dado.mes },
                     { ...dado, KZ, fatia_demais, fatia_KZ },
                     updateOptions
                 ).then(result => {

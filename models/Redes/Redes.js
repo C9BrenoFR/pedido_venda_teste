@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const RedeSchema = new mongoose.Schema({
     codigo_cliente: { type: String, required: true },
     nome: { type: String, required: true },
+    representante:Number,
     razao_social: String,
     nome_fantasia: String,
     qtd_lojas: Number,
@@ -21,6 +22,7 @@ const RedeSchema = new mongoose.Schema({
     out25: Number,
     nov25: Number,
     dez25: Number
+    
 }, { collection: 'redes' });
 
 module.exports = mongoose.model('Redes', RedeSchema);

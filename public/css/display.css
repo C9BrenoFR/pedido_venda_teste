@@ -131,6 +131,11 @@ tbody tr:hover {
     transform: scale(1.15);
 }
 
+.representante{
+    display: none;
+}
+
+
 @media (max-width: 990px) {
     .client-info {
      flex-direction: column;

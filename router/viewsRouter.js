@@ -9,6 +9,8 @@ const eficienciaController = require('../controllers/eficienciaController');
 const displayController = require('../controllers/displayController');  
 const redesController = require('../controllers/redesController');  
 const sellOutController = require('../controllers/sellOutController');
+const fernandoController = require('../controllers/fernandoController');
+const clientController = require('../controllers/clientController');
 
 const router = express.Router();
 
@@ -44,27 +46,27 @@ router.get('/detalhes',authMiddleware, (req, res) => {
 });
 
 // Rota para a página de detalhes do produto (Detalhes_Produtos.html)
-router.get('/detalhesProdutos',(req, res) => {
+router.get('/detalhesProdutos',authMiddleware,(req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'Detalhes_Produtos.html'));
 });
 
 // Rota para a página de eficiencia cliente (eficiencia.html)
-router.get('/eficiencia',(req, res) => {
+router.get('/eficiencia',authMiddleware,(req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'eficiencia.html'));
 });
 
 // Rota para a página de eficiencia cliente (sellOut.html)
-router.get('/sellOut',(req, res) => {
+router.get('/sellOut',authMiddleware,(req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'sellOut.html'));
 });
 
 // Rota para a página de eficiencia cliente (display.html)
-router.get('/display',(req, res) => {
+router.get('/display',authMiddleware,(req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'display.html'));
 });
 
 // Rota para a página de eficiencia cliente (redes.html)
-router.get('/redes',(req, res) => {
+router.get('/redes',authMiddleware,(req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'redes.html'));
 });
 
@@ -73,6 +75,14 @@ router.get('/logistica',authMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'logistica.html'));
 });
 
+// Rota para a página de detalhes do pedido (detalhes.html)
+router.get('/logistica03', authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'logisticaFernando.html'));
+});
+
+router.get('/logistica02', authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'logisticaJoao.html'));
+});
 
 
 // Rota para a página (video.html)
@@ -85,9 +95,14 @@ router.get('/video',authMiddleware, (req, res) => {
 router.get('/api/pedidos', orderController.getOrderDetails); // Pedidos com representantes
 router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes do pedido por ID
 
+router.get('/api/cliente/:cnpj', clientController.getClientDetails); // Detalhes do cliente por cnpj
+
 
 // Rotas da API de Logistica
 router.get('/api/logistica/onedrive', invoicesController.fetchLogisticsData);
+router.get('/api/logistica/logistica03', fernandoController.fetchLogisticsData);
+router.get('/api/logistica/logistica02', fernandoController.fetchLogisticsData1);
+
 
 
 // Rota para página de erro 401 (Senha incorreta)

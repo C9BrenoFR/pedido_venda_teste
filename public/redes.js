@@ -27,6 +27,7 @@ function cnpjInvalido(cnpj) {
 function limparCamposCliente() {
     document.getElementById('cliente').value = '';
     document.getElementById('codgroup').value = '';
+    document.getElementById("rep").value = '';
     document.getElementById('table-body').innerHTML = '';
 }
 
@@ -113,6 +114,7 @@ async function buscarDadosRedes(codgroup) {
 async function salvarDados() {
     const codgroup = document.getElementById('codgroup').value;
     const nome = document.getElementById('cliente').value;
+    const representante = document.getElementById("rep").value.trim();
     const cnpj = document.getElementById('cnpj').value.trim();
 
     if (!cnpj || !codgroup) {
@@ -125,7 +127,8 @@ async function salvarDados() {
         const inputs = row.querySelectorAll('input');
         return {
             codigo_cliente: codgroup,
-            nome,
+            nome:nome,
+            representante: representante,
             razao_social: inputs[0].value,
             nome_fantasia: inputs[1].value,
             qtd_lojas: parseFloat(inputs[2].value) || 0,
@@ -151,7 +154,7 @@ async function salvarDados() {
         const response = await fetch('/api/redes/salvar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codigo_cliente: codgroup, nome, redes: dados })
+            body: JSON.stringify({ codigo_cliente: codgroup, nome, representante:representante ,redes: dados })
         });
         const result = await response.json();
         alert(result.message);
@@ -181,6 +184,7 @@ document.getElementById('cnpj').addEventListener('blur', async function () {
     if (cliente) {
         document.getElementById('cliente').value = cliente[29];
         document.getElementById('codgroup').value = cliente[30];
+        document.getElementById('rep').value = cliente[15];
         await buscarDadosRedes(cliente[30]);
     } else {
         alert('Cliente não encontrado.');
