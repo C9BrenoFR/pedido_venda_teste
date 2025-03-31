@@ -69,10 +69,10 @@ async function fetchItemPriceListDetails(codgroup) {
           throw new Error(`Erro ao buscar item da lista de preco: ${response.statusText}`);
         }
     
-        const clientData = await response.json();
-        console.log('dados lista precos recebidos:', clientData); // Log dos dados recebidos
+        const itemListPriceData = await response.json();
+        console.log('dados lista precos recebidos:', itemListPriceData); // Log dos dados recebidos
     
-        return clientData || []; // Retorna o array de pedidos
+        return itemListPriceData || []; // Retorna o array de pedidos
       } catch (error) {
         console.error('Erro ao buscar lista de preco 2:', error);
       }
