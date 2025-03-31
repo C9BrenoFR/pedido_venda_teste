@@ -656,7 +656,7 @@ confirmButton.addEventListener("click", async () => {
                                 DataPrevista: new Date().toISOString(),
                                 Quantidade: quantidade,
                             }
-                        ],
+                    ],
                         ItemId: itemId,
                         Quantidade: quantidade,
                     };
