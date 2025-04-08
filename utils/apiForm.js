@@ -115,6 +115,7 @@ async function fetchClientsWithRepresentatives(cnpj) {
       }
   
       const repData = await repResponse.json();
+      console.log('dados representantes recebidos:', repData);
   
       // 3. Retornar cliente + representantes
       return {
@@ -160,6 +161,8 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
           console.warn(`Erro ao buscar transportdora: ${transResponse.statusText}`);
         } else {
           transData = await transResponse.json();
+          console.log('dados transporte recebidos:', transData);
+          
         }
       } catch (transError) {
         console.warn('Erro ao buscar transportadoras, retornando transportadoras como vazia.', transError);
@@ -204,6 +207,7 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
           console.warn(`Lista de preço não encontrada ou erro de resposta: ${cnpjResponse.statusText}`);
         } else {
           cnpjData = await cnpjResponse.json();
+          console.log('dados clientye atinga recebidos:', cnpjData);
         }
       } catch (cnpjError) {
         console.warn('Erro ao buscar lista de preço, retornando listaPreco como vazia.', cnpjError);
@@ -249,6 +253,7 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
           console.warn(`Lista de preço não encontrada ou erro de resposta: ${priceListResponse.statusText}`);
         } else {
           priceListData = await priceListResponse.json();
+          console.log('dados lista preco atinga recebidos:', priceListData);
         }
       } catch (priceListError) {
         console.warn('Erro ao buscar lista de preço, retornando listaPreco como vazia.', priceListError);
@@ -293,6 +298,7 @@ async function fetchPaymentCondition(cnpj) {
           console.warn(`Erro ao buscar condição de pagamento: ${payResponse.statusText}`);
         } else {
           payData = await payResponse.json();
+          console.log('dados cod de pagamento atinga recebidos:', payData);
         }
       } catch (payError) {
         console.warn('Erro ao buscar condição de pagamento, retornando condicaoPagamento como vazia.', payError);
@@ -342,6 +348,7 @@ async function fetchPaymentCondition(cnpj) {
           console.warn(`Erro ao buscar forma de pagamento: ${payMethodResponse.statusText}`);
         } else {
           payMethodData = await payMethodResponse.json();
+          console.log('dados forma de pagamentos recebidos:', payMethodData);
         }
       } catch (payMethodError) {
         console.warn('Erro ao buscar froma de pagamento, retornando formaPagamento como vazia.', payMethodError);
@@ -391,6 +398,8 @@ async function fetchPaymentCondition(cnpj) {
           console.warn(`Erro ao buscar contato: ${contatResponse.statusText}`);
         } else {
           contatData = await contatResponse.json();
+          console.log('dados contato recebidos:', contatData);
+          
         }
       } catch (contatError) {
         console.warn('Erro ao buscar contato, retornando contato como vazia.', contatError);
