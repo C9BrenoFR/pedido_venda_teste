@@ -97,7 +97,10 @@ router.get('/api/pedidos', orderController.getOrderDetails); // Pedidos com repr
 router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes do pedido por ID
 
 router.get('/api/cliente/:cnpj', clientController.getClientDetails); // Detalhes do cliente por cnpj
-router.get('/api/lista/:codgroup', itemListController.getItemList); // Detalhes do cliente por lista de preço
+router.get('/api/cliente1/:cnpj', clientController.getClientDetailsTest); // Detalhes do cliente por cnpj
+//router.get('/api/lista/:codgroup', itemListController.getItemList); // Detalhes do cliente por lista de preço id
+router.get('/api/lista/:codgroup', itemListController.getItemList); // Detalhes do cliente por lista de preço clienteId
+router.get('/api/lista1/:codClient', itemListController.getItemListNew); // Detalhes do cliente por lista de preço clienteId
 
 
 // Rotas da API de Logistica

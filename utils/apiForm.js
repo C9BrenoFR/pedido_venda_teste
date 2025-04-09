@@ -233,9 +233,9 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
 
       const clientOld = await fetchAllClientapiAntiga(cnpj);
   
-      const pricelistId= clientOld.clienteDataOld.Result.ListaPrecoId;
+      const codClientId = clientOld.codigo;
   
-      const priceListtEndpoint = `http://kidszone-api-integracao.dbcorp.com.br/v1/ListaPreco/BuscarPorId/${pricelistId}`;
+      const priceListtEndpoint = `https://gateway-ng.dbcorp.com.br:55500/vendas-service/listapreco/cliente/${codClientId}`;
   
       let priceListData = [];
   
@@ -243,9 +243,9 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
         const priceListResponse = await fetch(priceListtEndpoint, {
           method: 'GET',
           headers: {
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json',
-            'ApplicationToken': ApplicationToken,
-            'CompanyToken': CompanyToken,
+            'Origin': 'https://kidszone-ng.dbcorp.com.br'
           }
         });
   

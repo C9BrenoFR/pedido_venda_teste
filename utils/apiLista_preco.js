@@ -80,6 +80,39 @@ async function fetchItemPriceListDetails(codgroup) {
 }
 
 
+async function fetchAllClientsWithPriceList(codClient) {
+
+  await checkToken();
+
+  if (!authToken) {
+    console.error('Erro: Token não obtido.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://gateway-ng.dbcorp.com.br:55500/vendas-service/listapreco/cliente/${codClient}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+        'Origin': 'https://kidszone-ng.dbcorp.com.br'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar item da lista de preco: ${response.statusText}`);
+    }
+
+    const itemListPriceData = await response.json();
+    console.log('dados lista precos recebidos:', itemListPriceData); // Log dos dados recebidos
+
+    return itemListPriceData || []; // Retorna o array de pedidos
+  } catch (error) {
+    console.error('Erro ao buscar lista de preco 2:', error);
+  }
+
+}
+
 setInterval(checkToken, 60 * 60 * 1000);  // Verifica o token a cada 1 hora
 
 
@@ -88,6 +121,8 @@ setInterval(checkToken, 60 * 60 * 1000);  // Verifica o token a cada 1 hora
 module.exports = {
     authenticate,
     checkToken,
-    fetchItemPriceListDetails
+    fetchItemPriceListDetails,
+    fetchAllClientsWithPriceList
+
 
   };
