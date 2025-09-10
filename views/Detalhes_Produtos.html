@@ -12,8 +12,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" integrity="sha512-MpDFIChbcXl2QgipQrt1VcPHMldRILetapBl5MPCA9Y8r7qvlwx1/Mc9hNTzY+kS5kX6PdoDq41ws1HiVNLdZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
-    <link rel="stylesheet" href="/css/detalhesProdutos.css?v=1744158574072">
+    <link rel="stylesheet" href="/css/detalhesProdutos.css?v=1757533566435">
+
+    <link rel="stylesheet" href="/css/theme-toggle.css?v=1757533566435">
+    <!-- Script inline para aplicar o tema imediatamente -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.classList.add(savedTheme + '-theme');
+        })();
+    </script>
 
 </head>
 <body>
@@ -30,7 +40,22 @@
         <div class="codigo-item">
             <label for="codigo">CÓDIGO ITEM:</label>
             <input type="text" id="codigo" placeholder="Digite o código">
+
+            <a target="_blank" class="catalogo" href="https://kidszoneworld.com.br/wp-content/uploads/2025/04/Catalogo-Kids-Zone-2025.pdf" >Vizualizar Catálogo</a>
+            <div class="tooltip-container excel-tooltip">
+                <a id="exportExcel1">
+                    <img class="img_link_excel" src="/images/excel.png" alt="exportar para excel">
+                </a>
+                <span class="tooltip">Baixar planilha com todos itens ativos</span>
+            </div>
+
         </div>
+
+        <!-- Toggle switch -->
+        <label class="theme-switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+        </label>
 
         
            <!-- Mensagem de feedback -->
@@ -121,7 +146,8 @@
         </div>
     </div>
 
-    <script src="/detalhesProdutos.js?v=1744158574072"></script>
+    <script src="/detalhesProdutos.js?v=1757533566435"></script>
+    <script src="/theme-toggle.js?v=1757533566435"></script>
    
 </body>
 </html>

@@ -12,7 +12,17 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="/css/styles2.css?v=1744158574110">
+    <link rel="stylesheet" href="/css/styles2.css?v=1757533566441">
+
+    <link rel="stylesheet" href="/css/theme-toggle.css?v=1757533566441">
+    <!-- Script inline para aplicar o tema imediatamente -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.classList.add(savedTheme + '-theme');
+        })();
+    </script>
+
 </head>
 
 <body id="corpo">
@@ -103,26 +113,26 @@
 
 
                   <!-- input escondidos  -->
-                <label for="representanteId" class="">Rep ID:</label> 
-                <input type="text" class="" id="representanteId" placeholder="Rep ID" readonly>
+                <label for="representanteId" class="esconder">Rep ID:</label> 
+                <input type="text" class="esconder" id="representanteId" placeholder="Rep ID" readonly>
 
-                <label for="formPagId" class="">Forma de pagamento ID:</label> 
-                <input type="text" class="" id="formPagId" placeholder="formPag ID" readonly>
+                <label for="formPagId" class="esconder">Forma de pagamento ID:</label> 
+                <input type="text" class="esconder" id="formPagId" placeholder="formPag ID" readonly>
 
-                <label for="condPagId" class="">Condição de pagamento ID:</label> 
-                <input type="text" class="" id="condPagId" placeholder="condPag ID" readonly>
+                <label for="condPagId" class="esconder">Condição de pagamento ID:</label> 
+                <input type="text" class="esconder" id="condPagId" placeholder="condPag ID" readonly>
 
-                <label for="PercentualComissaoItem" class=""> % comissao item:</label> 
-                <input type="text" class="" id="PercentualComissaoItem" placeholder="% comissao item" readonly>
+                <label for="PercentualComissaoItem" class="esconder"> % comissao item:</label> 
+                <input type="text" class="esconder" id="PercentualComissaoItem" placeholder="% comissao item" readonly>
 
-                <label for="PercentualComissaoServico" class=""> % comissao servico:</label> 
-                <input type="text" class="" id="PercentualComissaoServico" placeholder="% comissao servico" readonly>
+                <label for="PercentualComissaoServico" class="esconder"> % comissao servico:</label> 
+                <input type="text" class="esconder" id="PercentualComissaoServico" placeholder="% comissao servico" readonly>
 
-                <label for="ContatoClienteId" class=""> contato id:</label> 
-                <input type="text" class="" id="ContatoClienteId" placeholder="contato id" readonly>
+                <label for="ContatoClienteId" class="esconder"> contato id:</label> 
+                <input type="text" class="esconder" id="ContatoClienteId" placeholder="contato id" readonly>
 
-                <label class="" for="email_rep">Email_Rep</label> 
-                <input type="text" class="" id="email_rep" placeholder="Descrição Grupo" readonly>
+                <label class="esconder" for="email_rep">Email_Rep</label> 
+                <input type="text" class="esconder" id="email_rep" placeholder="Descrição Grupo" readonly>
 
                   <!-- input escondidos  -->
 
@@ -279,18 +289,27 @@
 
     <footer>
         <div class="link_sites">
+
+            <!-- Toggle switch -->
+            <label class="theme-switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+
            <button id="logoutButton2">Sair</button>
            <a target="_blank" href="/admin">Área T.I.</a>
            <a target="_blank" href="/comercial">Área Comercial</a>
            <a target="_blank" href="/logistica03">Área logística</a>
            <a target="_blank" href="/detalhesProdutos">Detalhes do Produto</a>
-           <a target="_blank" href="/eficiencia">Eficiência</a>
+           <a target="_blank" href="/cadastroCliente">Cadastrar Cliente</a>
+           <a target="_blank" href="/investComercial">Investimento</a>
         </div>
         
     </footer>
     
-    <script src="/script.js?v=1744158574110"></script>
+    <script src="/script.js?v=1757533566441"></script>
     <script  src="/pdf.js?v=1742259354185"></script>
+    <script src="/theme-toggle.js?v=1757533566441"></script>
 
     <script>
          // Função para limpar dados do usuário e redirecionar para a página de login
@@ -311,6 +330,6 @@
             window.location.href = '/login2';
         });
     </script>
-    
+
 </body>
 </html>

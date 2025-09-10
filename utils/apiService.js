@@ -6,7 +6,7 @@ let tokenExpirationTime = null;
 // Função para autenticar e obter o token
 async function authenticate() {
   try {
-    const response = await fetch('https://gateway-ng.dbcorp.com.br:55500/identidade-service/autenticar', {
+    const response = await fetch('https://gateway-ng.dbcorp.com.br:44400/identidade-service/autenticar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,191 +40,296 @@ async function checkToken() {
   }
 }
 
-// Função para calcular as datas de início e fim (últimos 30 dias)
-function getLast30Days() {
+// Função para calcular as datas de início e fim (últimos 60 dias como padrão, se não fornecidas)
+function getLast30Days(userDataInicio = null, userDataFim = null) {
   const hoje = new Date();
-  const dataFim = hoje.toISOString().split('T')[0]; // Data de hoje no formato YYYY-MM-DD
-  const dataInicio = new Date(hoje.setDate(hoje.getDate() - 60)).toISOString().split('T')[0]; // Data 30 dias atrás
+  const dataFim = userDataFim ? new Date(userDataFim).toISOString().split('T')[0] : hoje.toISOString().split('T')[0]; // Usa data fornecida ou hoje
+  const dataInicio = userDataInicio 
+    ? new Date(userDataInicio).toISOString().split('T')[0] 
+    : new Date(hoje.setDate(hoje.getDate() - 60)).toISOString().split('T')[0]; // Usa data fornecida ou 60 dias atrás
   return { dataInicio, dataFim };
 }
 
-// Função para buscar os pedidos de venda
-async function fetchOrderDetails(status = 3) {
+
+// Função para buscar os pedidos de venda com paginação e todos os detalhes relacionados
+async function fetchOrderDetails(status = 6, userDataInicio = null, userDataFim = null, userStatusSeparacao = null , usercodCliente = null) {
   await checkToken();
 
   if (!authToken) {
     console.error('Erro: Token não obtido.');
-    return;
+    return [];
   }
 
-  // Calcula as datas dinamicamente
-  const { dataInicio, dataFim } = getLast30Days();
-   
-  console.log(`Buscando pedidos com status: ${status}, DataPedidoInicio: ${dataInicio}, DataPedidoFim: ${dataFim}`);
+  // Calcula as datas dinamicamente com base nos parâmetros fornecidos ou padrão
+  const { dataInicio, dataFim } = getLast30Days(userDataInicio, userDataFim);
+  
+  console.log(`Buscando pedidos com status: ${status}, DataPedidoInicio: ${dataInicio}, DataPedidoFim: ${dataFim}, StatusSeparacao: ${userStatusSeparacao !== null ? userStatusSeparacao : 'todos'}`);
 
+  const pageSize = 15; // Tamanho de cada página (lote)
+  const maxRecords = 150; // Limite máximo de registros
+  let currentPage = 1;
+  let allOrders = [];
+  let hasMoreData = true;
+
+  // Endpoints para as requisições adicionais
+  const representativeEndpoint = 'https://gateway-ng.dbcorp.com.br:44400/pessoa-service/representante/cliente/';
+  const orderDetailsEndpoint = 'https://gateway-ng.dbcorp.com.br:44400/vendas-service/pedido/';
+  const transportEndpoint = 'https://gateway-ng.dbcorp.com.br:44400/pessoa-service/transportadora/codigo/';
+  const invoiceEndpoint = 'https://gateway-ng.dbcorp.com.br:44400/documentos-fiscais-service/nota-fiscal?PedidoDeVendaCodigo=';
+
+  while (hasMoreData && allOrders.length < maxRecords) {
+    try {
+      console.log(`Buscando página ${currentPage} com ${pageSize} registros por página...`);
+      
+      // 1. Buscar pedidos da página atual
+      // Constrói a URL dinamicamente, incluindo StatusSeparacao apenas se fornecido
+      let url = `https://gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?DataPedidoInicio=${dataInicio}&DataPedidoFim=${dataFim}&status=${status}&EmpresaCodigo=2&PageNumber=${currentPage}&PageSize=${pageSize}`;
+      if (userStatusSeparacao !== null) {
+        url += `&StatusSeparacao=${userStatusSeparacao}`;
+      }
+      if (usercodCliente !== null) {
+        url += `&ClienteCodigo=${usercodCliente}`;
+      }
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar pedidos: ${response.statusText}`);
+      }
+
+      const ordersData = await response.json();
+      const pageData = ordersData.dados || [];
+      
+      console.log(`Recebidos ${pageData.length} pedidos da página ${currentPage}`);
+      
+      // 2. Para cada pedido na página, buscar todos os detalhes relacionados
+      const enrichedOrders = await Promise.all(pageData.map(async (order) => {
+        try {
+          // 2.1 Buscar representante
+          let representante = null;
+          try {
+            const repResponse = await fetch(`${representativeEndpoint}${order.cliente.codigo}`, {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            if (repResponse.ok) {
+              const repData = await repResponse.json();
+              representante = repData[0] || null;
+            }
+          } catch (error) {
+            console.error(`Erro ao buscar representante para cliente ${order.cliente.codigo}:`, error);
+          }
+          
+          // 2.2 Buscar detalhes do pedido
+          let detalhes = null;
+          try {
+            const detailsResponse = await fetch(`${orderDetailsEndpoint}${order.id}`, {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            if (detailsResponse.ok) {
+              detalhes = await detailsResponse.json();
+            }
+          } catch (error) {
+            console.error(`Erro ao buscar detalhes para o pedido com ID ${order.id}:`, error);
+          }
+          
+          // 2.3 Buscar detalhes da transportadora
+          let detalhes_transporte = null;
+          try {
+            const transportResponse = await fetch(`${transportEndpoint}${order.transportadoraCodigo}`, {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            if (transportResponse.ok) {
+              detalhes_transporte = await transportResponse.json();
+            }
+          } catch (error) {
+            console.error(`Erro ao buscar detalhes da transportadora ${order.transportadoraCodigo}:`, error);
+          }
+          
+          // 2.4 Buscar notas fiscais
+          let notas_fiscais = null;
+          try {
+            const invoiceResponse = await fetch(`${invoiceEndpoint}${order.codigo}`, {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            if (invoiceResponse.ok) {
+              notas_fiscais = await invoiceResponse.json();
+            }
+          } catch (error) {
+            console.error(`Erro ao buscar detalhes da NF ${order.codigo}:`, error);
+          }
+          
+          // Retornar o pedido com todos os detalhes
+          return {
+            ...order,
+            representante,
+            detalhes,
+            detalhes_transporte,
+            notas_fiscais
+          };
+        } catch (error) {
+          console.error(`Erro ao processar pedido:`, error);
+          return order; // Retorna o pedido original em caso de erro
+        }
+      }));
+      
+      // Adiciona os pedidos enriquecidos desta página ao array acumulado
+      allOrders = [...allOrders, ...enrichedOrders];
+      
+      // Verifica se há mais páginas para buscar
+      if (pageData.length < pageSize) {
+        // Se recebemos menos registros que o tamanho da página, não há mais dados
+        hasMoreData = false;
+        console.log('Não há mais dados para buscar.');
+      } else {
+        // Avança para a próxima página
+        currentPage++;
+      }
+      
+      // Verifica se atingimos o limite máximo de registros
+      if (allOrders.length >= maxRecords) {
+        console.log(`Limite máximo de ${maxRecords} registros atingido.`);
+        // Trunca o array para o limite máximo, caso tenha ultrapassado
+        allOrders = allOrders.slice(0, maxRecords);
+        break;
+      }
+      
+    } catch (error) {
+      console.error(`Erro ao buscar página ${currentPage}:`, error);
+      hasMoreData = false; // Para o loop em caso de erro
+    }
+  }
+
+  console.log(`Total de pedidos recuperados e enriquecidos: ${allOrders.length}`);
+  return allOrders;
+}
+
+
+async function fetchOrderDetailsEndpoint(CodPedido) {
+  await checkToken();
+
+  if (!authToken) {
+    console.error('Erro: Token não obtido.');
+    return null;
+  }
 
   try {
-    const response = await fetch(
-      `https://gateway-ng.dbcorp.com.br:55500/vendas-service/pedido?DataPedidoInicio=${dataInicio}&DataPedidoFim=${dataFim}&status=${status}&EmpresaCodigo=2&PageNumber=1&PageSize=200`, {
+    // Endpoints para as requisições
+    const representativeEndpoint = 'https://gateway-ng.dbcorp.com.br:44400/pessoa-service/representante?ClienteCodigo=';
+    const orderDetailsEndpoint = 'https://gateway-ng.dbcorp.com.br:44400/vendas-service/pedido/';
+    const transportEndpoint = 'https://gateway-ng.dbcorp.com.br:44400/pessoa-service/transportadora/codigo/';
+    const detailsOrderEndpoint = `https://gateway-ng.dbcorp.com.br:44400/vendas-service/pedido?PedidoCodigo=${CodPedido}`;
+
+    // 1. Buscar dados básicos do pedido
+    const detailsOrderResponse = await fetch(detailsOrderEndpoint, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${authToken}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://kidszone-ng.dbcorp.com.br'
       }
     });
 
-    if (!response.ok) {
-      throw new Error(`Erro ao buscar pedidos: ${response.statusText}`);
+    if (!detailsOrderResponse.ok) {
+      console.warn(`Erro ao buscar pedido: ${detailsOrderResponse.statusText}`);
+      return null;
     }
 
-    const ordersData = await response.json();
-    console.log('Pedidos recebidos:', ordersData); // Log dos dados recebidos
-
-    return ordersData.dados || []; // Retorna o array de pedidos
-  } catch (error) {
-    console.error('Erro ao buscar detalhes do pedido:', error);
-  }
-}
-
-// Função para buscar representantes para cada cliente
-async function fetchOrdersWithRepresentatives(status = 3) {
-
-  const orders = await fetchOrderDetails(status);
-
-  const representativeEndpoint = 'https://gateway-ng.dbcorp.com.br:55500/pessoa-service/representante/cliente/';
-
-  const ordersWithRepresentatives = await Promise.all(
-    orders.map(async (order) => {
-      const clienteCodigo = order.cliente.codigo;
-
-      try {
-        const repResponse = await fetch(`${representativeEndpoint}${clienteCodigo}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        const repData = await repResponse.json();
-        return {
-          ...order,
-          representante: repData[0] || null // Combina os dados do representante
-        };
-      } catch (error) {
-        console.error(`Erro ao buscar representante para cliente ${clienteCodigo}:`, error);
-        return {
-          ...order,
-          representante: null
-        };
-      }
-    })
-  );
-
-  return ordersWithRepresentatives;
-}
-
-// Função para buscar detalhes do pedido de venda
-async function fetchOrdersWithdetailsAndRepresentatives (status = 3) {
-
-   const orders2 = await fetchOrdersWithRepresentatives(status) ;
-
-   const IdOrdersDetailsEndpoint = 'https://gateway-ng.dbcorp.com.br:55500/vendas-service/pedido/';
-
-   const ordersWithDetails = await Promise.all(
-
-      orders2.map(async (order) => {
-        try {
-            const response = await fetch(`${IdOrdersDetailsEndpoint}${order.id}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${authToken}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro ao buscar detalhes do pedido ${order.id}: ${response.statusText}`);
-            }
-
-            const orderDetails = await response.json();
-            return {
-                ...order,
-                detalhes: orderDetails,
-            };
-        } catch (error) {
-            console.error(`Erro ao buscar detalhes para o pedido com ID ${order.id}:`, error);
-            return {
-                ...order,
-                detalhes: null, // Caso haja erro, atribui null aos detalhes
-            };
-        }
-      })
-   
-   );
-
-   return ordersWithDetails;
-}
-
-
-async function  fetchOrdersWithdetailsAndRepresentativesWithTransport(status = 3) {
-
-    const orders3 = await fetchOrdersWithdetailsAndRepresentatives(status) ;   
-
-    const transportEndpoint = 'https://gateway-ng.dbcorp.com.br:55500/pessoa-service/transportadora/codigo/'
-
-    const transportWithDetails = await Promise.all(
-      
-        orders3.map(async (order) => {
-           
-           try {
-              
-              const response = await fetch(`${transportEndpoint}${order.transportadoraCodigo}`,{
-                  method: 'GET',
-                  headers: {
-                      'Authorization': `Bearer ${authToken}`,
-                      'Content-Type': 'application/json',
-                  },
-              });
-            
-              
-              if (!response.ok) {
-                  throw new Error(`Erro ao buscar detalhes da transportadora ${order.transportadoraCodigo}: ${response.statusText}`);
-              }
-
-              const transportDetails = await response.json();
-              return {
-                ...order,
-                detalhes_transporte : transportDetails,
-              };  
-
-           } catch (error) {
-              console.error(`Erro ao buscar detalhes do id da transportadora ${order.transportadoraCodigo}:`, error);
-              return {
-                ...order,
-                detalhes_transporte: null, // Caso haja erro, atribui null aos detalhes
-              };
-           }
-
-        })
-
-    );
-
-    return transportWithDetails;
+    const detailsOrderData = await detailsOrderResponse.json();
     
-}
+    if (!detailsOrderData || detailsOrderData.length === 0) {
+      console.warn('Nenhum dado de pedido encontrado');
+      return null;
+    }
 
-const fetchOrderDetailsById = async (id, status = 3) => {
-  try {
-    const response = await fetch(`/api/pedidos/${id}?status=${status}`);
-    if (!response.ok) throw new Error(`Erro ao carregar pedido ${id}: ${response.statusText}`);
-    const data = await response.json();
-    return data;
+    const order = detailsOrderData || []
+
+    // 2. Buscar representante
+    let representante = null;
+    try {
+      const repResponse = await fetch(`${representativeEndpoint}${order.dados[0].cliente.codigo}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (repResponse.ok) {
+       console.log(`esta é teste repre ${repResponse}`)
+        representante = await repResponse.json();
+      }
+    } catch (error) {
+      console.error(`Erro ao buscar representante para cliente ${order.codigo}:`, error);
+    }
+
+    // 3. Buscar detalhes do pedido
+    let detalhes = null;
+    try {
+      const detailsResponse = await fetch(`${orderDetailsEndpoint}${order.dados[0].id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (detailsResponse.ok) {
+        detalhes = await detailsResponse.json();
+      }
+    } catch (error) {
+      console.error(`Erro ao buscar detalhes para o pedido com ID ${order.dados[0].id}:`, error);
+    }
+
+    // 4. Buscar detalhes da transportadora
+    let detalhes_transporte = null;
+    try {
+      const transportResponse = await fetch(`${transportEndpoint}${order.dados[0].transportadoraCodigo}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (transportResponse.ok) {
+        detalhes_transporte = await transportResponse.json();
+      }
+    } catch (error) {
+      console.error(`Erro ao buscar detalhes da transportadora ${order.transportadoraCodigo}:`, error);
+    }
+
+    // Retornar o pedido com todos os detalhes
+    return {
+      ...order,
+      representante,
+      detalhes,
+      detalhes_transporte,
+    };
+
   } catch (error) {
-    console.error(`Erro ao buscar detalhes do pedido com ID ${id}:`, error);
-    throw error;
+    console.error('Erro ao processar pedido:', error);
+    return null;
   }
-};
+}
 
 setInterval(checkToken, 60 * 60 * 1000);  // Verifica o token a cada 1 hora
 
@@ -233,8 +338,5 @@ module.exports = {
   authenticate,
   checkToken,
   fetchOrderDetails,
-  fetchOrdersWithRepresentatives,
-  fetchOrdersWithdetailsAndRepresentatives,
-  fetchOrdersWithdetailsAndRepresentativesWithTransport,
-  fetchOrderDetailsById
+  fetchOrderDetailsEndpoint
 };

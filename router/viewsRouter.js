@@ -11,7 +11,9 @@ const redesController = require('../controllers/redesController');
 const sellOutController = require('../controllers/sellOutController');
 const fernandoController = require('../controllers/fernandoController');
 const clientController = require('../controllers/clientController');
-const itemListController = require('../controllers/itemListController'); 
+const clientePdfController = require('../controllers/clientePdfController');
+const pdfInvestComercialController = require('../controllers/pdf_invest_comercialController');
+const pdfInvestPromotorController = require('../controllers/pdf_invest_promotorController');
 
 const router = express.Router();
 
@@ -91,16 +93,27 @@ router.get('/video',authMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'video.html'));
 });
 
+// Rota para a página (cadastroCliente.html)
+router.get('/cadastroCliente',authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'cadastroCliente.html'));
+});
+
+
+// Rota para a página (invest.html)
+router.get('/investComercial',authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'invest_comercial.html'));
+});
+
+router.get('/investPromotor',authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'invest_promotor.html'));
+});
+
 
 // Rotas da API de pedidos
 router.get('/api/pedidos', orderController.getOrderDetails); // Pedidos com representantes
-router.get('/api/pedidos/:id', orderController.getOrderDetailsById); // Detalhes do pedido por ID
-
+router.get('/api/pedidos1/:codPedido', orderController.getClientDetailsEndpoint); // Detalhes do pedido por codPedido
 router.get('/api/cliente/:cnpj', clientController.getClientDetails); // Detalhes do cliente por cnpj
-router.get('/api/cliente1/:cnpj', clientController.getClientDetailsTest); // Detalhes do cliente por cnpj
-//router.get('/api/lista/:codgroup', itemListController.getItemList); // Detalhes do cliente por lista de preço id
-router.get('/api/lista/:codgroup', itemListController.getItemList); // Detalhes do cliente por lista de preço clienteId
-router.get('/api/lista1/:codClient', itemListController.getItemListNew); // Detalhes do cliente por lista de preço clienteId
+router.get('/api/cliente1/:cnpj', clientController.getClientDetailsTest); // Detalhes do cliente por cnpj full
 
 
 // Rotas da API de Logistica
@@ -140,6 +153,10 @@ router.get('/session-test', (req, res) => {
 
 // Rota para envio de PDF
 router.post('/send-pdf', pdfController.sendPdf);
+router.post('/send-client-pdf', clientePdfController.sendClientPdf);
+router.post('/send-pdf-investComercial', pdfInvestComercialController.sendPdf);
+router.post('/send-pdf-investPromotor', pdfInvestPromotorController.sendPdf);
+
 
 // Rota para autenticação
 router.post('/auth', authenticateUser);
@@ -178,6 +195,7 @@ router.delete('/api/redes/remover', redesController.removerLinhaRedes);
 router.get('/api/sellOut/:codgroup', sellOutController.getSellOutBycodgroup);
 router.post('/api/sellOut/salvar', sellOutController.salvarSellOut);        
 router.delete('/api/sellOut/remover', sellOutController.removerLinhaSellOut);
+
 
 
 module.exports = router;

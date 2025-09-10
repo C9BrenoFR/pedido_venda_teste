@@ -3,14 +3,14 @@ const fetch = require('node-fetch');
 let authToken = null;
 let tokenExpirationTime = null;
 // Tokens necessários para autenticação
-const ApplicationToken = '62ca18a8-aa3b-41b7-a54e-f669a437d326';
-const CompanyToken = 'b5b984c5-cbfa-490b-8513-448fc67a39b6';
+const ApplicationToken = '35f65072-81d0-4b7e-bf2c-39158de0e885';
+const CompanyToken = '67426fed-77a7-48ef-b96d-9f96e5b37e10';
 
 
 // Função para autenticar e obter o token
 async function authenticate() {
   try {
-    const response = await fetch('https://gateway-ng.dbcorp.com.br:55500/identidade-service/autenticar', {
+    const response = await fetch('https://gateway-ng.dbcorp.com.br:44400/identidade-service/autenticar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ async function fetchClientDetails(cnpj) {
       }
     
       try {
-        const response = await fetch(`https://gateway-ng.dbcorp.com.br:55500/pessoa-service/cliente/documento/${cnpj}`, {
+        const response = await fetch(`https://gateway-ng.dbcorp.com.br:44400/pessoa-service/cliente/documento/${cnpj}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authToken}`,
@@ -99,7 +99,7 @@ async function fetchClientsWithRepresentatives(cnpj) {
       const clienteId = clientData.codigo;
   
       // 2. Buscar os representantes desse cliente
-      const representativeEndpoint = `https://gateway-ng.dbcorp.com.br:55500/pessoa-service/representante/cliente/${clienteId}`;
+      const representativeEndpoint = `https://gateway-ng.dbcorp.com.br:44400/pessoa-service/representante/cliente/${clienteId}`;
       
       const repResponse = await fetch(representativeEndpoint, {
         method: 'GET',
@@ -142,7 +142,7 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
   
        const transportId = clientRepresentative.transportadoraId
   
-       const transportEndpoint = `https://gateway-ng.dbcorp.com.br:55500/pessoa-service/transportadora/codigo/${transportId}`
+       const transportEndpoint = `https://gateway-ng.dbcorp.com.br:44400/pessoa-service/transportadora/codigo/${transportId}`
   
       let transData = [];
   
@@ -189,7 +189,7 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
   
       const cnpjID= clientRepresentativeWithTransport.documento.numeroTexto;
   
-      const cnpjEndpoint = `http://kidszone-api-integracao.dbcorp.com.br/v1/Cliente/BuscarPorCnpjCpf/${cnpjID}`;
+      const cnpjEndpoint = `http://homolog-kidszone-api-integracao.dbcorp.com.br/v1/Cliente/BuscarPorCnpjCpf/${cnpjID}`;
   
       let cnpjData = [];
   
@@ -235,8 +235,8 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
   
       const codClientId = clientOld.codigo;
   
-      const priceListtEndpoint = `https://gateway-ng.dbcorp.com.br:55500/vendas-service/listapreco/cliente/${codClientId}`;
-  
+      const priceListtEndpoint = `https://gateway-ng.dbcorp.com.br:44400/vendas-service/lista-preco?ClienteCodigo=${codClientId}`;
+      console.log(`Codigo do Cliente: ${codClientId}`);
       let priceListData = [];
   
       try {
@@ -261,7 +261,7 @@ async function fetchClientsWithdetailsAndRepresentativesWithTransport(cnpj) {
   
       return {
         ...clientOld,
-        listaPreco: priceListData || []
+        listaPreco: priceListData.dados || []
       };
   
     } catch (error) {
@@ -279,7 +279,7 @@ async function fetchPaymentCondition(cnpj) {
   
        const paytId = clientWithPriceList.condicaoPagamentoId
   
-       const payEndpoint = `http://kidszone-api-integracao.dbcorp.com.br/v1/CondicaoPagamento/BuscarPorId/${paytId}`;
+       const payEndpoint = `http://homolog-kidszone-api-integracao.dbcorp.com.br/v1/CondicaoPagamento/BuscarPorId/${paytId}`;
   
       let payData = [];
   
@@ -329,7 +329,7 @@ async function fetchPaymentCondition(cnpj) {
   
        const payMethodtId = clientWithPaymentCondition.codigo
   
-       const payMethodEndpoint = `https://gateway-ng.dbcorp.com.br:55500/financeiro-service/forma-de-pagamento?ClienteCodigo=${payMethodtId}`
+       const payMethodEndpoint = `https://gateway-ng.dbcorp.com.br:44400/financeiro-service/forma-de-pagamento?ClienteCodigo=${payMethodtId}&EmpresaCodigo=2`
   
       let payMethodData = [];
   
@@ -379,7 +379,7 @@ async function fetchPaymentCondition(cnpj) {
   
        const clientId = clientWithPaymentMethod.codigo
   
-       const contatEndpoint = `https://gateway-ng.dbcorp.com.br:55500/pessoa-service/cliente/${clientId}/contatos`
+       const contatEndpoint = `https://gateway-ng.dbcorp.com.br:44400/pessoa-service/cliente/${clientId}/contatos`
   
       let contatData = [];
   
