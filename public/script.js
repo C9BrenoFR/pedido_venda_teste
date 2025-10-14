@@ -250,7 +250,7 @@ document.getElementById('cnpj').addEventListener('blur', async function (event) 
                 clienteApi["COND. DE PAGTO"],
                 clienteApi["REPRESENTANTE"],
                 clienteApi["REPRESENTANTE NOME"],
-                clienteApi["COD CLIENTE 2"],
+                clienteApi["COD CLIENTE"],
                 clienteApi["LISTA"],
                 clienteApi["LISTA NOME1"],
                 clienteApi["TRANSPORTADORA"],
