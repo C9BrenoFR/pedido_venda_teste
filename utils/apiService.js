@@ -123,7 +123,7 @@ async function fetchOrderDetails(status = 6, userDataInicio = null, userDataFim 
             });
             if (repResponse.ok) {
               const repData = await repResponse.json();
-              representante = repData[0] || null;
+              representante = repData.dados[0] || null;
             }
           } catch (error) {
             console.error(`Erro ao buscar representante para cliente ${order.cliente.codigo}:`, error);
@@ -278,6 +278,7 @@ async function fetchOrderDetailsEndpoint(CodPedido) {
       if (repResponse.ok) {
         console.log(`esta é teste repre ${repResponse}`)
         representante = await repResponse.json();
+        representante = representante.dados
       }
     } catch (error) {
       console.error(`Erro ao buscar representante para cliente ${order.codigo}:`, error);
