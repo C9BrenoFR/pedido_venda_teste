@@ -279,7 +279,7 @@ async function fetchPaymentCondition(cnpj) {
 
     const paytId = clientWithPriceList.condicaoPagamentoId
 
-    const payEndpoint = `http://homolog-kidszone-api-integracao.dbcorp.com.br/v1/CondicaoPagamento/BuscarPorId/${paytId}`;
+    const payEndpoint = `http://kidszone-api-integracao.dbcorp.com.br/v1/CondicaoPagamento/BuscarPorId/${paytId}`;
 
     let payData = [];
 
